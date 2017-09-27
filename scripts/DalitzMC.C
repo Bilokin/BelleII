@@ -1,0 +1,53 @@
+void DalitzMC(string filename = "mc.root")
+{
+	TFile * file = TFile::Open(filename.c_str());
+	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1200,400);
+	TH1F * Kpion = new TH1F("Kpion","M(K^{0} #pi^{#pm});M(K^{0} #pi^{#pm}) [GeV]",50,0.6,2.2);
+	TH1F * pionpion = new TH1F("pionpion","M(#pi^{#mp} #pi^{#pm});M(#pi^{#mp} #pi^{#pm}^{#pm}) [GeV]",50,0.2,1.6);
+	//TH2F * dalitz = new TH2F("dalitz","Dalitz plot;M(#pi^{#pm} #pi^{#mp}) [GeV];M(K^{0} #pi^{#pm})) [GeV]",50,0.2,1.2,50,0.6,1.2);
+	TH2F * dalitz = new TH2F("dalitz","Dalitz plot;M(K^{0} #pi^{#mp}) [GeV];M(#pi^{#pm}  #pi^{#mp})) [GeV]",30,0.6,1.2,30,0.2,1.2);
+
+	c1->Divide(3,1);
+	string E0 = "B0__daughter__bo0__cmE__bc";
+	string E1 = "B0__daughter__bo1__cmE__bc";
+	string E2 = "B0__daughter__bo2__cmE__bc";
+	string px0 = "B0__daughter__bo0__cmpx__bc";
+	string px1 = "B0__daughter__bo1__cmpx__bc";
+	string px2 = "B0__daughter__bo2__cmpx__bc";
+	string py0 = "B0__daughter__bo0__cmpy__bc";
+	string py1 = "B0__daughter__bo1__cmpy__bc";
+	string py2 = "B0__daughter__bo2__cmpy__bc";
+	string pz0 = "B0__daughter__bo0__cmpz__bc";
+	string pz1 = "B0__daughter__bo1__cmpz__bc";
+	string pz2 = "B0__daughter__bo2__cmpz__bc";
+	string p = "+";
+	string m = "-";
+	string s = "*";
+	string m12 = "sqrt(pow(" + E1 + p + E2 + ",2)"+m+ "pow("+px1+p+px2 +",2)"+m+ "pow("+py1+p+py2 +",2)"+m+ "pow("+pz1+p+pz2 +",2)" +")";
+	string m01 = "sqrt(pow(" + E0 + p + E1 + ",2)"+m+ "pow("+px0+p+px1 +",2)"+m+ "pow("+py0+p+py1 +",2)"+m+ "pow("+pz0+p+pz1 +",2)" +")";
+	string m02 = "sqrt(pow(" + E0 + p + E2 + ",2)"+m+ "pow("+px0+p+px2 +",2)"+m+ "pow("+py0+p+py2 +",2)"+m+ "pow("+pz0+p+pz2 +",2)" +")";
+	c1->cd(1);
+	//B0sSIG->Draw( (m12).c_str() );
+	B0sSIG->Project("pionpion", m12.c_str());
+	pionpion->Draw();
+	gPad->SetLeftMargin(0.14);
+	gPad->SetBottomMargin(0.14);
+	pionpion->GetYaxis()->SetTitleOffset(1.3);
+	pionpion->GetXaxis()->SetTitleOffset(1.3);
+	c1->cd(2);
+	//B0sSIG->Draw( m01.c_str() );
+	B0sSIG->Project("Kpion", m02.c_str());
+	Kpion->Draw();
+	gPad->SetLeftMargin(0.14);
+	gPad->SetBottomMargin(0.14);
+	Kpion->GetYaxis()->SetTitleOffset(1.3);
+	Kpion->GetXaxis()->SetTitleOffset(1.3);
+	c1->cd(3);
+	//B0sSIG->Draw( (m01+":"+m12).c_str(),"","colz" );
+	B0sSIG->Project("dalitz", (m12+":"+m02).c_str());
+	dalitz->Draw("colz");
+	gPad->SetLeftMargin(0.14);
+	gPad->SetBottomMargin(0.14);
+	dalitz->GetYaxis()->SetTitleOffset(1.3);
+	dalitz->GetXaxis()->SetTitleOffset(1.3);
+}
