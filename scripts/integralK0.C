@@ -5,7 +5,8 @@ void integralK0(string filename = "mc.root")
 	TTree* K0sMy = (TTree*)file->Get("K0sMy");
 	TH1F * k0Hist = new TH1F("k0Hist", ";#rho []", 200,0,200);
 	TH1F * k0Hist2 = new TH1F("k0Hist2", ";#rho [mm]", 200,0,200);
-	K0sMy->Project("k0Hist","K_S0_TruthRho*10","K_S0_TruthRho < 20");
+	K0sMy->Project("k0Hist","K_S0_TruthRho*10","K_S0_TruthRho < 20 && abs(K_S0_MC_MOTHER_ID) == 10313 || abs(K_S0_MC_MOTHER_ID) == 323");
+	//K0sMy->Project("k0Hist","K_S0_TruthRho*10","K_S0_TruthRho < 20");
 	k0Hist->Draw();
 	float all = k0Hist->Integral(1,200);
 	float pxd = k0Hist->Integral(1,22);

@@ -21,6 +21,26 @@
     <EventHigh>5000</EventHigh>
   </File>
   <File>
+    <LFN>/home/sbilokin/BelleII/test/evtgen3.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/evtgen3.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/evtgen4.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/evtgen4.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
     <LFN>/home/sbilokin/BelleII/test/reco-signal2.root</LFN>
     <PFN>/home/sbilokin/BelleII/test/reco-signal2.root</PFN>
     <ExperimentLow>1</ExperimentLow>
@@ -30,6 +50,49 @@
     <RunHigh>1</RunHigh>
     <EventHigh>5000</EventHigh>
     <Parents>/home/sbilokin/BelleII/test/evtgen2.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/reco-signal3.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/reco-signal3.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/evtgen3.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/reco-signal4.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/reco-signal4.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/evtgen4.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/sim-09/evtgen.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/sim-09/evtgen.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/sim-09/reco-signal.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/sim-09/reco-signal.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>69</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/sim-09/evtgen.root</Parents>
   </File>
   <File>
     <LFN>/home/sviatoslav/BelleII/test/B2A101-Y4SEventGeneration-evtgen.root</LFN>

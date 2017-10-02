@@ -34,8 +34,8 @@ void B0reco(string filename = "test.root")
 	TH1F * deltaEHist = new TH1F("deltaEHist", ";axis []", 50,-0.5,0.5);
 	TH1F * deltaEAllHist = new TH1F("deltaEAllHist", ";#Delta E [GeV]", 50,-0.5,0.5);
 	
-	TH1F * MHist = new TH1F("MHist", ";axis []", 50,4,6);
-	TH1F * MAllHist = new TH1F("MAllHist", ";M [GeV]", 50,4,6);
+	TH1F * MHist = new TH1F("MHist", ";axis []", 50,5,5.5);
+	TH1F * MAllHist = new TH1F("MAllHist", ";M [GeV]", 50,5,5.5);
 	
 	TH1F * MbcHist = new TH1F("MbcHist", ";M_{bc} []", 50,5.2,5.35);
 	TH1F * MbcAllHist = new TH1F("MbcAllHist", ";M_{bc} [GeV]", 50,5.2,5.35);
@@ -46,8 +46,8 @@ void B0reco(string filename = "test.root")
 	TH1F * rhoHist = new TH1F("rhoHist", ";#rho [cm]", 50,0.6,2.20);
 	TH1F * rhoAllHist = new TH1F("rhoAllHist", ";#rho [cm]", 50,0.6,2.20);
 	
-	TH1F * chiHist = new TH1F("chiHist", ";#chi []", 50,0,50);
-	TH1F * chiAllHist = new TH1F("chiAllHist", ";#chi []", 50,0,50);
+	TH1F * chiHist = new TH1F("chiHist", ";M(K_{S}^{0}) [GeV]", 50,0.45,0.550);
+	TH1F * chiAllHist = new TH1F("chiAllHist", ";M(K_{S}^{0}) [GeV]", 50,0.45,0.550);
 	cout << "All B0: " << allB << "; true B0: " << trueB << "\n"; 
 	cout << "Purity B0: " << trueB/allB*100 << "%\n";
 	B0Signal->Project("deltaEAllHist","B0_deltae",cut.c_str());
@@ -89,18 +89,27 @@ void B0reco(string filename = "test.root")
 	makePretty(rhoHist);
 	makePretty(rhoAllHist, kGray+1);
 	rhoHist->Draw("same");
-	cout << "dE: " << deltaEHist->GetMean() << " ~ " << deltaEHist->GetRMS() << endl;	
-	cout << "Mbc: " << MbcHist->GetMean() << " ~ " << MbcHist->GetRMS() << endl;	
-	cout << "cos: " << cosHist->GetMean() << " ~ " << cosHist->GetRMS() << endl;	
-	cout << "dE: " << deltaEHist->GetMean() << " ~ " << deltaEHist->GetRMS() << endl;	
+	TF1 * myBW1 = new TF1("myBW1","TMath::BreitWigner(x,[0],[1])*[2]*TMath::Gaus(x,[3],[4])",0.6,2.2);
+
+	myBW1->SetParLimits(0,1.1,1.5);
+	myBW1->SetParLimits(1,0.0001,0.1);
+	myBW1->SetParLimits(2,0.1,1000);
+	myBW1->SetParLimits(3,1,2);
+	myBW1->SetParLimits(4,0.1,1);
+	rhoHist->Fit("myBW1","RLQ");
 	c1->cd(6);
-	B0Signal->Project("chiAllHist",chi2.c_str(),cut.c_str());
-	B0Signal->Project("chiHist",chi2.c_str(),("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
+	string k0mass = "B0_K_10_K_S0_M";
+	B0Signal->Project("chiAllHist",k0mass.c_str(),cut.c_str());
+	B0Signal->Project("chiHist",k0mass.c_str(),("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
 	chiAllHist->Draw();
 	makePretty(chiHist);
 	makePretty(chiAllHist, kGray+1);
 	chiHist->Draw("same");
-	
+	TF1 * myBW = new TF1("myBW","TMath::BreitWigner(x,[0],[1])*[2]",0.45,0.55);
+	myBW->SetParLimits(0,0.45,0.55);
+	myBW->SetParLimits(1,0.0001,0.05);
+	myBW->SetParLimits(2,0.1,1000);
+	chiHist->Fit("myBW","RLQ");
 	
 	/*B0Signal->Draw("B0_Rho",cut.c_str());
 	B0Signal->Draw("B0_Rho",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");

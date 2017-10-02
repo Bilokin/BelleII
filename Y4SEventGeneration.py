@@ -47,7 +47,7 @@ loadGearbox()
 # dump generated events in MDST format to the output ROOT file
 #
 # add_mdst_output function is defined in reconstruction/scripts/reconstruction.py
-add_mdst_output(analysis_main, True, 'evtgen2.root')
+add_mdst_output(analysis_main, True, 'sim-09/evtgen.root')
 printPrimaryMCParticles()
 
 # process all modules added to the analysis_main path

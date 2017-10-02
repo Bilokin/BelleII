@@ -28,7 +28,7 @@ if not os.path.isfile('evtgen.root'):
 
 # load input ROOT file
 #inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
-inputMdst('None', 'evtgen.root')
+inputMdst('None', 'evtgen.root evtgen2.root evtgen3.root evtgen4.root')
 
 # print contents of the DataStore before loading MCParticles
 printDataStore()
@@ -89,10 +89,9 @@ toolsK0my = ['Kinematics', '^K_S0 -> ^pi+ ^pi-']
 toolsK0my += ['InvMass', '^K_S0']
 toolsK0my += ['Vertex', '^K_S0']
 toolsK0my += ['MCVertex', '^K_S0']
+toolsK0my += ['MCHierarchy', '^K_S0']
 toolsK0my += ['MCTruth', '^K_S0 -> ^pi+ ^pi-']
 toolsK0my += ['CustomFloats[cosTheta]', '^K_S0  -> ^pi+ ^pi-']
-toolsK0my += ['CustomFloats[abs(genMotherPDG)]', '^K_S0']
-toolsK0my += ['MCReconstructible', 'K_S0 -> ^pi+ ^pi-']
 
 toolsK0p = ['Kinematics', '^K_10']
 toolsK0p += ['InvMass', '^K_10']

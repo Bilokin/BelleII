@@ -2,7 +2,7 @@ void DalitzReco(string filename = "test.root")
 {
 	TFile * file = TFile::Open(filename.c_str());
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1200,400);
-	TH1F * Kpion = new TH1F("Kpion","M(K^{0} #pi^{#pm});M(K^{0} #pi^{#pm}) [GeV]",50,0.6,2.2);
+	TH1F * Kpion = new TH1F("Kpion","M(K^{0} #pi^{#pm});M(K^{0} #pi^{#pm}) [GeV]",50,0.6,1.6);
 	TH1F * pionpion = new TH1F("pionpion","M(#pi^{#mp} #pi^{#pm});M(#pi^{#mp} #pi^{#pm}^{#pm}) [GeV]",50,0.2,1.6);
 	//TH2F * dalitz = new TH2F("dalitz","Dalitz plot;M(#pi^{#pm} #pi^{#mp}) [GeV];M(K^{0} #pi^{#pm})) [GeV]",50,0.2,1.2,50,0.6,1.2);
 	TH2F * dalitz = new TH2F("dalitz","Dalitz plot;M(K^{0} #pi^{#mp}) [GeV];M(#pi^{#pm}  #pi^{#mp})) [GeV]",30,0.6,1.2,30,0.2,1.2);

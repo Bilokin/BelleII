@@ -15,7 +15,7 @@ void makePretty(TH1F* htemp, int color = kBlue)
 void Pions(string filename = "test.root")
 {
 	gROOT->Reset(); 
-	int nevents = 5000;
+	int nevents = 20000;
 	TFile * file = TFile::Open(filename.c_str());
 	//TTree* K0Signal = (TTree*)file->Get("K0Signal");
 	TTree* pions = (TTree*)file->Get("pions");
