@@ -48,15 +48,16 @@ buildRestOfEvent('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleList='B0:signal',
-             mode='Expert',
-             weightFiles='B2JpsiKs_mu',
-             workingDirectory='.',
-             categories=['Electron','IntermediateElectron','Muon',
-                         'IntermediateMuon','KinLepton',
-                         'IntermediateKinLepton','Kaon','SlowPion',
-                         'FastPion','Lambda','FSC',
-                         'MaximumPstar','KaonPion'])
+flavorTagger(particleList='B0:signal')
+#             mode='Expert',
+#             weightFiles='B2JpsiKs_muBGx0',
+#             workingDirectory='.',
+#             downloadFromDatabaseIfNotfound=True)
+#             categories=['Electron','IntermediateElectron','Muon',
+#                         'IntermediateMuon','KinLepton',
+#                         'IntermediateKinLepton','Kaon','SlowPion',
+#                         'FastPion','Lambda','FSC',
+#                         'MaximumPstar','KaonPion'])
 
 #reconstructDecay("B0:sig ->K_S0:all pi+:all pi-:all gamma:loose", " 4 < M < 6")
 #matchMCTruth('K_S0:all')
