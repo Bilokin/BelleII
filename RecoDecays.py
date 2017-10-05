@@ -14,14 +14,14 @@ from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
-if not os.path.isfile('reco-signal.root'):
-    sys.exit('Required input file (B2A101-Y4SEventGeneration-gsim-BKGx0.root) does not exist. '
-             'Please run B2A101-Y4SEventGeneration.py and B2A103-SimulateAndReconstruct-withoutBeamBkg.py '
-             'tutorial scripts first.')
+#if not os.path.isfile('reco-signal.root'):
+#    sys.exit('Required input file (B2A101-Y4SEventGeneration-gsim-BKGx0.root) does not exist. '
+#             'Please run B2A101-Y4SEventGeneration.py and B2A103-SimulateAndReconstruct-withoutBeamBkg.py '
+#             'tutorial scripts first.')
 
 # load input ROOT file
 add_beamparameters(analysis_main,'Y4S')
-inputMdst('default', 'reco-signal.root reco-signal2.root reco-signal3.root reco-signal4.root')
+inputMdst('default', 'mc-v08/reco-signal.root mc-v08/reco-signal2.root mc-v08/reco-signal3.root mc-v08/reco-signal4.root mc-v08/reco-signal5.root mc-v08/reco-signal6.root mc-v08/reco-signal7.root mc-v08/reco-signal8.root')
 stdPi('all')
 stdPi('')
 stdMu('all')
@@ -45,10 +45,11 @@ reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6")# and Mbc > 5
 vertexRave('B0:signal',0.02, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma','iptube')
 #vertexKFit('B0:signal',0.0);
 buildRestOfEvent('B0:signal')
+matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleList='B0:signal')
+flavorTagger(particleList = 'B0:signal', weightFiles='B2JpsiKs_muBGx0')
 #             mode='Expert',
 #             weightFiles='B2JpsiKs_muBGx0',
 #             workingDirectory='.',
@@ -63,7 +64,6 @@ flavorTagger(particleList='B0:signal')
 #matchMCTruth('K_S0:all')
 matchMCTruth('pi+:all')
 matchMCTruth('K_10:all')
-matchMCTruth('B0:signal')
 matchMCTruth('gamma:loose')
 
 #printVariableValues('gamma:loose',['E'])
@@ -75,11 +75,11 @@ matchMCTruth('gamma:loose')
 #printDataStore()
 toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] gamma']
 toolsB0_meson += ['CustomFloats[cosTheta]', '^B0']
-toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
+#toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
 toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
 toolsB0_meson += ['Vertex','^B0']
-toolsB0_meson += ['PDGCode','^B0']
+#toolsB0_meson += ['PDGCode','^B0']
 toolsB0_meson += ['InvMass','^B0 -> [^K_10 -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
 #toolsB0_meson += ['MCReconstructible', 'B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
@@ -91,6 +91,8 @@ toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']
 toolsB0_meson += ['MCDeltaT', '^B0']
 toolsB0_meson += ['FlavorTagging', '^B0']
+toolsB0_meson += ['FlavorTagInfo', '^B0']
+toolsB0_meson += ['ROEMultiplicities', '^B0']
 
 
 
@@ -125,12 +127,13 @@ K0Info += ['MCVertex', '^K_S0']
 K0Info += ['CustomFloats[distance]', '^K_S0']
 K0Info += ['CustomFloats[cosTheta]', '^K_S0 -> ^pi+ ^pi-']
 K0Info += ['CustomFloats[nDaughters]', '^K_S0']
+K0Info += ['TrackHits','K_S0 -> ^pi+ ^pi-']
+K0Info += ['CustomFloats[d0:z0:d0Err:z0Err]', 'K_S0 -> ^pi+ ^pi-']
 #K0Info += ['CustomFloats[daughter(0,piid)]', '^K_S0']
 #K0Info += ['CustomFloats[daughter(1,piid)]', '^K_S0']
 #K0Info += ['CustomFloats[daughter(0,eid)]', '^K_S0']
 #K0Info += ['CustomFloats[daughter(1,eid)]', '^K_S0']
-K0Info += ['CustomFloats[d0:z0:d0Err:z0Err]', 'K_S0 -> ^pi+ ^pi-']
-K0Info += ['MCReconstructible', 'K_S0 -> ^pi+ ^pi-']
+#K0Info += ['MCReconstructible', 'K_S0 -> ^pi+ ^pi-']
 
 
 K0starInfo =  ['Kinematics','^K_10 ->  ^pi+ ^pi- ^K_S0']

@@ -32,13 +32,13 @@ add_beamparameters(analysis_main, 'Y4S')
 import os.path
 import sys
 #if not os.path.isfile('B2A101-Y4SEventGeneration-evtgen.root'):
-if not os.path.isfile('evtgen.root'):
-    sys.exit('Required input file (B2A101-Y4SEventGeneration-evtgen.root) does not exist. '
-             'Please run B2A101-Y4SEventGeneration.py tutorial script first.')
+#if not os.path.isfile('evtgen.root'):
+#    sys.exit('Required input file (B2A101-Y4SEventGeneration-evtgen.root) does not exist. '
+#             'Please run B2A101-Y4SEventGeneration.py tutorial script first.')
 
 # load input ROOT file
 #inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
-inputMdst('None', 'sim-09/evtgen.root')
+inputMdst('None', 'mc-v08/evtgen8.root')
 
 # simulation
 add_simulation(analysis_main)
@@ -48,7 +48,7 @@ add_reconstruction(analysis_main)
 
 # dump in MDST format
 add_mdst_output(analysis_main, True,
-                'sim-09/reco-signal.root')
+                'mc-v08/reco-signal8.root')
 
 # Show progress of processing
 progress = register_module('ProgressBar')

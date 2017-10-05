@@ -22,13 +22,10 @@ from modularAnalysis import *
 import os.path
 import sys
 #if not os.path.isfile('B2A101-Y4SEventGeneration-evtgen.root'):
-if not os.path.isfile('evtgen.root'):
-    sys.exit('Required input file (B2A101-Y4SEventGeneration-evtgen.root) does not exist. '
-             'Please run B2A101-Y4SEventGeneration.py tutorial script first.')
 
 # load input ROOT file
 #inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
-inputMdst('None', 'evtgen.root evtgen2.root evtgen3.root evtgen4.root')
+inputMdst('None', 'mc-v08/evtgen.root mc-v08/evtgen2.root mc-v08/evtgen3.root mc-v08/evtgen4.root')
 
 # print contents of the DataStore before loading MCParticles
 printDataStore()

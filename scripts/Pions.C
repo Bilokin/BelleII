@@ -30,7 +30,7 @@ void Pions(string filename = "test.root")
 	string cutPiPi = "(abs(pi_MC_GD_MOTHER_ID) == 10313 && abs(pi_MC_GD_GD_MOTHER_ID) == 511 && (abs(pi_MC_MOTHER_ID) == 323 || abs(pi_MC_MOTHER_ID) == 113)) || (abs(pi_MC_MOTHER_ID) == 10313 && abs(pi_MC_GD_MOTHER_ID) == 511)";
 	string cutK0 = "((abs(pi_MC_GD_MOTHER_ID) == 10313 && abs(pi_MC_GD_GD_MOTHER_ID) == 511)|| (abs(pi_MC_GD_GD_MOTHER_ID) == 10313)) && (abs(pi_MC_MOTHER_ID) == 310)";
 	int nrecoPiPi = pions->Draw("pi_P",(cutPiPi).c_str());
-	int nrecoK0 = pions->Draw("pi_P",(cutK0).c_str());
+	int nrecoK0 = pions->Draw("pi_P",(cutK0 + " && pi_nSVDHits > 0").c_str());
 	cout << "N pi+ pi- reconstructed: " << nrecoPiPi << " (" << (float)nrecoPiPi/nevents/2*100 << "%)\n";
 	cout << "N K0S reconstructed: " << nrecoK0 << " (" << (float)nrecoK0/nevents/2*100/0.7 << "%)\n";
 

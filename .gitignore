@@ -1,7 +1,7 @@
 # Prerequisites
 *.d
 FlavorTagging/*
-sim-09/*
+mc-v08/*
 
 # Object files
 *.o
