@@ -15,7 +15,7 @@ void makePretty(TH1F* htemp, int color = kBlue)
 void Pions(string filename = "test.root")
 {
 	gROOT->Reset(); 
-	int nevents = 20000;
+	int nevents = 5000;
 	TFile * file = TFile::Open(filename.c_str());
 	//TTree* K0Signal = (TTree*)file->Get("K0Signal");
 	TTree* pions = (TTree*)file->Get("pions");
@@ -30,7 +30,8 @@ void Pions(string filename = "test.root")
 	string cutPiPi = "(abs(pi_MC_GD_MOTHER_ID) == 10313 && abs(pi_MC_GD_GD_MOTHER_ID) == 511 && (abs(pi_MC_MOTHER_ID) == 323 || abs(pi_MC_MOTHER_ID) == 113)) || (abs(pi_MC_MOTHER_ID) == 10313 && abs(pi_MC_GD_MOTHER_ID) == 511)";
 	string cutK0 = "((abs(pi_MC_GD_MOTHER_ID) == 10313 && abs(pi_MC_GD_GD_MOTHER_ID) == 511)|| (abs(pi_MC_GD_GD_MOTHER_ID) == 10313)) && (abs(pi_MC_MOTHER_ID) == 310)";
 	int nrecoPiPi = pions->Draw("pi_P",(cutPiPi).c_str());
-	int nrecoK0 = pions->Draw("pi_P",(cutK0 + " && pi_nSVDHits > 0").c_str());
+	//int nrecoK0 = pions->Draw("pi_P",(cutK0 + " && pi_nSVDHits > 0").c_str());
+	int nrecoK0 = pions->Draw("pi_P",(cutK0 + " ").c_str());
 	cout << "N pi+ pi- reconstructed: " << nrecoPiPi << " (" << (float)nrecoPiPi/nevents/2*100 << "%)\n";
 	cout << "N K0S reconstructed: " << nrecoK0 << " (" << (float)nrecoK0/nevents/2*100/0.7 << "%)\n";
 
@@ -55,12 +56,12 @@ void Pions(string filename = "test.root")
 	string newcut = "&& 1 ";// pi_nPXDHits == 0";		
         TH1F* devZPiPi = new TH1F("devZPiPi",";Parameter deviation",50,0,25);
         TH1F* devZK0 = new TH1F("devZK0",";Parameter deviation",50,0,50);
-	pions->Project("devZPiPi","abs(pi__z0)/pi__z0Err", (cutPiPi + newcut).c_str());
-	pions->Project("devZK0","abs(pi__z0)/pi__z0Err", (cutK0).c_str());// && (pi__cosTheta > 0.85 || pi__cosTheta < -0.65)").c_str());
+	pions->Project("devZPiPi","abs(pi_z0)/pi_z0Err", (cutPiPi + newcut).c_str());
+	pions->Project("devZK0","abs(pi_z0)/pi_z0Err", (cutK0).c_str());// && (pi__cosTheta > 0.85 || pi__cosTheta < -0.65)").c_str());
         TH1F* devDPiPi = new TH1F("devDPiPi",";Parameter deviation",50,0,25);
         TH1F* devDK0 = new TH1F("devDK0",";Parameter deviation",50,0,50);
-	pions->Project("devDPiPi","abs(pi__d0)/pi__d0Err", (cutPiPi+newcut).c_str());
-	pions->Project("devDK0","abs(pi__d0)/pi__d0Err", (cutK0).c_str());// && (pi__cosTheta > 0.85 || pi__cosTheta < -0.65)").c_str());
+	pions->Project("devDPiPi","abs(pi_d0)/pi_d0Err", (cutPiPi+newcut).c_str());
+	pions->Project("devDK0","abs(pi_d0)/pi_d0Err", (cutK0).c_str());// && (pi__cosTheta > 0.85 || pi__cosTheta < -0.65)").c_str());
 	makePretty(devZPiPi);
 	makePretty(devDPiPi, kGreen);
 	devDPiPi->Draw("he");
@@ -86,7 +87,7 @@ void Pions(string filename = "test.root")
 	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 500, 500);
 	string selection = "&& 10*sqrt(pi_TruthVtxProd[0]*pi_TruthVtxProd[0] + pi_TruthVtxProd[1]*pi_TruthVtxProd[1]) < 200";
 	TH1F* rhoK0 = new TH1F("rhoK0",";#rho [mm]",50,0,200);
-	pions->Project("rhoK0","10*sqrt(pi_TruthVtxProd[0]*pi_TruthVtxProd[0] + pi_TruthVtxProd[1]*pi_TruthVtxProd[1]):pi__phi", (cutK0 + selection).c_str());
+	pions->Project("rhoK0","10*sqrt(pi_TruthVtxProd[0]*pi_TruthVtxProd[0] + pi_TruthVtxProd[1]*pi_TruthVtxProd[1])", (cutK0 + selection).c_str());
 	makePretty(rhoK0);
 	rhoK0->Draw();
 

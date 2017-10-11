@@ -55,3 +55,14 @@ dbstore/software_trigger_cut&calib&accept_dqm_Dstar 3 0,0,9,99
 dbstore/software_trigger_cut&calib&accept_dqm_Jpsiee 3 0,0,9,99
 dbstore/software_trigger_cut&calib&accept_dqm_Jpsimumu 3 0,0,9,99
 dbstore/BeamParameters 59449 0,0,9,99
+dbstore/EKLMDigitizationParameters 3 0,0,9,99
+dbstore/EKLMTimeCalibration 4 0,0,9,99
+dbstore/CDCTimeZeros 34 0,0,-1,-1
+dbstore/CDCXtRelations 30 0,0,-1,-1
+dbstore/CDCSpaceResols 30 0,0,-1,-1
+dbstore/EKLMDisplacement 3 0,0,-1,-1
+dbstore/trackfindingcdc_BackgroundClusterFilter 8 0,0,9,99
+dbstore/ARICHReconstructionPar 1 0,0,-1,-1
+dbstore/KLM_fBDT_10xbkg 1 0,0,-1,-1
+dbstore/ECLShowerEnergyCorrectionTemporary_phase2 6 0,0,-1,-1
+dbstore/ECLShowerEnergyCorrectionTemporary_phase3 9 0,0,-1,-1

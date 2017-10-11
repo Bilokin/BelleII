@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FileCatalog>
   <File>
+    <LFN>/home/sbilokin/BelleII/test/CPV/evtgen.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/CPV/evtgen.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/CPV/reco-signal.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/CPV/reco-signal.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/CPV/evtgen.root</Parents>
+  </File>
+  <File>
     <LFN>/home/sbilokin/BelleII/test/evtgen.root</LFN>
     <PFN>/home/sbilokin/BelleII/test/evtgen.root</PFN>
     <ExperimentLow>1</ExperimentLow>
@@ -112,6 +133,90 @@
     <RunHigh>1</RunHigh>
     <EventHigh>5000</EventHigh>
     <Parents>/home/sbilokin/BelleII/test/mc-v08/evtgen8.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/evtgen.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/evtgen.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/evtgen2.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/evtgen2.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/evtgen3.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/evtgen3.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/evtgen4.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/evtgen4.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/mc-v09/evtgen.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal2.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal2.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/mc-v09/evtgen2.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal3.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal3.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/mc-v09/evtgen3.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal4.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09/reco-signal4.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/mc-v09/evtgen4.root</Parents>
   </File>
   <File>
     <LFN>/home/sbilokin/BelleII/test/reco-signal2.root</LFN>

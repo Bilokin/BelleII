@@ -38,7 +38,7 @@ import sys
 
 # load input ROOT file
 #inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
-inputMdst('None', 'mc-v08/evtgen8.root')
+inputMdst('None', 'mc-v09/evtgen4.root')
 
 # simulation
 add_simulation(analysis_main)
@@ -48,7 +48,7 @@ add_reconstruction(analysis_main)
 
 # dump in MDST format
 add_mdst_output(analysis_main, True,
-                'mc-v08/reco-signal8.root')
+                'mc-v09/reco-signal4.root')
 
 # Show progress of processing
 progress = register_module('ProgressBar')

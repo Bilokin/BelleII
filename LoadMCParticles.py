@@ -25,7 +25,8 @@ import sys
 
 # load input ROOT file
 #inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
-inputMdst('None', 'mc-v08/evtgen.root mc-v08/evtgen2.root mc-v08/evtgen3.root mc-v08/evtgen4.root')
+#inputMdst('None', 'mc-v08/evtgen.root mc-v08/evtgen2.root mc-v08/evtgen3.root mc-v08/evtgen4.root')
+inputMdst('None', 'mc-v09/evtgen.root')
 
 # print contents of the DataStore before loading MCParticles
 printDataStore()
@@ -39,17 +40,23 @@ pionsM = ('pi-:gen', '')
 #pionsP = ('pi+:gen', '')
 kaons = ('K_S0:gen', '')
 kaonsS = ('K_10:gen', '')
-Y4S = ('Upsilon(4S):gen', '')
+#Y4S = ('Upsilon(4S):gen', '')
 protons = ('anti-p-:gen', '')
 b0s = ('B0:gen', '')
 print("EVENT")
-fillParticleListsFromMC([photons, electrons, muons, pionsM,  kaons, kaonsS, b0s, Y4S])
-reconstructDecay('K_S0:my -> pi+:gen pi-:gen', '0.4 < M < 0.6')
-reconstructDecay('Upsilon(4S):my -> B0:gen anti-B0:gen', '8 < M < 14')
-matchMCTruth('K_S0:my')
-matchMCTruth('Upsilon(4S):my')
+
+#kshortcut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 211 and  abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323 "
+kshortcut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 211 and  hasAncestor(10313, 0) "
+b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
+
+fillParticleListsFromMC([photons, electrons, muons, pionsM])
+
+fillParticleListsFromMC(("Upsilon(4S):gen",''),True)
+fillParticleListsFromMC(("K_10:gen",'abs(genMotherPDG) == 511'),True)
+fillParticleListsFromMC(("K_S0:gen",kshortcut),True)
+fillParticleListsFromMC(("B0:gen", b0cut),True)
+
 #applyCuts('K_S0:my','abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323')
-applyCuts('K_S0:my','abs(mcPDG) == 310')
 
 applyCuts('gamma:gen','abs(genMotherPDG) == 511')
 #applyCuts('K_S0:gen','abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323')
@@ -74,20 +81,10 @@ printVariableValues('B0:genSig',['p','px','mcPDG','genMotherPDG' ,'nDaughters'])
 applyCuts('B0:genSig','abs(mcPDG) == 511')
 # print out the contents of each ParticleList
 
-toolsK0 = ['Kinematics', '^K_S0']
-toolsK0 += ['InvMass', '^K_S0']
-toolsK0 += ['Vertex', '^K_S0']
-toolsK0 += ['MCVertex', '^K_S0']
-toolsK0 += ['MCTruth', '^K_S0']
-toolsK0 += ['CustomFloats[cosTheta]', '^K_S0']
-toolsK0 += ['CustomFloats[abs(genMotherPDG)]', '^K_S0']
-
 toolsK0my = ['Kinematics', '^K_S0 -> ^pi+ ^pi-']
-toolsK0my += ['InvMass', '^K_S0']
+toolsK-1my += ['InvMass', '^K_S0']
 toolsK0my += ['Vertex', '^K_S0']
 toolsK0my += ['MCVertex', '^K_S0']
-toolsK0my += ['MCHierarchy', '^K_S0']
-toolsK0my += ['MCTruth', '^K_S0 -> ^pi+ ^pi-']
 toolsK0my += ['CustomFloats[cosTheta]', '^K_S0  -> ^pi+ ^pi-']
 
 toolsK0p = ['Kinematics', '^K_10']
@@ -101,7 +98,7 @@ toolsGamma = ['Kinematics', '^gamma']
 toolsGamma += ['CustomFloats[cosTheta]', '^gamma']
 toolsGamma += ['CustomFloats[genMotherPDG]', '^gamma']
 
-toolsB0 = ['Kinematics', '^B0']
+toolsB0 = ['Kinematics', '^B0 -> ^K_10 ^gamma']
 toolsB0 += ['CMSKinematics', '^B0']
 toolsB0 += ['InvMass', '^B0']
 toolsB0 += ['MCVertex', '^B0']
@@ -139,10 +136,9 @@ ntupleFile('mc.root')
 ntupleTree('gamma', 'gamma:gen', toolsGamma)
 ntupleTree('B0s', 'B0:gen', toolsB0)
 ntupleTree('B0sSIG', 'B0:genSig', toolsB0SIG)
-ntupleTree('K0s', 'K_S0:gen', toolsK0)
-ntupleTree('K0sMy', 'K_S0:my', toolsK0my)
+ntupleTree('K0s', 'K_S0:gen', toolsK0my)
 ntupleTree('K0sp', 'K_10:gen', toolsK0p)
-ntupleTree('Y4S', 'Upsilon(4S):my', toolsY4S)
+ntupleTree('Y4S', 'Upsilon(4S):gen', toolsY4S)
 # Process the events
 process(analysis_main)
 

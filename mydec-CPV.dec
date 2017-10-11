@@ -1,0 +1,118 @@
+
+
+#SIGNAL FILE
+
+Define qoverp_incohMix_B_s0 1.0
+Define dm_incohMix_B_s0 17.8e12
+Define qoverp_incohMix_B0 1.0
+Define dm_incohMix_B0 0.507e12
+# Old definition of dm still in some decay models
+Define dm 0.507e12
+#Define dgamma 0
+#Define qoverp 1
+#Define phaseqoverp 0
+#Define values for B0s mixing
+#Define dms 20.e12
+# DeltaGammas corresponds to DG/G = 10%
+#Define dgammas 6.852e10
+# Activate incoherent Mixing
+### TODO: find a way to give mixing parameters through decay file to EvtGen
+#####yesIncoherentB0Mixing dm dgamma
+#####yesIncoherentBsMixing dms dgammas
+# define the values of the CKM angles (alpha=70, beta=40)
+Define alpha 1.365
+Define beta 0.39
+Define gamma 1.387
+Define twoBetaPlusGamma 2.167
+Define betaPlusHalfGamma 1.0835
+Define minusGamma -1.387
+Define minusTwoBeta -0.78
+
+# New definitions for psiKstar modes (Lange, July 26, 2000)
+Define PKHplus 0.159
+Define PKHzero 0.775
+Define PKHminus 0.612
+Define PKphHplus 1.563
+Define PKphHzero 0.0
+Define PKphHminus 2.712
+
+Define Aplus 0.490
+Define Azero 1.10
+Define Aminus 0.4
+#
+Define phAplus 2.5
+Define phAzero 0.0
+Define phAminus -0.17
+
+
+Alias myK_S0 K_S0
+
+Alias MyK*+ K*+
+Alias MyK*- K*-
+ChargeConj MyK*+ MyK*- 
+
+Alias MyK*0 K*0
+Alias Myanti_K*0 anti-K*0
+ChargeConj MyK*0 Myanti_K*0 
+
+Alias MyK10 K_10
+Alias Myanti_K10 anti-K_10
+ChargeConj MyK10 Myanti_K10 
+
+Alias MyK'10 K'_10
+Alias Myanti_K'10 anti-K'_10
+ChargeConj MyK'10 Myanti_K'10
+
+Alias MyK'*0 K'*0
+Alias Myanti_K'*0 anti-K'*0
+ChargeConj MyK'*0 Myanti_K'*0
+
+Alias MyK2*0 K_2*0
+Alias Myanti_K2*0 anti-K_2*0
+ChargeConj MyK2*0 Myanti_K2*0
+
+Alias MyK''*0 K''*0
+Alias Myanti_K''*0 anti-K''*0
+ChargeConj MyK''*0 Myanti_K''*0
+
+Alias MyB0 B0
+Alias Myanti-B0 anti-B0
+ChargeConj MyB0 Myanti-B0
+
+Decay Upsilon(4S)
+1.000    MyB0 Myanti-B0 B0  anti-B0  VSS_BMIX dm;
+Enddecay
+
+Decay MyB0
+1.000    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
+#0.433    MyK*0  gamma  HELAMP 1.0 0.0 1.0 0.0;
+#0.143    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
+#0.069    MyK'10  gamma  HELAMP 1.0 0.0 1.0 0.0;
+#0.135    MyK'*0  gamma  HELAMP 1.0 0.0 1.0 0.0;
+#0.176    MyK2*0  gamma  HELAMP 1.0 0.0 1.0 0.0;
+#0.018    MyK''*0  gamma  HELAMP 1.0 0.0 1.0 0.0;
+Enddecay
+CDecay Myanti-B0
+
+Decay MyK10
+0.500    K_S0 rho0 PHSP;
+0.250    MyK*+ pi- PHSP;
+0.250    MyK*- pi+ PHSP;
+Enddecay
+CDecay Myanti_K10
+
+Decay MyK*0
+1.000    K_S0 pi+ pi- PHSP;
+Enddecay
+CDecay Myanti_K*0
+
+
+
+Decay MyK*+
+1.000    K_S0 pi+ PHSP;
+Enddecay
+CDecay MyK*-
+
+
+
+End

@@ -12,18 +12,18 @@ void makePretty(TH1F* htemp, int color = kBlue)
 }
 void B0reco(string filename = "test.root")
 {
-	string l0 =  "sqrt(B0_K_10_pi0__z0*B0_K_10_pi0__z0 + B0_K_10_pi0__d0*B0_K_10_pi0__d0) / abs(B0_K_10_pi0__cosTheta)";
-	string l1 =  "sqrt(B0_K_10_pi1__z0*B0_K_10_pi1__z0 + B0_K_10_pi1__d0*B0_K_10_pi1__d0) / abs(B0_K_10_pi1__cosTheta)";
+	string l0 =  "sqrt(B0_K_10_pi0__z0*B0_K_10_pi0__z0 + B0_K_10_pi0__d0*B0_K_10_pi0__d0) / abs(B0_K_10_pi0_cosTheta)";
+	string l1 =  "sqrt(B0_K_10_pi1__z0*B0_K_10_pi1__z0 + B0_K_10_pi1__d0*B0_K_10_pi1__d0) / abs(B0_K_10_pi1_cosTheta)";
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1500,1000);
-	string chi2 = "pow((B0_deltae -0.0524)/0.0977,2) + pow((B0_mbc-5.277)/0.0128,2) + pow((B0__cosTheta - 0.966)/0.0263,2) +  pow((B0_K_10_K_S0_M - 0.5)/0.005,2)";
+	string chi2 = "pow((B0_deltae -0.0524)/0.0977,2) + pow((B0_mbc-5.277)/0.0128,2) + pow((B0_cosTheta - 0.966)/0.0263,2) +  pow((B0_K_10_K_S0_M - 0.5)/0.005,2)";
 	
 	c1->Divide(3,2);
 	c1->cd(1);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
-	//string cut = "abs(B0_K_10_pi0__d0 - B0_K_10_pi1__d0) < 0.04";//"B0_M > 5.1 && B0_M< 5.35 && B0_deltae < 0.18 && B0_deltae > -0.2 && B0_mbc > 5.275 &&B0__cosTheta > 0.92";//"B0_K_10_pi0_Reconstructible";//"B0_K_10_pi0_SeenInSVD == 1 && B0_K_10_pi1_SeenInSVD == 1 &&B0_K_10_pi0_SeenInPXD == 1 && B0_K_10_pi1_SeenInPXD";
+	//string cut = "abs(B0_K_10_pi0__d0 - B0_K_10_pi1__d0) < 0.04";//"B0_M > 5.1 && B0_M< 5.35 && B0_deltae < 0.18 && B0_deltae > -0.2 && B0_mbc > 5.275 &&B0_cosTheta > 0.92";//"B0_K_10_pi0_Reconstructible";//"B0_K_10_pi0_SeenInSVD == 1 && B0_K_10_pi1_SeenInSVD == 1 &&B0_K_10_pi0_SeenInPXD == 1 && B0_K_10_pi1_SeenInPXD";
 	//string cut = "abs("+ (l0 + "-" + l1 + ") < 0.5") ;
-	//string cut = "B0_mbc > 5.27 && B0_M < 5.4 && abs(B0_deltae) < 0.25 && B0__cosTheta > 0.9";
+	//string cut = "B0_mbc > 5.27 && B0_M < 5.4 && abs(B0_deltae) < 0.25 && B0_cosTheta > 0.9";
 	string cut = "B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
 	//string cut = "B0_mbc < 5.292 && B0_mbc > 5.2 && B0_K_10_K_S0_M > 0.45 && B0_K_10_K_S0_M < 5.4 && abs(B0_deltae) < 0.2";
 	//string cut = "1";
@@ -72,8 +72,8 @@ void B0reco(string filename = "test.root")
 	MbcHist->Draw("same");
 	
 	c1->cd(4);
-	B0Signal->Project("cosAllHist","B0__cosTheta",cut.c_str());
-	B0Signal->Project("cosHist","B0__cosTheta",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
+	B0Signal->Project("cosAllHist","B0_cosTheta",cut.c_str());
+	B0Signal->Project("cosHist","B0_cosTheta",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
 	cosAllHist->Draw();
 	makePretty(cosHist);
 	makePretty(cosAllHist, kGray+1);
@@ -115,12 +115,12 @@ void B0reco(string filename = "test.root")
 	B0Signal->Draw("B0_Rho",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
 	B0Signal->Draw("abs(B0_K_10_pi0__d0 - B0_K_10_pi1__d0)",cut.c_str());
 	B0Signal->Draw("abs(B0_K_10_pi0__d0 - B0_K_10_pi1__d0)",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
-	B0Signal->Draw("sqrt(B0_K_10_pi0__z0*B0_K_10_pi0__z0 + B0_K_10_pi0__d0*B0_K_10_pi0__d0) / abs(B0_K_10_pi0__cosTheta)",cut.c_str());
-	B0Signal->Draw("sqrt(B0_K_10_pi0__z0*B0_K_10_pi0__z0 + B0_K_10_pi0__d0*B0_K_10_pi0__d0) / abs(B0_K_10_pi0__cosTheta)",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
+	B0Signal->Draw("sqrt(B0_K_10_pi0__z0*B0_K_10_pi0__z0 + B0_K_10_pi0__d0*B0_K_10_pi0__d0) / abs(B0_K_10_pi0_cosTheta)",cut.c_str());
+	B0Signal->Draw("sqrt(B0_K_10_pi0__z0*B0_K_10_pi0__z0 + B0_K_10_pi0__d0*B0_K_10_pi0__d0) / abs(B0_K_10_pi0_cosTheta)",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
 	B0Signal->Draw((l0 + "-" + l1).c_str(),cut.c_str());
 	B0Signal->Draw((l0 + "-" + l1).c_str(),("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
 	*/
 
-	//B0Signal->Draw("(B0_K_10_pi0__cosTheta):(B0_K_10_pi1__cosTheta)",cut.c_str());
-	//B0Signal->Draw("(B0_K_10_pi0__cosTheta):(B0_K_10_pi1__cosTheta)",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
+	//B0Signal->Draw("(B0_K_10_pi0_cosTheta):(B0_K_10_pi1_cosTheta)",cut.c_str());
+	//B0Signal->Draw("(B0_K_10_pi0_cosTheta):(B0_K_10_pi1_cosTheta)",("abs(B0_mcPDG) == 511&&"+cut).c_str(), "same");
 }
