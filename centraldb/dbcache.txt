@@ -66,3 +66,5 @@ dbstore/ARICHReconstructionPar 1 0,0,-1,-1
 dbstore/KLM_fBDT_10xbkg 1 0,0,-1,-1
 dbstore/ECLShowerEnergyCorrectionTemporary_phase2 6 0,0,-1,-1
 dbstore/ECLShowerEnergyCorrectionTemporary_phase3 9 0,0,-1,-1
+dbstore/SVDOnlyDefaultMap.root 1 0,0,-1,-1
+dbstore/SVDPXDDefaultMap.root 1 0,0,-1,-1

@@ -28,6 +28,16 @@ from reconstruction import add_mdst_output
 from modularAnalysis import analysis_main
 from ROOT import Belle2
 from beamparameters import add_beamparameters
+defaultFilename = "evtgen.root"
+defaultFoldername = "test"
+filename = defaultFoldername + '/' + defaultFilename
+for arg in sys.argv:
+	print(arg)
+if len(sys.argv)==2:
+	filename = sys.argv[1]
+
+if os.path.isfile(filename):
+	sys.exit('Required input file does exist. ')
 
 add_beamparameters(analysis_main, 'Y4S')
 
@@ -38,7 +48,7 @@ add_beamparameters(analysis_main, 'Y4S')
 #
 # generateY4S function is defined in analysis/scripts/modularAnalysis.py
 #generateY4S(1000, 'Y4SEventGeneration.dec')
-generateY4S(5000, 'mydec.dec')
+generateY4S(5000, 'mydec-CPV.dec')
 
 # If the simulation and reconstruction is not performed in the sam job,
 # then the Gearbox needs to be loaded with the loadGearbox() function.
@@ -47,7 +57,7 @@ loadGearbox()
 # dump generated events in MDST format to the output ROOT file
 #
 # add_mdst_output function is defined in reconstruction/scripts/reconstruction.py
-add_mdst_output(analysis_main, True, 'mc-v09/evtgen4.root')
+add_mdst_output(analysis_main, True, filename)
 printPrimaryMCParticles()
 
 # process all modules added to the analysis_main path

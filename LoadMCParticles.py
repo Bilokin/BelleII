@@ -26,7 +26,7 @@ import sys
 # load input ROOT file
 #inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
 #inputMdst('None', 'mc-v08/evtgen.root mc-v08/evtgen2.root mc-v08/evtgen3.root mc-v08/evtgen4.root')
-inputMdst('None', 'mc-v09/evtgen.root')
+inputMdst('None', 'CPV/evtgen.root')
 
 # print contents of the DataStore before loading MCParticles
 printDataStore()
@@ -46,15 +46,18 @@ b0s = ('B0:gen', '')
 print("EVENT")
 
 #kshortcut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 211 and  abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323 "
-kshortcut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 211 and  hasAncestor(10313, 0) "
+kshortcut = "abs(daughter(0,mcPDG)) == 211 and  hasAncestor(10313, 0) "
 b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
+#gammacut = "E > 1.5 and  abs(daughter(0,mcPDG)) == 11 and countDaughters( ) == 2 and abs(genMotherPDG) == 511"
+gammacut = "E > 1.5  and abs(genMotherPDG) == 511"
 
-fillParticleListsFromMC([photons, electrons, muons, pionsM])
+fillParticleListsFromMC([electrons, muons, pionsM])
 
 fillParticleListsFromMC(("Upsilon(4S):gen",''),True)
 fillParticleListsFromMC(("K_10:gen",'abs(genMotherPDG) == 511'),True)
 fillParticleListsFromMC(("K_S0:gen",kshortcut),True)
 fillParticleListsFromMC(("B0:gen", b0cut),True)
+fillParticleListsFromMC(("gamma:gen", gammacut),True)
 
 #applyCuts('K_S0:my','abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323')
 
@@ -82,7 +85,7 @@ applyCuts('B0:genSig','abs(mcPDG) == 511')
 # print out the contents of each ParticleList
 
 toolsK0my = ['Kinematics', '^K_S0 -> ^pi+ ^pi-']
-toolsK-1my += ['InvMass', '^K_S0']
+toolsK0my += ['InvMass', '^K_S0']
 toolsK0my += ['Vertex', '^K_S0']
 toolsK0my += ['MCVertex', '^K_S0']
 toolsK0my += ['CustomFloats[cosTheta]', '^K_S0  -> ^pi+ ^pi-']
@@ -94,7 +97,7 @@ toolsK0p += ['MCTruth', '^K_10']
 toolsK0p += ['MCVertex', '^K_10']
 toolsK0p += ['CustomFloats[abs(genMotherPDG)]', '^K_10']
 
-toolsGamma = ['Kinematics', '^gamma']
+toolsGamma = ['Kinematics', '^gamma -> e+ e-']
 toolsGamma += ['CustomFloats[cosTheta]', '^gamma']
 toolsGamma += ['CustomFloats[genMotherPDG]', '^gamma']
 
@@ -102,8 +105,8 @@ toolsB0 = ['Kinematics', '^B0 -> ^K_10 ^gamma']
 toolsB0 += ['CMSKinematics', '^B0']
 toolsB0 += ['InvMass', '^B0']
 toolsB0 += ['MCVertex', '^B0']
-toolsB0 += ['CustomFloats[cosTheta]', '^B0']
-toolsB0 += ['CustomFloats[nDaughters]', '^B0']
+toolsB0 += ['CustomFloats[cosTheta]', '^B0 -> ^K_10 ^gamma']
+toolsB0 += ['CustomFloats[nDaughters]', '^B0 -> ^K_10 ^gamma']
 
 toolsB0SIG = ['Kinematics', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
 toolsB0SIG += ['InvMass', '^B0']

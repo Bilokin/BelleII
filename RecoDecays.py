@@ -1,4 +1,3 @@
-
 from basf2 import *
 from modularAnalysis import *
 from vertex import *
@@ -9,28 +8,36 @@ from stdCharged import *
 from stdFSParticles import *
 from flavorTagger import *
 
-
 from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
-#if not os.path.isfile('reco-signal.root'):
-#    sys.exit('Required input file (B2A101-Y4SEventGeneration-gsim-BKGx0.root) does not exist. '
-#             'Please run B2A101-Y4SEventGeneration.py and B2A103-SimulateAndReconstruct-withoutBeamBkg.py '
-#             'tutorial scripts first.')
+defaultInputFilename = "evtgen.root"
+defaultInputFoldername = "test"
+inputFilename = defaultInputFoldername + '/' + defaultInputFilename
+defaultOutputFilename = "test.root"
+defaultOutputFoldername = "."
+outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
+for arg in sys.argv:
+	print(arg)
+if len(sys.argv)==2:
+	inputFilename = sys.argv[1]
+if len(sys.argv)==3:
+	inputFilename = sys.argv[1]
+	outputFilename = sys.argv[2]
 
-# load input ROOT file
+# load input ROOT file2
 add_beamparameters(analysis_main,'Y4S')
 #inputMdst('default', 'mc-v08/reco-signal.root mc-v08/reco-signal2.root mc-v08/reco-signal3.root mc-v08/reco-signal4.root mc-v08/reco-signal5.root mc-v08/reco-signal6.root mc-v08/reco-signal7.root mc-v08/reco-signal8.root')
-inputMdst('default', 'mc-v09/reco-signal.root mc-v09/reco-signal2.root')
+#inputMdst('default', 'mc-v09/reco-tf2signal.root mc-v09/reco-tf2signal2.root mc-v09/reco-tf2signal3.root mc-v09/reco-tf2signal4.root')
+#inputMdst('default', 'CPV/reco-tf2signal1.root CPV/reco-tf2signal2.root CPV/reco-tf2signal3.root')
+inputMdst('default', inputFilename)
 stdPi('all')
 stdPi('')
 stdMu('all')
 stdKshorts()
 stdPhotons('loose')
 stdPi0s()
-#fillParticleList('K_S0:mdst','')
-#stdFSParticles()
 #rankByHighest()
 applyCuts('gamma:loose','1.6 < E < 4')
 #applyCuts('K_S0:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
@@ -43,14 +50,14 @@ vertexRave('K_S0:all',0.01)
 reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
 #applyCuts('K_10:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
 reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6")# and Mbc > 5.2 and abs(deltaE) < 0.250")
-vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma')
+vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
 #vertexKFit('B0:signal',0.0);
-#buildRestOfEvent('B0:signal')
+buildRestOfEvent('B0:signal')
 matchMCTruth('B0:signal')
 
-#TagV('B0:signal', 'breco')
+TagV('B0:signal', 'breco')
 
-#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx0')
+flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx0')
 #             mode='Expert',
 #             weightFiles='B2JpsiKs_muBGx0',
 #             workingDirectory='.',
@@ -79,7 +86,8 @@ toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
 toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['Vertex','^B0']
+toolsB0_meson += ['Vertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
+toolsB0_meson += ['MCVertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
 #toolsB0_meson += ['PDGCode','^B0']
 toolsB0_meson += ['InvMass','^B0 -> [^K_10 -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
@@ -92,7 +100,8 @@ toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']
 toolsB0_meson += ['DeltaTErr', '^B0']
 toolsB0_meson += ['MCDeltaT', '^B0']
-toolsB0_meson += ['FlavorTagging[TMVA-FBDT, FANN-MLP, qrCategories]', '^B0']
+#toolsB0_meson += ['FlavorTagging[TMVA-FBDT, FANN-MLP, qrCategories]', '^B0']
+toolsB0_meson += ['FlavorTagging', '^B0']
 toolsB0_meson += ['MassBeforeFit', '^B0']
 toolsB0_meson += ['ROEMultiplicities', '^B0']
 
@@ -114,10 +123,10 @@ PiInfo += ['MCTruth','^pi+']
 PiInfo += ['CustomFloats[genMotherPDG:d0:z0:d0Err:z0Err:cosTheta:phi]', '^pi+']
 PiInfo += ['Reconstructible', '^pi+']
 PiInfo += ['MCHierarchy','^pi+']
-PiInfo += ['MCVertex','^pi+']
+#PiInfo += ['MCVertex','^pi+']
 PiInfo += ['Track','^pi+']
 PiInfo += ['TrackHits','^pi+']
-PiInfo += ['PID','^pi+']
+#PiInfo += ['PID','^pi+']
 
 
 K0Info =  ['Kinematics','^K_S0 -> ^pi+ ^pi-']
@@ -144,7 +153,7 @@ K0starInfo += ['MCTruth','^K_10']
 K0starInfo += ['InvMass','^K_10']
 K0starInfo += ['Vertex','^K_10']
 
-ntupleFile('test.root')
+ntupleFile(outputFilename)
 ntupleTree('B0Signal', 'B0:signal', toolsB0_meson)
 ntupleTree('GammaSignal', 'gamma:loose', gammaInfo)
 ntupleTree('K0Signal', 'K_S0:all', K0Info)

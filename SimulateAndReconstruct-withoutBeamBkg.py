@@ -25,12 +25,23 @@ from simulation import add_simulation
 from reconstruction import add_reconstruction
 from reconstruction import add_mdst_output
 from beamparameters import add_beamparameters
+defaultInputFilename = "evtgen.root"
+defaultInputFoldername = "test"
+inputFilename = defaultInputFoldername + '/' + defaultInputFilename
+defaultOutputFilename = "reco-tf2signal.root"
+defaultOutputFoldername = "test"
+outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
+for arg in sys.argv:
+	print(arg)
+if len(sys.argv)==2:
+	inputFilename = sys.argv[1]
+if len(sys.argv)==3:
+	inputFilename = sys.argv[1]
+	outputFilename = sys.argv[2]
 
 add_beamparameters(analysis_main, 'Y4S')
 
 # check if the required input file exists (from B2A101 example)
-import os.path
-import sys
 #if not os.path.isfile('B2A101-Y4SEventGeneration-evtgen.root'):
 #if not os.path.isfile('evtgen.root'):
 #    sys.exit('Required input file (B2A101-Y4SEventGeneration-evtgen.root) does not exist. '
@@ -38,17 +49,16 @@ import sys
 
 # load input ROOT file
 #inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
-inputMdst('None', 'mc-v09/evtgen4.root')
+inputMdst('None', inputFilename)
 
 # simulation
-add_simulation(analysis_main)
+add_simulation(analysis_main, use_vxdtf2=True)
 
 # reconstruction
-add_reconstruction(analysis_main)
+add_reconstruction(analysis_main, use_vxdtf2=True)
 
 # dump in MDST format
-add_mdst_output(analysis_main, True,
-                'mc-v09/reco-signal4.root')
+add_mdst_output(analysis_main, True, outputFilename)
 
 # Show progress of processing
 progress = register_module('ProgressBar')

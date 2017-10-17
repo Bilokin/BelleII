@@ -22,11 +22,11 @@ void K0reco(string filename = "test.root")
 	int allK = K0Signal->Draw("K_S0_mcPDG", "abs(K_S0_mcPDG) > -1");
 	float trueK = K0Signal->Draw("K_S0_mcPDG","abs(K_S0_mcPDG) == 310");
 	int totalEntries = 1000;
-	K0Signal->Draw("K_S0_P","abs(K_S0_mcPDG) > -1");
+	K0Signal->Draw("K_S0_P","abs(K_S0_mcPDG) > -1 ");
 	K0Signal->Draw("K_S0_P","abs(K_S0_mcPDG) == 310","same");
 	c1->cd(2);
-	K0Signal->Draw("K_S0_M","abs(K_S0_mcPDG) > -1");
-	K0Signal->Draw("K_S0_M","abs(K_S0_mcPDG) == 310","same");
+	K0Signal->Draw("K_S0_M","abs(K_S0_mcPDG) > -1 && K_S0_M < 0.6");
+	K0Signal->Draw("K_S0_M","abs(K_S0_mcPDG) == 310  && K_S0_M < 0.6","same");
 	c1->cd(3);
 	K0Signal->Draw("K_S0_Rho*10","abs(K_S0_mcPDG) > -1 && K_S0_Rho < 20");
 	K0Signal->Draw("K_S0_Rho*10","abs(K_S0_mcPDG) == 310 && K_S0_Rho < 20","same");
@@ -69,17 +69,17 @@ void K0reco(string filename = "test.root")
 	offsethpi->Sumw2();
 
 
-	K0Signal->Project( "d0hK","abs(K_S0_pi0__d0)/K_S0_pi0__d0Err","K_S0_pi0__d0Err < 1 && K_S0_mcPDG == 310");
-	K0Signal->Project("+d0hK","abs(K_S0_pi1__d0)/K_S0_pi1__d0Err","K_S0_pi1__d0Err < 1 && K_S0_mcPDG == 310");
-	pions->Project("d0hpi","pi__d0Err","abs(pi__genMotherPDG) == 310 && pi__d0Err < 1");
+	K0Signal->Project( "d0hK","abs(K_S0_pi0_d0)/K_S0_pi0_d0Err","K_S0_pi0_d0Err < 1 && K_S0_mcPDG == 310");
+	K0Signal->Project("+d0hK","abs(K_S0_pi1_d0)/K_S0_pi1_d0Err","K_S0_pi1_d0Err < 1 && K_S0_mcPDG == 310");
+	pions->Project("d0hpi","pi_d0Err","abs(pi_genMotherPDG) == 310 && pi_d0Err < 1");
 	d0eff->Divide(d0hK,d0hpi);
 	//makePretty(d0hK);
 	//d0hpi->Draw();
 	makePretty(d0hK, kGreen);
 	//d0eff->Draw("e");
-	K0Signal->Project( "z0hK","abs(K_S0_pi0__z0)/K_S0_pi0__z0Err","K_S0_pi0__z0Err < 1 && K_S0_mcPDG == 310");
-	K0Signal->Project("+z0hK","abs(K_S0_pi1__z0)/K_S0_pi1__z0Err","K_S0_pi1__z0Err < 1 && K_S0_mcPDG == 310");
-	pions->Project("z0hpi","pi__z0Err","abs(pi__genMotherPDG) == 310 && pi__z0Err < 1");
+	K0Signal->Project( "z0hK","abs(K_S0_pi0_z0)/K_S0_pi0_z0Err","K_S0_pi0_z0Err < 1 && K_S0_mcPDG == 310");
+	K0Signal->Project("+z0hK","abs(K_S0_pi1_z0)/K_S0_pi1_z0Err","K_S0_pi1_z0Err < 1 && K_S0_mcPDG == 310");
+	pions->Project("z0hpi","pi_z0Err","abs(pi_genMotherPDG) == 310 && pi_z0Err < 1");
 	z0eff->Divide(z0hK,z0hpi);
 	//makePretty(z0hK);
 	//z0hpi->Draw();
@@ -95,34 +95,34 @@ void K0reco(string filename = "test.root")
 	c2->cd(2);
 	//z0eff->Draw("e");
 	c2->cd(3);
-	K0Signal->Project("coshK","K_S0_pi0__cosTheta","K_S0_mcPDG == 310");
-	K0Signal->Project("+coshK","K_S0_pi1__cosTheta","K_S0_mcPDG == 310");
-	pions->Project("coshpi","pi__cosTheta","abs(pi__genMotherPDG) == 310");
+	K0Signal->Project("coshK","K_S0_pi0_cosTheta","K_S0_mcPDG == 310");
+	K0Signal->Project("+coshK","K_S0_pi1_cosTheta","K_S0_mcPDG == 310");
+	pions->Project("coshpi","pi_cosTheta","abs(pi_genMotherPDG) == 310");
 
 	K0Signal->Project("phK","abs(K_S0_pi0_P-K_S0_pi0_TruthP)/K_S0_pi0_TruthP*100","K_S0_mcPDG == 310");
 	K0Signal->Project("+phK","abs(K_S0_pi1_P-K_S0_pi1_TruthP)/K_S0_pi1_TruthP*100","K_S0_mcPDG == 310");
-	pions->Project("phpi","abs(pi_P - pi_TruthP)/pi_TruthP*100","abs(pi__genMotherPDG) == 310 &&abs(pi_mcPDG) == 211");
+	pions->Project("phpi","abs(pi_P - pi_TruthP)/pi_TruthP*100","abs(pi_genMotherPDG) == 310 &&abs(pi_mcPDG) == 211");
 
-	/*K0Signal->Project("offsethK","K_S0_pi0__d0/K_S0_pi0__d0Err+abs(K_S0_pi0__z0)/K_S0_pi0__z0Err","K_S0_mcPDG == 310");
-	K0Signal->Project("+offsethK","K_S0_pi1__d0/K_S0_pi1__d0Err + abs(K_S0_pi1__z0)/K_S0_pi1__z0Err","K_S0_mcPDG == 310");
-	pions->Project("offsethpi","pi__d0/pi__d0Err+abs(pi__z0)/pi__z0Err","abs(pi__genMotherPDG) == 310");*/
-	K0Signal->Project("offsethK","K_S0_pi0__z0/K_S0_pi0__z0Err","K_S0_mcPDG == 310");
-	K0Signal->Project("+offsethK","K_S0_pi1__z0/K_S0_pi1__z0Err","K_S0_mcPDG == 310");
-	pions->Project("offsethpi","pi__z0/pi__z0Err","abs(pi__genMotherPDG) == 310");//*/
+	/*K0Signal->Project("offsethK","K_S0_pi0_d0/K_S0_pi0_d0Err+abs(K_S0_pi0_z0)/K_S0_pi0_z0Err","K_S0_mcPDG == 310");
+	K0Signal->Project("+offsethK","K_S0_pi1_d0/K_S0_pi1_d0Err + abs(K_S0_pi1_z0)/K_S0_pi1_z0Err","K_S0_mcPDG == 310");
+	pions->Project("offsethpi","pi_d0/pi_d0Err+abs(pi_z0)/pi_z0Err","abs(pi_genMotherPDG) == 310");*/
+	K0Signal->Project("offsethK","K_S0_pi0_z0/K_S0_pi0_z0Err","K_S0_mcPDG == 310");
+	K0Signal->Project("+offsethK","K_S0_pi1_z0/K_S0_pi1_z0Err","K_S0_mcPDG == 310");
+	pions->Project("offsethpi","pi_z0/pi_z0Err","abs(pi_genMotherPDG) == 310");//*/
 	
 	coseff->Divide(coshK,coshpi);
 	coshpi->Draw();
 	coshK->Draw("same");
 	coseff->Draw("e");
 
-	K0Signal->Project("seenhK","K_S0_pi0_SeenInECL","K_S0_mcPDG == 310");
-	K0Signal->Project("+seenhK","K_S0_pi1_SeenInECL","K_S0_mcPDG == 310");
-	pions->Project("seenhpi","pi_SeenInECL","abs(pi__genMotherPDG) == 310");
-	seeneff->Divide(seenhK,seenhpi);
-	seenhpi->Draw();
-	seenhK->Draw("same");
-	seeneff->Draw("e");
-	peff->Divide(phK,phpi);
+	//K0Signal->Project("seenhK","K_S0_pi0_SeenInECL","K_S0_mcPDG == 310");
+	//K0Signal->Project("+seenhK","K_S0_pi1_SeenInECL","K_S0_mcPDG == 310");
+	//pions->Project("seenhpi","pi_SeenInECL","abs(pi_genMotherPDG) == 310");
+	//seeneff->Divide(seenhK,seenhpi);
+	//seenhpi->Draw();
+	//seenhK->Draw("same");
+	//seeneff->Draw("e");
+	//peff->Divide(phK,phpi);
 	phpi->Draw();
 	phK->Draw("same");
 	//peff->Draw("e");

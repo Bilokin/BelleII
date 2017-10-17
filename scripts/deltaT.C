@@ -26,31 +26,50 @@ float myExp(float x, float slopeM, float slopeP) {return (x>0)?  std::exp(slopeM
 void deltaT(string filename = "test.root")
 {
 	string cut = "B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
-	string trueB = "&& abs(B0_mcPDG) == 511";
+	//string trueB = "&& abs(B0_mcPDG) == 511";
+	string trueB = "&& B0_isSignal == 1";
 
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1500,1000);
 	c1->Divide(3,2);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	c1->cd(1);
-	TH1F * deltaTBtrueHist = new TH1F("deltaTBtrueHist", ";#Delta t [ps]", 50,0,10);
-	TH1F * deltaTBHist = new TH1F("deltaTBHist", ";#Delta t [ps]", 50,0,10);
+	TH1F * deltaTBtrueHist = new TH1F("deltaTBtrueHist", ";#Delta t [ps]", 50,-10,10);
+	TH1F * deltaTBHist = new TH1F("deltaTBHist", ";#Delta t [ps]", 50,-10,10);
 	
-	B0Signal->Project("deltaTBtrueHist", "abs(B0_DeltaT)", (cut + trueB).c_str());
-	float nevents = B0Signal->Project("deltaTBHist", "abs(B0_DeltaT)", (cut).c_str());
+	B0Signal->Project("deltaTBtrueHist", "(B0_DeltaT)", (cut + trueB).c_str());
+	float nevents = B0Signal->Project("deltaTBHist", "(B0_DeltaT)", (cut).c_str());
 	makePretty(deltaTBtrueHist);
 	makePretty(deltaTBHist, kGray+1);
 	deltaTBHist->Draw();
 	deltaTBtrueHist->Draw("same");
 	//TF1 * deltat = new TF1("deltat","[0]*TMath::Gaus(x,[1],[2])+ [3]*TMath::Gaus(x,0,[4])",-10,10);	
-	TF1 * deltat = new TF1("deltat","expo",.5,10);	
+	//TF1 * deltat = new TF1("deltat","[0]*myExp(x,[1],[2])",-10,10);	
+	TF1 * deltat = new TF1("deltat","[0]*myExp(x,[1],[1])+[3]*TMath::Gaus(x,[4],[5])",-10,10);	
 	//deltat->SetParLimits(0,1,1000);
 	//deltat->SetParLimits(1,-1,1);
 	//deltat->SetParLimits(2,0.01,10);
 	//deltat->SetParLimits(3,1,100);
 	//deltat->SetParLimits(4,0.01,10);
-	deltaTBtrueHist->Fit("deltat","R");
+	TF1 * coreT = new TF1("coreT", "[0]*myExp(x,[1],[1])", -10,10);
+	makePretty(coreT);
+	deltaTBHist->Fit("deltat","R");
+	coreT->SetParameters(deltat->GetParameter(0), deltat->GetParameter(1));
 	cout <<  "nEvents: " << nevents << " Tau: " << 1./deltat->GetParameter(1) << endl;
+	coreT->Draw("same");
+	c1->cd(3);
+	
+	TH1F * deltaTPullHist = new TH1F("deltaTPullHist", ";#Delta t [ps]", 50,-10,10.);
+	TH1F * deltaTPullAllHist = new TH1F("deltaTPullAllHist", ";Resolution #Delta t ", 50,-10,10.);
+	TH2F * ddeltaT2Hist = new TH2F("ddeltaT2Hist", ";#Delta#Delta t [ps]", 50,0,3, 50,0,10 );
+	B0Signal->Project("ddeltaT2Hist", "(B0_DeltaT-B0_TruthDeltaT) : B0_DeltaTErr", (cut + trueB ).c_str());
+	B0Signal->Project("deltaTPullHist", "(B0_DeltaT-B0_TruthDeltaT)/B0_DeltaTErr", (cut + trueB).c_str());
+	B0Signal->Project("deltaTPullAllHist", "((B0_DeltaT-B0_TruthDeltaT))/B0_DeltaTErr", (cut).c_str());
+	ddeltaT2Hist->Draw();
+	makePretty(deltaTPullHist);
+	makePretty(deltaTPullAllHist, kGray+1);
+	deltaTPullAllHist->Draw();
+	deltaTPullHist->Draw("same");
 	c1->cd(2);
 	
 	TH1F * tagBtrueHist = new TH1F("tagBtrueHist", ";FBDT []; Purity", 5,-1,1);
@@ -123,5 +142,32 @@ void deltaT(string filename = "test.root")
 	makePretty(deltaTBbarPHist,kRed);
 	deltaTBPHist->Draw();
 	deltaTBbarPHist->Draw("same");
+	
+	c1->cd(6);
+	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 500, 500);
+	c2->cd();
+	int nbins = 30;
+	string dalitzcut = "";
+	TH1F * BHist = new TH1F("BHist", ";#Delta t [ps]", nbins,-10,10);
+	TH1F * BbarHist = new TH1F("BbarHist", ";#Delta t [ps]", nbins,-10,10);
+	TH1F * genBHist = new TH1F("genBHist", ";#Delta t [ps]", nbins,-10,10);
+	TH1F * genBbarHist = new TH1F("genBbarHist", ";#Delta t [ps]", nbins,-10,10);
 
+        B0Signal->Project("genBHist", "B0_TruthDeltaT", (cut + dalitzcut + "&& B0_mcPDG == 511").c_str());
+        B0Signal->Project("genBbarHist", "B0_TruthDeltaT", (cut + dalitzcut +"&& B0_mcPDG == -511").c_str());
+        B0Signal->Project("BHist", "B0_DeltaT", (cut +dalitzcut+ "&& B0_FANN_qrCombined > 0.6").c_str());
+        B0Signal->Project("BbarHist", "B0_DeltaT", (cut + dalitzcut+"&& B0_FANN_qrCombined < -0.6").c_str());
+	makePretty(BHist);
+	makePretty(BbarHist,kRed);
+	genBHist->Scale(BHist->GetMaximum()/genBHist->GetMaximum());
+	genBbarHist->Scale(BHist->GetMaximum()/genBbarHist->GetMaximum());
+	genBHist->SetLineWidth(3);
+	genBHist->SetLineColor(kGray);
+	genBbarHist->SetLineWidth(3);
+	genBbarHist->SetLineColor(kGray+1);
+	genBHist->Draw("h");
+	genBbarHist->Draw("esame");
+	//BHist->Draw("hesame");
+	//BbarHist->Draw("hesame");
+	
 }
