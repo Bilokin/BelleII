@@ -22,8 +22,13 @@ void B0reco(string filename = "test.root")
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string cut = "B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
+	//string cut = "B0_mbc > 5.2 && B0_deltae > -0.2 && B0_deltae < 0.2"; // S Akar
 	cut += " && B0_K_10_pi0_nPXDHits > 0 &&  B0_K_10_pi1_nPXDHits > 0";
+	//cut += " && abs(B0_K_10_K_S0_M - 0.498) < 0.01 && B0_K_10_M < 1.6 && B0_K_10_M > 1.1";
+	cut += " && B0_K_10_M < 1.8 ";
+	//cut += " && B0_K_10_K_S0_Rho > 0.2";
 	string mccut= "B0_isSignal &&";
+	//string mccut= "abs(B0_mcPDG) ==511 &&";
 	//string cut = "1";
 	//string cut = chi2 + "<8";
 	int allB = B0Signal->Draw("B0_mcPDG", ("abs(B0_mcPDG) > -1 &&"+cut).c_str());
@@ -91,7 +96,7 @@ void B0reco(string filename = "test.root")
 
 	myBW1->SetParLimits(0,1.1,1.5);
 	myBW1->SetParLimits(1,0.0001,0.1);
-	myBW1->SetParLimits(2,0.1,1000);
+	myBW1->SetParLimits(2,0.1,100000);
 	myBW1->SetParLimits(3,1,2);
 	myBW1->SetParLimits(4,0.1,1);
 	rhoHist->Fit("myBW1","RLQ");

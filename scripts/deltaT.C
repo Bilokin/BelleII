@@ -53,14 +53,14 @@ void deltaT(string filename = "test.root")
 	//deltat->SetParLimits(4,0.01,10);
 	TF1 * coreT = new TF1("coreT", "[0]*myExp(x,[1],[1])", -10,10);
 	makePretty(coreT);
-	deltaTBHist->Fit("deltat","R");
+	//deltaTBHist->Fit("deltat","R");
 	coreT->SetParameters(deltat->GetParameter(0), deltat->GetParameter(1));
 	cout <<  "nEvents: " << nevents << " Tau: " << 1./deltat->GetParameter(1) << endl;
-	coreT->Draw("same");
+	//coreT->Draw("same");
 	c1->cd(3);
 	
 	TH1F * deltaTPullHist = new TH1F("deltaTPullHist", ";#Delta t [ps]", 50,-10,10.);
-	TH1F * deltaTPullAllHist = new TH1F("deltaTPullAllHist", ";Resolution #Delta t ", 50,-10,10.);
+	TH1F * deltaTPullAllHist = new TH1F("deltaTPullAllHist", ";ull #Delta t ", 50,-10,10.);
 	TH2F * ddeltaT2Hist = new TH2F("ddeltaT2Hist", ";#Delta#Delta t [ps]", 50,0,3, 50,0,10 );
 	B0Signal->Project("ddeltaT2Hist", "(B0_DeltaT-B0_TruthDeltaT) : B0_DeltaTErr", (cut + trueB ).c_str());
 	B0Signal->Project("deltaTPullHist", "(B0_DeltaT-B0_TruthDeltaT)/B0_DeltaTErr", (cut + trueB).c_str());
@@ -109,6 +109,7 @@ void deltaT(string filename = "test.root")
 
 	//TF1 * deltatRes = new TF1("deltatRes","[0]*TMath::Gaus(x,[1],[2]) + (1.-[0])*([3]*TMath::Gaus(x,[4],[5]) + (1.-[3]) * TMath::Gaus(x,[6],[7]) )",-10,10);
 	TF1 * deltatRes = new TF1("deltatRes","[0]*TMath::Gaus(x,[1],[2]) + [3]*TMath::Gaus(x,[4],[5]) + [6] * TMath::Gaus(x,[7],[8])",-10,10);
+	makePretty(deltatRes, kGray+1);
 	//deltatRes->SetParLimits(0, nevents/1000, nevents);
 	deltatRes->SetParLimits(1, -0.1, 0.1);
 	deltatRes->SetParLimits(2, 0.1, 2);
@@ -128,9 +129,9 @@ void deltaT(string filename = "test.root")
 	bkg2->SetParameters(deltatRes->GetParameter(6), deltatRes->GetParameter(7),deltatRes->GetParameter(8));
 	makePretty(bkg2, kGreen);
 	cout << "P: " << deltatRes->GetParameter(0) << endl;
-	core->Draw("same");
-	bkg1->Draw("same");
-	bkg2->Draw("same");
+	//core->Draw("same");
+	//bkg1->Draw("same");
+	//bkg2->Draw("same");
 	c1->cd(5);
 
 	TH1F * deltaTBPHist = new TH1F("deltaTBPHist", ";#Delta t [ps]", 50,-10,10);
@@ -144,9 +145,20 @@ void deltaT(string filename = "test.root")
 	deltaTBbarPHist->Draw("same");
 	
 	c1->cd(6);
+	TH1F * deltaTErr = new TH1F("deltaTErr", ";#Delta t uncertainty [ps]", 50,0,5);
+	TH1F * deltaTtrueErr = new TH1F("deltaTtrueErr", ";#Delta t [ps]", 50,0,5);
+
+        B0Signal->Project("deltaTtrueErr", "B0_DeltaTErr", (cut + trueB).c_str());
+        B0Signal->Project("deltaTErr", "B0_DeltaTErr", (cut ).c_str());
+	makePretty(deltaTtrueErr);
+	makePretty(deltaTErr,kGray+1);
+
+	deltaTErr->Draw();
+	deltaTtrueErr->Draw("same");
+	
 	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 500, 500);
 	c2->cd();
-	int nbins = 30;
+	int nbins = 50;
 	string dalitzcut = "";
 	TH1F * BHist = new TH1F("BHist", ";#Delta t [ps]", nbins,-10,10);
 	TH1F * BbarHist = new TH1F("BbarHist", ";#Delta t [ps]", nbins,-10,10);
@@ -159,15 +171,17 @@ void deltaT(string filename = "test.root")
         B0Signal->Project("BbarHist", "B0_DeltaT", (cut + dalitzcut+"&& B0_FANN_qrCombined < -0.6").c_str());
 	makePretty(BHist);
 	makePretty(BbarHist,kRed);
-	genBHist->Scale(BHist->GetMaximum()/genBHist->GetMaximum());
-	genBbarHist->Scale(BHist->GetMaximum()/genBbarHist->GetMaximum());
+	//genBHist->Scale(BHist->GetMaximum()/genBHist->GetMaximum());
+	//genBbarHist->Scale(BHist->GetMaximum()/genBbarHist->GetMaximum());
 	genBHist->SetLineWidth(3);
 	genBHist->SetLineColor(kGray);
 	genBbarHist->SetLineWidth(3);
 	genBbarHist->SetLineColor(kGray+1);
 	genBHist->Draw("h");
 	genBbarHist->Draw("esame");
+        TF1 * myBdeltaT = new TF1("myBdeltaT",      "exp(-abs(x)/[0])/(4*[0])*( 1 + ([1]*cos([3]*x)+[2]*sin([3]*x)) )",-10,10);
+	genBHist->Fit("myBdeltaT");
+	
 	//BHist->Draw("hesame");
 	//BbarHist->Draw("hesame");
-	
 }
