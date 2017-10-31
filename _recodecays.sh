@@ -1,6 +1,6 @@
 #!/bin/bash
-parallelProcesses=3
-recoFileName="reco-tf2signal"
+parallelProcesses=4
+recoFileName="reco-signal"
 root=".root"
 startingNumber=$1
 number=$((startingNumber))

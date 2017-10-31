@@ -6,7 +6,7 @@ from stdV0s import stdKshorts
 from stdPhotons import *
 from stdCharged import *
 from stdFSParticles import *
-from flavorTagger import *
+#from flavorTagger import *
 
 from beamparameters import *
 # check if the required input file exists (from B2A101 example)
@@ -25,62 +25,36 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
+use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
 
 # load input ROOT file2
 add_beamparameters(analysis_main,'Y4S')
-#inputMdst('default', 'mc-v08/reco-signal.root mc-v08/reco-signal2.root mc-v08/reco-signal3.root mc-v08/reco-signal4.root mc-v08/reco-signal5.root mc-v08/reco-signal6.root mc-v08/reco-signal7.root mc-v08/reco-signal8.root')
-#inputMdst('default', 'mc-v09/reco-tf2signal.root mc-v09/reco-tf2signal2.root mc-v09/reco-tf2signal3.root mc-v09/reco-tf2signal4.root')
-#inputMdst('default', 'CPV/reco-tf2signal1.root CPV/reco-tf2signal2.root CPV/reco-tf2signal3.root')
 inputMdst('default', inputFilename)
-stdPi('all')
-stdPi('')
 stdMu('all')
 stdKshorts()
 stdPhotons('loose')
 stdPi0s()
+stdPi('all')
 #rankByHighest()
-applyCuts('gamma:loose','1.6 < E < 4')
+#applyCuts('gamma:loose','1.6 < E < 4')
 #applyCuts('K_S0:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
-#applyCuts('K_S0:all','dr > 0.1 and 0.48 < M < 0.52')
-#applyCuts('pi+:all','piid > 0.437')
-#stdCharged()
-#reconstructDecay("K*+:all ->^K_S0:all ^pi+:all", "0.5 < M < 1.2")
-#reconstructDecay("rho0:all ->pi+:all pi-:all", "0.2 < M < 1.6")
 vertexRave('K_S0:all',0.01)
 reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
-#applyCuts('K_10:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
-reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6")# and Mbc > 5.2 and abs(deltaE) < 0.250")
+reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
 vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
-#vertexKFit('B0:signal',0.0);
+oldMask = ('oldMask', 'useCMSFrame(p)<=3.2', 'p >= 0.05 and useCMSFrame(p)<=3.2')
+
 buildRestOfEvent('B0:signal')
+
 matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx0')
-#             mode='Expert',
-#             weightFiles='B2JpsiKs_muBGx0',
-#             workingDirectory='.',
-#             downloadFromDatabaseIfNotfound=True)
-#             categories=['Electron','IntermediateElectron','Muon',
-#                         'IntermediateMuon','KinLepton',
-#                         'IntermediateKinLepton','Kaon','SlowPion',
-#                         'FastPion','Lambda','FSC',
-#                         'MaximumPstar','KaonPion'])
-
-#reconstructDecay("B0:sig ->K_S0:all pi+:all pi-:all gamma:loose", " 4 < M < 6")
-#matchMCTruth('K_S0:all')
+#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx0')
 matchMCTruth('pi+:all')
 matchMCTruth('K_10:all')
 matchMCTruth('gamma:loose')
 
-#printVariableValues('gamma:loose',['E'])
-#printVariableValues('B0:signal',['M','dr','mcPDG'])
-#printVariableValues('K_10:all',['M','dr','mcPDG'])
-#printList('B0:signal', True)
-
-# print contents of the DataStore before loading Particles
-#printDataStore()
 toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
@@ -91,8 +65,10 @@ toolsB0_meson += ['MCVertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
 #toolsB0_meson += ['PDGCode','^B0']
 toolsB0_meson += ['InvMass','^B0 -> [^K_10 -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
+#toolsB0_meson += ['PID','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
 #toolsB0_meson += ['MCReconstructible', 'B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
 toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
+toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^K_10 -> pi+ pi- K_S0] gamma']
 toolsB0_meson += ['Dalitz', '^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
 toolsB0_meson += ['TrackHits','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
 toolsB0_meson += ['TagVertex', '^B0']
@@ -100,8 +76,8 @@ toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']
 toolsB0_meson += ['DeltaTErr', '^B0']
 toolsB0_meson += ['MCDeltaT', '^B0']
-#toolsB0_meson += ['FlavorTagging[TMVA-FBDT, FANN-MLP, qrCategories]', '^B0']
-toolsB0_meson += ['FlavorTagging', '^B0']
+toolsB0_meson += ['FlavorTagging[TMVA-FBDT, FANN-MLP, qrCategories]', '^B0']
+#toolsB0_meson += ['FlavorTagging', '^B0']
 toolsB0_meson += ['MassBeforeFit', '^B0']
 toolsB0_meson += ['ROEMultiplicities', '^B0']
 
@@ -140,11 +116,6 @@ K0Info += ['CustomFloats[cosTheta]', '^K_S0 -> ^pi+ ^pi-']
 K0Info += ['CustomFloats[nDaughters]', '^K_S0']
 K0Info += ['TrackHits','K_S0 -> ^pi+ ^pi-']
 K0Info += ['CustomFloats[d0:z0:d0Err:z0Err]', 'K_S0 -> ^pi+ ^pi-']
-#K0Info += ['CustomFloats[daughter(0,piid)]', '^K_S0']
-#K0Info += ['CustomFloats[daughter(1,piid)]', '^K_S0']
-#K0Info += ['CustomFloats[daughter(0,eid)]', '^K_S0']
-#K0Info += ['CustomFloats[daughter(1,eid)]', '^K_S0']
-#K0Info += ['MCReconstructible', 'K_S0 -> ^pi+ ^pi-']
 
 
 K0starInfo =  ['Kinematics','^K_10 ->  ^pi+ ^pi- ^K_S0']

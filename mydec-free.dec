@@ -1,49 +1,4 @@
-
-
 #SIGNAL FILE
-#Define qoverp_incohMix_B_s0 1.0
-#Define dm_incohMix_B_s0 17.8e12
-#Define qoverp_incohMix_B0 1.0
-#Define dm_incohMix_B0 0.507e12
-# Old definition of dm still in some decay models
-#Define dm 0.507e12
-#Define dgamma 0
-#Define qoverp 1
-#Define phaseqoverp 0
-#Define values for B0s mixing
-#Define dms 20.e12
-# DeltaGammas corresponds to DG/G = 10%
-#Define dgammas 6.852e10
-# Activate incoherent Mixing
-### TODO: find a way to give mixing parameters through decay file to EvtGen
-#####yesIncoherentB0Mixing dm dgamma
-#####yesIncoherentBsMixing dms dgammas
-# define the values of the CKM angles (alpha=70, beta=40)
-#Define alpha 1.365
-#Define beta 0.39
-#Define gamma 1.387
-#Define twoBetaPlusGamma 2.167
-#Define betaPlusHalfGamma 1.0835
-#Define minusGamma -1.387
-#Define minusTwoBeta -0.78
-
-# New definitions for psiKstar modes (Lange, July 26, 2000)
-Define PKHplus 0.159
-Define PKHzero 0.775
-Define PKHminus 0.612
-Define PKphHplus 1.563
-Define PKphHzero 0.0
-Define PKphHminus 2.712
-
-Define Aplus 0.490
-Define Azero 1.10
-Define Aminus 0.4
-#
-Define phAplus 2.5
-Define phAzero 0.0
-Define phAminus -0.17
-
-
 Alias myK_S0 K_S0
 
 Alias MyK*+ K*+
@@ -83,8 +38,7 @@ Decay Upsilon(4S)
 Enddecay
 
 Decay MyB0
-1.000    MyK10  gamma SVP_CP  beta dm  0.1 0.03 0.0 0.1 0.0;;
-#1.000    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
+1.000    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
 #0.433    MyK*0  gamma  HELAMP 1.0 0.0 1.0 0.0;
 #0.143    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
 #0.069    MyK'10  gamma  HELAMP 1.0 0.0 1.0 0.0;

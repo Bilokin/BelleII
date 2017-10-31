@@ -1,5 +1,5 @@
 #!/bin/bash
-parallelProcesses=3
+parallelProcesses=4
 genFileName="evtgen"
 recoFileName="reco-tf2signal"
 root=".root"

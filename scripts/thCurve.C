@@ -3,7 +3,7 @@ void thCurve()
 	float tauB = 1.52; //e-12 s
 	//float deltaM = 3.3e-10;//MeV
 	float deltaM = 0.51;//e12 h s^-1
-	float S = 0.2;
+	float S = 0.7;
 	float A = 0.1;
 
 	TCanvas *c1 = new TCanvas("c1", "Dalitz", 0, 0, 500, 500);

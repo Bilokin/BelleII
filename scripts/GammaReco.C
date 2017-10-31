@@ -23,7 +23,7 @@ void GammaReco(string filename = "test.root")
 	Eres->Draw("eh");
 	//GammaSignal->Draw("abs(gamma_P-gamma_TruthP)/gamma_TruthP:gamma_P","abs(gamma_P-gamma_TruthP)/gamma_TruthP < 0.2");
 	c1->cd(2);
-	GammaSignal->Project("Cos","gamma__cosTheta","");
+	GammaSignal->Project("Cos","gamma_cosTheta","");
 	makePretty(Cos);
 	Cos->Draw("eh");
 }

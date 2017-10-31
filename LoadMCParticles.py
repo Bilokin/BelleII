@@ -18,15 +18,8 @@
 from basf2 import *
 from modularAnalysis import *
 
-# check if the required input file exists (from B2A101 example)
-import os.path
-import sys
-#if not os.path.isfile('B2A101-Y4SEventGeneration-evtgen.root'):
-
 # load input ROOT file
-#inputMdst('None', 'B2A101-Y4SEventGeneration-evtgen.root')
-#inputMdst('None', 'mc-v08/evtgen.root mc-v08/evtgen2.root mc-v08/evtgen3.root mc-v08/evtgen4.root')
-inputMdst('None', 'CPV/evtgen.root')
+inputMdst('None', 'mc-v08/evtgen.root mc-v08/evtgen2.root mc-v08/evtgen3.root mc-v08/evtgen4.root')
 
 # print contents of the DataStore before loading MCParticles
 printDataStore()
@@ -37,18 +30,14 @@ photons = ('gamma:gen', '')
 electrons = ('e-:gen', '')
 muons = ('mu-:gen', '')
 pionsM = ('pi-:gen', '')
-#pionsP = ('pi+:gen', '')
 kaons = ('K_S0:gen', '')
 kaonsS = ('K_10:gen', '')
-#Y4S = ('Upsilon(4S):gen', '')
 protons = ('anti-p-:gen', '')
 b0s = ('B0:gen', '')
-print("EVENT")
 
-#kshortcut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 211 and  abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323 "
 kshortcut = "abs(daughter(0,mcPDG)) == 211 and  hasAncestor(10313, 0) "
 b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
-#gammacut = "E > 1.5 and  abs(daughter(0,mcPDG)) == 11 and countDaughters( ) == 2 and abs(genMotherPDG) == 511"
+b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
 gammacut = "E > 1.5  and abs(genMotherPDG) == 511"
 
 fillParticleListsFromMC([electrons, muons, pionsM])
@@ -62,27 +51,14 @@ fillParticleListsFromMC(("gamma:gen", gammacut),True)
 #applyCuts('K_S0:my','abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323')
 
 applyCuts('gamma:gen','abs(genMotherPDG) == 511')
-#applyCuts('K_S0:gen','abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323')
 applyCuts('pi-:gen','abs(genMotherPDG) == 323 or abs(genMotherPDG) == 113 or abs(genMotherPDG) == 10313')
-#vertexRave('K_S0:gen', 0)
 
-#reconstructDecay('K_10:genSig -> K_S0:gen pi+:gen pi-:gen', '' )
-#matchMCTruth('K_10:genSig')
 applyCuts('K_10:gen','abs(mcPDG) == 10313 and abs(genMotherPDG) == 511 ')
-#applyCuts('K_S0:genSig','abs(genMotherPDG) == 511')
-#reconstructDecay('B0:genSig -> K_10:gen gamma:gen', '4<M<6')
 reconstructDecay('B0:genSig -> K_S0:gen pi+:gen pi-:gen gamma:gen', '5.<M<5.5')
 
 matchMCTruth('B0:genSig')
-#reconstructDecay('B0:genSig ->  pi+:gen pi-:gen  pi+:gen pi-:gen gamma:gen', '5.2795<M<5.28' )
 printVariableValues('B0:genSig',['p','px','mcPDG','genMotherPDG' ,'nDaughters']) 
-# print contents of the DataStore after loading MCParticles
-# the difference is that DataStore now contains StoreArray<Particle>
-# filled with Particles created from generated final state particles
-#printDataStore()
-#applyCuts('B0:genSig','daughter(1,PDG) == 22')
 applyCuts('B0:genSig','abs(mcPDG) == 511')
-# print out the contents of each ParticleList
 
 toolsK0my = ['Kinematics', '^K_S0 -> ^pi+ ^pi-']
 toolsK0my += ['InvMass', '^K_S0']
@@ -105,6 +81,7 @@ toolsB0 = ['Kinematics', '^B0 -> ^K_10 ^gamma']
 toolsB0 += ['CMSKinematics', '^B0']
 toolsB0 += ['InvMass', '^B0']
 toolsB0 += ['MCVertex', '^B0']
+toolsB0 += ['CustomFloats[daughter(0,mcPDG):daughter(1,mcPDG)]', 'B0 -> ^K_10 gamma']
 toolsB0 += ['CustomFloats[cosTheta]', '^B0 -> ^K_10 ^gamma']
 toolsB0 += ['CustomFloats[nDaughters]', '^B0 -> ^K_10 ^gamma']
 
@@ -130,12 +107,12 @@ toolsB0SIG += ['CustomFloats[daughter(0,pz)]', '^B0']
 toolsB0SIG += ['CustomFloats[daughter(1,pz)]', '^B0']
 toolsB0SIG += ['CustomFloats[daughter(2,pz)]', '^B0']
 
-toolsY4S = ['Kinematics', '^Upsilon(4S)']
-toolsY4S += ['CMSKinematics', '^Upsilon(4S)']
+toolsY4S  = ['Kinematics', '^Upsilon(4S) -> ^B0 ^anti-B0']
+toolsY4S += ['CMSKinematics', '^Upsilon(4S) ->  ^B0 ^anti-B0']
 toolsY4S += ['InvMass', '^Upsilon(4S)']
-toolsY4S += ['MCVertex', '^Upsilon(4S)']
-toolsY4S += ['MCVertex', 'Upsilon(4S) -> ^B0 ^anti-B0']
-ntupleFile('mc.root')
+toolsY4S += ['MCVertex', '^Upsilon(4S) -> ^B0 ^anti-B0']
+toolsY4S += ['MCDeltaT', 'Upsilon(4S) -> ^B0 ^anti-B0']
+ntupleFile('gen.root')
 ntupleTree('gamma', 'gamma:gen', toolsGamma)
 ntupleTree('B0s', 'B0:gen', toolsB0)
 ntupleTree('B0sSIG', 'B0:genSig', toolsB0SIG)

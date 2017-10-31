@@ -1,7 +1,13 @@
 # Prerequisites
 *.d
 FlavorTagging/*
+grid/*
+newgrid/*
+bkgx1/*
 mc-v08/*
+mc-v09/*
+pdf/*
+
 
 # Object files
 *.o
