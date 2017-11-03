@@ -7,7 +7,7 @@ bkgx1/*
 mc-v08/*
 mc-v09/*
 pdf/*
-
+scripts/rootpandas.ipynb
 
 # Object files
 *.o

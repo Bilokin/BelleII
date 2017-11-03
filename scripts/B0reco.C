@@ -12,12 +12,12 @@ void B0reco(string filename = "test.root")
 	string cut = "B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
 	//string cut = "B0_mbc > 5.2 && B0_deltae > -0.2 && B0_deltae < 0.2"; // S Akar
 	//cut += " && B0_K_10_pi0_nPXDHits > 0 &&  B0_K_10_pi1_nPXDHits > 0";
-	//cut += " && B0_K_10_M < 1.8 ";
-	//cut += " && abs(B0_K_10_K_S0_M - 0.497) < 0.01 ";
-	//cut += " && B0_m12 > 0.6 ";
+	cut += " && B0_K_10_M < 1.8 ";
+	cut += " && abs(B0_K_10_K_S0_M - 0.497) < 0.01 ";
+	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	//cut += " && (B0_m23 > 0.95 ||  B0_m23 < 0.85) && (B0_m13 > 0.95 ||  B0_m13 < 0.85)";
-	//cut += " && abs(B0_K_10_K_S0_M - 0.497)/B0_K_10_K_S0_ErrM < 3 ";
-	//cut += " && B0_K_10_K_S0_Rho > 0.15";
+	cut += " && abs(B0_K_10_K_S0_M - 0.497)/B0_K_10_K_S0_ErrM < 3 ";
+	cut += " && B0_K_10_K_S0_Rho > 0.15";
 	string angleCMS = "B0_K_10_useCMSFrame__bodaughterAngleInBetween__bo0__cm1__bc__bc";
 	//cut += "&& " + angleCMS + " < 1.75";
 	string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
@@ -88,7 +88,7 @@ void B0reco(string filename = "test.root")
 	rhoHist->Draw("same");
 	TF1 * myBW1 = new TF1("myBW1","TMath::BreitWigner(x,[0],[1])*[2]*TMath::Gaus(x,[3],[4])",1,2.);
 
-	myBW1->SetParLimits(0,1.1,1.5);
+	myBW1->SetParLimits(0,1.2,1.4);
 	myBW1->SetParLimits(1,0.0001,0.1);
 	myBW1->SetParLimits(2,0.1,100000);
 	myBW1->SetParLimits(3,1,2);

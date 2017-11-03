@@ -64,7 +64,7 @@ matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx0')
+flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 matchMCTruth('pi+:all')
 matchMCTruth('K_10:all')
 matchMCTruth('gamma:loose')
@@ -127,9 +127,9 @@ K0Info += ['MCTruth','^K_S0 -> ^pi+ ^pi-']
 K0Info += ['InvMass','^K_S0']
 K0Info += ['Vertex', '^K_S0']
 K0Info += ['MCVertex', '^K_S0']
-K0Info += ['CustomFloats[distance]', '^K_S0']
+#K0Info += ['CustomFloats[distance]', '^K_S0']
 K0Info += ['CustomFloats[cosTheta]', '^K_S0 -> ^pi+ ^pi-']
-K0Info += ['CustomFloats[nDaughters]', '^K_S0']
+#K0Info += ['CustomFloats[nDaughters]', '^K_S0']
 K0Info += ['TrackHits','K_S0 -> ^pi+ ^pi-']
 K0Info += ['CustomFloats[d0:z0:d0Err:z0Err]', 'K_S0 -> ^pi+ ^pi-']
 
@@ -142,10 +142,10 @@ K0starInfo += ['Vertex','^K_10']
 
 ntupleFile(outputFilename)
 ntupleTree('B0Signal', 'B0:signal', toolsB0_meson)
-#ntupleTree('GammaSignal', 'gamma:loose', gammaInfo)
-ntupleTree('K0Signal', 'K_S0:all', K0Info)
-#ntupleTree('K1Signal', 'K_10:all', K0starInfo)
 ntupleTree('pions', 'pi+:all', PiInfo)
+ntupleTree('K0Signal', 'K_S0:all', K0Info)
+#ntupleTree('GammaSignal', 'gamma:loose', gammaInfo)
+#ntupleTree('K1Signal', 'K_10:all', K0starInfo)
 # Process the events
 process(analysis_main)
 
