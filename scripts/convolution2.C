@@ -16,7 +16,7 @@
 #include "RooPlot.h"
 using namespace RooFit ;
 
-void convolution2(TTree* tree = NULL, float fsignorm = 0.8, float wnorm = 0.21, float dwnorm = 0.)
+void convolution2(TTree* tree = NULL, float fsignorm = 0.3, float wnorm = 0.21, float dwnorm = 0.)
 {
 	
 	std::cout << " ____________________________" << std::endl;
@@ -51,8 +51,8 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.8, float wnorm = 0.21, 
 
 	// Additional parameters needed for B decay with CPV
 	RooRealVar CPeigen("CPeigen","CP eigen value",1) ;
-	RooRealVar A("A","A",0.1,0,1) ;
-	RooRealVar S("S","S",0.3,0,1) ;
+	RooRealVar A("A","A",0.1,0,0.5);
+	RooRealVar S("S","S",0.3,0,0.5);
 	RooRealVar effR("effR","B0/B0bar reco efficiency ratio",0.) ;
 
 	RooRealVar fres1("fres1","fres parameter",0.67);
@@ -90,10 +90,14 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.8, float wnorm = 0.21, 
 	// Generate some data
 	if (!data) 
 	{
-		std::cout << " _____________________________ \n" << std::endl;
-		std::cout << "       Generating Toy MC" << std::endl;
-		std::cout << " _____________________________ " << std::endl;
-		data = combinedQ.generate(RooArgSet(dt,q),30000);
+		int nevents = 161./fsignorm;
+		nevents = 1356.96/fsignorm; // PHASE III 5 ab^-1 DATASET
+		//nevents = 13569.6/fsignorm; // FULL 50ab^-1 DATASET
+		nevents = 30000;
+		std::cout << " _________________________________________ \n" << std::endl;
+		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
+		std::cout << " _________________________________________ " << std::endl;
+		data = combinedQ.generate(RooArgSet(dt,q), nevents);
 	}
 	data->get(0)->Print();
 	//RooFitResult* resb = bcp.fitTo(*data, Save()) ;
@@ -101,27 +105,30 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.8, float wnorm = 0.21, 
 	// Plot B0 and B0bar tagged data separately
 	RooPlot* frame = dt.frame(Title("B decay (B0/B0bar)")) ;
 
-	data->plotOn(frame,Cut("q==q::B0"),MarkerColor(kBlue)) ;
+	data->plotOn(frame,Cut("q==q::B0"),MarkerColor(kBlue), MarkerStyle(22)) ;
 	//bcp.plotOn(frame, Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
 	combinedQ.plotOn(frame, Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
 
-	data->plotOn(frame,Cut("q==q::B0bar"),MarkerColor(kRed)) ;
+	data->plotOn(frame,Cut("q==q::B0bar"),MarkerColor(kRed), MarkerStyle(23)) ;
 	//bcp.plotOn(frame, Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
-	combinedBkg.plotOn(frame, Normalization(1-fsignorm),LineStyle(kDashed), LineColor(kGray));
+	combinedBkg.plotOn(frame, Normalization(0.5-fsignorm/2),LineStyle(kDashed), LineColor(kGray));
 	combinedQ.plotOn(frame, Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
 	//combinedSignalRes.plotOn(frame, Normalization(1-fsignorm),LineStyle(kDashed), LineColor(kGray));
-	TCanvas* c = new TCanvas("rf708_bphysics","rf708_bphysics",500,500) ;
+	TCanvas* c = new TCanvas("bphysics","bphysics",1000,500) ;
+	c->Divide(2,1);
+	c->cd(1);
 	gPad->SetLeftMargin(0.15) ; frame->GetYaxis()->SetTitleOffset(1.6) ; frame->Draw() ;
-	
-	RooPlot* frame2 = new RooPlot(A,S,0.,1,0.,1) ;
+	float Arange[2] = {-0.3, 0.3};
+	float Srange[2] = {-0.3, 0.3};
+	RooPlot* frame2 = new RooPlot(A,S,Arange[0], Arange[1],Srange[0],Srange[1]) ;
 	frame2->SetTitle("Ellipse") ;
-	resb->plotOn(frame2,A,S,"ME12ABHV") ;
-	new TCanvas("convolution","convolution",500,500);
+	//resb->plotOn(frame2,A,S,"ME12ABHV") ;
+	resb->plotOn(frame2,A,S,"MEHV") ;
+	//new TCanvas("convolution","convolution",500,500);
+	c->cd(2);
 	gPad->SetLeftMargin(0.15) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
-
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
 	resb->Print();
-	combinedBkg.Print();
 }

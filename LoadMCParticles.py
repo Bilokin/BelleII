@@ -18,8 +18,22 @@
 from basf2 import *
 from modularAnalysis import *
 
+defaultInputFilename = "evtgen.root"
+defaultInputFoldername = "test"
+inputFilename = defaultInputFoldername + '/' + defaultInputFilename
+defaultOutputFilename = "reco-tf2signal.root"
+defaultOutputFoldername = "test"
+outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
+for arg in sys.argv:
+	print(arg)
+if len(sys.argv)==2:
+	inputFilename = sys.argv[1]
+if len(sys.argv)==3:
+	inputFilename = sys.argv[1]
+	outputFilename = sys.argv[2]
+
 # load input ROOT file
-inputMdst('None', 'mc-v08/evtgen.root mc-v08/evtgen2.root mc-v08/evtgen3.root mc-v08/evtgen4.root')
+inputMdst('None', inputFilename)
 
 # print contents of the DataStore before loading MCParticles
 printDataStore()
@@ -112,7 +126,7 @@ toolsY4S += ['CMSKinematics', '^Upsilon(4S) ->  ^B0 ^anti-B0']
 toolsY4S += ['InvMass', '^Upsilon(4S)']
 toolsY4S += ['MCVertex', '^Upsilon(4S) -> ^B0 ^anti-B0']
 toolsY4S += ['MCDeltaT', 'Upsilon(4S) -> ^B0 ^anti-B0']
-ntupleFile('gen.root')
+ntupleFile(outputFilename)
 ntupleTree('gamma', 'gamma:gen', toolsGamma)
 ntupleTree('B0s', 'B0:gen', toolsB0)
 ntupleTree('B0sSIG', 'B0:genSig', toolsB0SIG)
