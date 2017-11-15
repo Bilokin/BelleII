@@ -56,7 +56,7 @@ void deltaT(string filename = "test.root")
 	deltaTPullHist->Draw("same");
 	deltaTPullHist->Fit("gaus");
 	c1->cd(2);
-	int nbinsf = 4;
+	int nbinsf = 25;
 	TH1F * tagBtrueHist = new TH1F("tagBtrueHist", ";FBDT []; Purity", nbinsf,-1,1);
 	TH1F * tagBAllHist = new TH1F("tagBAllHist", ";FBDT []", nbinsf,-1,1);
 	TH1F * tagBbartrueHist = new TH1F("tagBbartrueHist", ";FBDT []", nbinsf,-1,1);
@@ -66,8 +66,8 @@ void deltaT(string filename = "test.root")
 	B0Signal->Project("tagBtrueHist", "B0_FANN_qrCombined", (cut + trueB + "&& B0_mcPDG == 511").c_str());
 	B0Signal->Project("tagBAllHist", "B0_FANN_qrCombined", (cut+trueB).c_str());
 	B0Signal->Project("tagBbartrueHist", "B0_FANN_qrCombined", (cut + trueB + "&& B0_mcPDG == -511").c_str());
-	//tagBtrueHist->Divide(tagBAllHist);
-	//tagBbartrueHist->Divide(tagBAllHist);
+	tagBtrueHist->Divide(tagBAllHist);
+	tagBbartrueHist->Divide(tagBAllHist);
 	makePretty(tagBtrueHist);
 	makePretty(tagBAllHist, kGray+1);
 	makePretty(tagBbartrueHist,kRed);

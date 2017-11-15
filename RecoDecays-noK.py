@@ -1,7 +1,6 @@
 from basf2 import *
 from modularAnalysis import *
 from vertex import *
-
 from stdV0s import stdKshorts
 from stdPhotons import *
 from stdCharged import *
@@ -27,6 +26,14 @@ if len(sys.argv)==3:
 	outputFilename = sys.argv[2]
 use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
 
+from variables import variables
+variables.addAlias('K_10_M', 'daughterInvariantMass(0,1,2)')
+
+#DELETE THIS
+variables.addAlias('K_10_K_S0_M', 'daughter(2,M)')
+variables.addAlias('K_10_K_S0_Rho', 'daughter(2,dr)')
+#
+
 # load input ROOT file2
 add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
@@ -39,9 +46,9 @@ applyCuts('gamma:loose','1.4 < E < 4')
 #applyCuts('K_S0:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
 #vertexRave('K_S0:all',0.01)
 vertexKFit('K_S0:all',0.0)
-reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
-reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
-vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
+#reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
+reconstructDecay("B0:signal ->K_S0:all pi+:all pi-:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
+vertexRave('B0:signal',0.01, 'B0 -> ^K_S0 ^pi+ ^pi- gamma')
 
 buildRestOfEvent('B0:signal')
 
@@ -65,26 +72,27 @@ TagV('B0:signal', 'breco')
 
 flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 matchMCTruth('pi+:all')
-matchMCTruth('K_10:all')
+#matchMCTruth('K_10:all')
 matchMCTruth('gamma:loose')
 #rankByHighest()
 
-toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
+toolsB0_meson =  ['Kinematics','^B0 -> ^K_S0 ^pi+ ^pi- ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
-toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['Vertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['MCVertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
+toolsB0_meson += ['MCTruth','^B0 -> ^K_S0 ^pi+ ^pi- ^gamma']
+toolsB0_meson += ['MCHierarchy','^B0 -> ^K_S0 ^pi+ ^pi- gamma']
+toolsB0_meson += ['Vertex','^B0 -> ^K_S0 pi+ pi- gamma']
+toolsB0_meson += ['MCVertex','^B0 -> ^K_S0 pi+ pi- gamma']
 #toolsB0_meson += ['PDGCode','^B0']
-toolsB0_meson += ['InvMass','^B0 -> [^K_10 -> pi+ pi- ^K_S0]  gamma']
+toolsB0_meson += ['InvMass','^B0 -> ^K_S0 pi+ pi- gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
 #toolsB0_meson += ['PID','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
 #toolsB0_meson += ['MCReconstructible', 'B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
-toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^K_10 -> pi+ pi- K_S0] gamma']
-toolsB0_meson += ['Dalitz', '^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['TrackHits','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
+toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> K_S0 ^pi+ ^pi- ^gamma']
+toolsB0_meson += ['CustomFloats[K_10_M:K_10_K_S0_M:K_10_K_S0_Rho]', '^B0 -> K_S0 pi+ pi- gamma']
+#toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> pi+ pi- K_S0 gamma']
+toolsB0_meson += ['Dalitz', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
+toolsB0_meson += ['TrackHits','B0 -> K_S0 ^pi+ ^pi- gamma']
 toolsB0_meson += ['TagVertex', '^B0']
 toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']
@@ -92,7 +100,7 @@ toolsB0_meson += ['DeltaTErr', '^B0']
 toolsB0_meson += ['MCDeltaT', '^B0']
 #toolsB0_meson += ['FlavorTagging[TMVA-FBDT, FANN-MLP, qrCategories]', '^B0']
 toolsB0_meson += ['FlavorTagging', '^B0']
-toolsB0_meson += ['ContinuumSuppression', '^B0:phiKs']
+toolsB0_meson += ['ContinuumSuppression', '^B0']
 
 toolsB0_meson += ['MassBeforeFit', '^B0']
 toolsB0_meson += ['ROEMultiplicities', '^B0']

@@ -16,7 +16,7 @@
 #include "RooPlot.h"
 using namespace RooFit ;
 
-void convolution2(TTree* tree = NULL, float fsignorm = 0.3, float wnorm = 0.21, float dwnorm = 0.)
+void convolution2(TTree* tree = NULL, float fsignorm = 0.7, float wnorm = 0.21, float dwnorm = 0.)
 {
 	
 	std::cout << " ____________________________" << std::endl;
@@ -51,8 +51,8 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.3, float wnorm = 0.21, 
 
 	// Additional parameters needed for B decay with CPV
 	RooRealVar CPeigen("CPeigen","CP eigen value",1) ;
-	RooRealVar A("A","A",0.1,0,0.5);
-	RooRealVar S("S","S",0.3,0,0.5);
+	RooRealVar A("A","A",0.1,-0.5,0.5);
+	RooRealVar S("S","S",0.3,-0.5,0.5);
 	RooRealVar effR("effR","B0/B0bar reco efficiency ratio",0.) ;
 
 	RooRealVar fres1("fres1","fres parameter",0.67);
@@ -90,14 +90,15 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.3, float wnorm = 0.21, 
 	// Generate some data
 	if (!data) 
 	{
-		int nevents = 161./fsignorm;
-		nevents = 1356.96/fsignorm; // PHASE III 5 ab^-1 DATASET
-		//nevents = 13569.6/fsignorm; // FULL 50ab^-1 DATASET
-		nevents = 30000;
+		int nevents = 1315.12/fsignorm;   // PHASE III  2 ab^-1 DATASET
+		nevents = 32877.9/fsignorm; // FULL      50 ab^-1 DATASET
+		//nevents = 30000;
 		std::cout << " _________________________________________ \n" << std::endl;
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
 		data = combinedQ.generate(RooArgSet(dt,q), nevents);
+		A.setVal(0);
+		S.setVal(0);
 	}
 	data->get(0)->Print();
 	//RooFitResult* resb = bcp.fitTo(*data, Save()) ;
@@ -111,8 +112,9 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.3, float wnorm = 0.21, 
 
 	data->plotOn(frame,Cut("q==q::B0bar"),MarkerColor(kRed), MarkerStyle(23)) ;
 	//bcp.plotOn(frame, Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
-	combinedBkg.plotOn(frame, Normalization(0.5-fsignorm/2),LineStyle(kDashed), LineColor(kGray));
+//	combinedBkg.plotOn(frame, Normalization(0.5-fsignorm/2),LineStyle(kDashed), LineColor(kGray));
 	combinedQ.plotOn(frame, Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
+	combinedQ.plotOn(frame, Components(combinedBkg), Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kGray)) ;
 	//combinedSignalRes.plotOn(frame, Normalization(1-fsignorm),LineStyle(kDashed), LineColor(kGray));
 	TCanvas* c = new TCanvas("bphysics","bphysics",1000,500) ;
 	c->Divide(2,1);
@@ -131,4 +133,6 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.3, float wnorm = 0.21, 
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
 	resb->Print();
+	RooAbsReal* allevents = combinedQ.createIntegral(dt);
+	cout << "All events: " << combinedQ.expectedEvents(RooArgSet(dt,q));
 }

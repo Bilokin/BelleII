@@ -49,7 +49,7 @@ string getCuts()
 	//cut += " && (B0_m23 > 0.95 ||  B0_m23 < 0.85) && (B0_m13 > 0.95 ||  B0_m13 < 0.85)";
 	cut += " && B0_K_10_M < 1.8 ";
 	cut += " && B0_K_10_K_S0_Rho > 0.15";
-	cut += " && abs(B0_FANN_qrCombined) > 0.5 ";
+	//cut += " && abs(B0_FANN_qrCombined) > 0.5 ";
 	return cut;
 }
 

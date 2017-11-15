@@ -14,6 +14,7 @@ void B0reco(string filename = "test.root")
 	//cut += "&& " + angleCMS + " < 1.75";
 	string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
 	string mccutrho = " abs(B0_K_10_pi0_MC_MOTHER_ID) ==113 &&";
+	//string mccutrho = " abs(B0_pi0_MC_MOTHER_ID) ==113 &&";
 	//string mccut= "abs(B0_mcPDG) ==511 &&";
 	//string cut = "1";
 	//string cut = chi2 + "<8";
