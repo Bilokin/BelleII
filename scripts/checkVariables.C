@@ -5,8 +5,11 @@ void checkVariables(string filename = "test.root", bool signal = true)
 	string scfB = "B0_isSignal == 0 && B0_isContinuumEvent == 0";
 	string continuum = "B0_isSignal == 0 && B0_isContinuumEvent == 1";
 	string cut = (signal)? trueB : continuum;
-	cut += " && iCand == 0";
-	//cut = "1";	
+	cut += " && iCand == 0 ";
+	//cut = "iCand == 0 ";	
+	cut += " && abs(B0_K_10_K_S0_SigM) < 3 ";
+	cut += " && B0_K_10_K_S0_Rho > 0.15";
+	cut += " && B0_K_10_K_S0_VtxPvalue > 0.01";
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1000,1000);
 	c1->Divide(2,2);
 	TFile * file = TFile::Open(filename.c_str());
@@ -27,4 +30,5 @@ void checkVariables(string filename = "test.root", bool signal = true)
 	makePretty(MbcHist);
 	MbcHist->Draw("he");
 	THStack * stack = new THStack("stack","stack");
+	
 }

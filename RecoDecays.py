@@ -11,6 +11,7 @@ from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
+ratingVar = "chiProb"
 defaultInputFilename = "evtgen.root"
 defaultInputFoldername = "test"
 inputFilename = defaultInputFoldername + '/' + defaultInputFilename
@@ -27,7 +28,7 @@ if len(sys.argv)==3:
 use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
-variables.addAlias('myRatingCriteria','formula(chiProb+abs(daughter(0,daughter(2,SigM))))')
+variables.addAlias('myRatingCriteria',ratingVar)
 
 # load input ROOT file2
 add_beamparameters(analysis_main,'Y4S')
@@ -40,12 +41,12 @@ stdPi('all')
 applyCuts('gamma:loose','1.4 < E < 4')
 #applyCuts('K_S0:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
 #vertexRave('K_S0:all',0.01)
-vertexKFit('K_S0:all',0.0)
+vertexKFit('K_S0:all',0.01)
 reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
 reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
 vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
 
-rankByLowest('B0:signal','chiProb', 1, outputVariable='myRating')
+rankByHighest('B0:signal',ratingVar, 1, outputVariable='myRating')
 
 buildRestOfEvent('B0:signal')
 
@@ -79,6 +80,7 @@ toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRa
 toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
 toolsB0_meson += ['Vertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
+toolsB0_meson += ['CustomFloats[significanceOfDistance]', '^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['MCVertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
 #toolsB0_meson += ['PDGCode','^B0']
 toolsB0_meson += ['InvMass','^B0 -> [^K_10 -> pi+ pi- ^K_S0]  gamma']
