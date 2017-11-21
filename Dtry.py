@@ -1,6 +1,7 @@
 from basf2 import *
 from modularAnalysis import *
 from vertex import *
+
 from stdV0s import stdKshorts
 from stdPhotons import *
 from stdCharged import *
@@ -25,9 +26,6 @@ if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
 use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
-from variables import variables
-variables.addAlias('myRating','extraInfo(myRating)')
-variables.addAlias('myRatingCriteria','formula(chiProb+abs(daughter(0,daughter(2,SigM))))')
 
 # load input ROOT file2
 add_beamparameters(analysis_main,'Y4S')
@@ -44,8 +42,6 @@ vertexKFit('K_S0:all',0.0)
 reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
 reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
 vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
-
-rankByLowest('B0:signal','chiProb', 1, outputVariable='myRating')
 
 buildRestOfEvent('B0:signal')
 
@@ -74,7 +70,7 @@ matchMCTruth('gamma:loose')
 #rankByHighest()
 
 toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
+toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
 toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
@@ -100,7 +96,6 @@ toolsB0_meson += ['ContinuumSuppression', '^B0:phiKs']
 
 toolsB0_meson += ['MassBeforeFit', '^B0']
 toolsB0_meson += ['ROEMultiplicities', '^B0']
-toolsB0_meson += ['EventMetaData', '^B0']
 
 
 

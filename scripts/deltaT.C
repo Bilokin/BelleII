@@ -1,3 +1,4 @@
+#include "fitSettings.C"
 void makePretty(TF1* htemp, int color = kBlue)
 {
 	htemp->SetLineWidth(5);
@@ -12,7 +13,9 @@ void makePretty(TF1* htemp, int color = kBlue)
 
 void deltaT(string filename = "test.root")
 {
+	fitSettings fitResult;
 	string cut = getCuts();
+	//cut += " && B0_CSMVA > 0.1";
 	string trueB = "&& B0_isSignal == 1";
 	string bkgB = "&& B0_isSignal == 0";
 
@@ -40,6 +43,10 @@ void deltaT(string filename = "test.root")
 	bkgPdf->SetParLimits(3,0.01,2);
 	deltaTBbkgHist->Fit("bkgPdf");
 	float fbkg = bkgPdf->GetParameter(0)/(bkgPdf->GetParameter(2)+bkgPdf->GetParameter(0));
+	fitResult.fbkg[0] = bkgPdf->GetParameter(0)/(bkgPdf->GetParameter(2)+bkgPdf->GetParameter(0));
+	fitResult.fsig = neventstrue/nevents;
+	fitResult.sigmabkg[0] = bkgPdf->GetParameter(1);
+	fitResult.sigmabkg[1] = bkgPdf->GetParameter(3);
 	//coreT->Draw("same");
 	c1->cd(3);
 	
@@ -56,7 +63,7 @@ void deltaT(string filename = "test.root")
 	deltaTPullHist->Draw("same");
 	deltaTPullHist->Fit("gaus");
 	c1->cd(2);
-	int nbinsf = 25;
+	int nbinsf = 100;
 	TH1F * tagBtrueHist = new TH1F("tagBtrueHist", ";FBDT []; Purity", nbinsf,-1,1);
 	TH1F * tagBAllHist = new TH1F("tagBAllHist", ";FBDT []", nbinsf,-1,1);
 	TH1F * tagBbartrueHist = new TH1F("tagBbartrueHist", ";FBDT []", nbinsf,-1,1);
@@ -123,6 +130,12 @@ void deltaT(string filename = "test.root")
 	bkg2->SetParameters(deltatRes->GetParameter(6), deltatRes->GetParameter(7),deltatRes->GetParameter(8));
 	makePretty(bkg2, kGreen);
 	cout << "P: " << deltatRes->GetParameter(0) << endl;
+	fitResult.fres[0] = deltatRes->GetParameter(0)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
+	fitResult.fres[1] = deltatRes->GetParameter(2)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
+	fitResult.fres[2] = deltatRes->GetParameter(4)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
+	fitResult.sigmares[0] = deltatRes->GetParameter(1);
+	fitResult.sigmares[1] = deltatRes->GetParameter(3);
+	fitResult.sigmares[2] = deltatRes->GetParameter(5);
 	//core->Draw("same");
 	//bkg1->Draw("same");
 	//bkg2->Draw("same");
@@ -180,10 +193,10 @@ void deltaT(string filename = "test.root")
         TF1 * myBdeltaT = new TF1("myBdeltaT",      "0.81*exp(-abs(x)/1.5)/(4*1.5)*( 1 + ([0]*cos(0.51*x)+[1]*sin(0.51*x)) )",-10,10);
 	genBHist->Fit("myBdeltaT");
 		std::cout << "-------------------------------------------------"  << std::endl;
-	cout <<  "nEvents: " << nevents << " signal fraction: " << neventstrue/nevents << endl;
+	cout <<  "nEvents: " << nevents << " signal fraction: " << fitResult.fsig << endl;
 	std::cout << "Purity: " << puritybar << " shift: " << shift << std::endl;
-	std::cout << "fres1: " << fres1 << " fres2: " << fres2 << " fres3: " << fres3 << " | s1: " << deltatRes->GetParameter(1)  << " s2: " << deltatRes->GetParameter(3) << " s3: " << deltatRes->GetParameter(5)  << std::endl;
-	std::cout << "fbkg: " << fbkg << " s1: " << bkgPdf->GetParameter(1)  << " s2: " << bkgPdf->GetParameter(3)  << std::endl;
+	std::cout << "fres1: " << fitResult.fres[0] << " fres2: " << fitResult.fres[1] << " fres3: " << fitResult.fres[2] << " | s1: " << fitResult.sigmares[0]  << " s2: " << fitResult.sigmares[1] << " s3: " << fitResult.sigmares[2]  << std::endl;
+	std::cout << "fbkg: " <<  fitResult.fbkg[0] << " s1: " << fitResult.sigmabkg[0]  << " s2: " << fitResult.sigmabkg[1]  << std::endl;
 	//BHist->Draw("hesame");
 	//BbarHist->Draw("hesame");
 }

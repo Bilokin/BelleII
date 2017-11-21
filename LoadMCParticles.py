@@ -51,7 +51,7 @@ b0s = ('B0:gen', '')
 
 kshortcut = "abs(daughter(0,mcPDG)) == 211 and  hasAncestor(10313, 0) "
 b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
-b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
+ks0cut = "countDaughters( ) == 2 and abs(daughter(1,mcPDG)) == 22 and abs(daughter(0,mcPDG)) == 310"
 gammacut = "E > 1.5  and abs(genMotherPDG) == 511"
 
 fillParticleListsFromMC([electrons, muons, pionsM])
@@ -60,6 +60,7 @@ fillParticleListsFromMC(("Upsilon(4S):gen",''),True)
 fillParticleListsFromMC(("K_10:gen",'abs(genMotherPDG) == 511'),True)
 fillParticleListsFromMC(("K_S0:gen",kshortcut),True)
 fillParticleListsFromMC(("B0:gen", b0cut),True)
+fillParticleListsFromMC(("K*0:gen", ks0cut),True)
 fillParticleListsFromMC(("gamma:gen", gammacut),True)
 
 #applyCuts('K_S0:my','abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323')
@@ -73,6 +74,9 @@ reconstructDecay('B0:genSig -> K_S0:gen pi+:gen pi-:gen gamma:gen', '5.<M<5.5')
 matchMCTruth('B0:genSig')
 printVariableValues('B0:genSig',['p','px','mcPDG','genMotherPDG' ,'nDaughters']) 
 applyCuts('B0:genSig','abs(mcPDG) == 511')
+toolsKS0 = ['Kinematics', '^K*0 -> ^K_S0 ^gamma']
+toolsKS0 += ['InvMass', '^K*0 -> ^K_S0 gamma']
+toolsKS0 += ['MCTruth', '^K*0 -> ^K_S0 ^gamma']
 
 toolsK0my = ['Kinematics', '^K_S0 -> ^pi+ ^pi-']
 toolsK0my += ['InvMass', '^K_S0']
@@ -92,6 +96,7 @@ toolsGamma += ['CustomFloats[cosTheta]', '^gamma']
 toolsGamma += ['CustomFloats[genMotherPDG]', '^gamma']
 
 toolsB0 = ['Kinematics', '^B0 -> ^K_10 ^gamma']
+toolsB0 += ['EventMetaData', '^B0']
 toolsB0 += ['CMSKinematics', '^B0']
 toolsB0 += ['InvMass', '^B0']
 toolsB0 += ['MCVertex', '^B0']
@@ -129,6 +134,7 @@ toolsY4S += ['MCDeltaT', 'Upsilon(4S) -> ^B0 ^anti-B0']
 ntupleFile(outputFilename)
 ntupleTree('gamma', 'gamma:gen', toolsGamma)
 ntupleTree('B0s', 'B0:gen', toolsB0)
+ntupleTree('Kstar0', 'K*0:gen', toolsKS0)
 ntupleTree('B0sSIG', 'B0:genSig', toolsB0SIG)
 ntupleTree('K0s', 'K_S0:gen', toolsK0my)
 ntupleTree('K0sp', 'K_10:gen', toolsK0p)

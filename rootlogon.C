@@ -59,6 +59,7 @@ void makePretty(TH1F* htemp, int color = kBlue)
 	htemp->SetFillStyle(3004);
 	htemp->SetFillColor(color);
 	htemp->SetLineColor(color);
+	htemp->SetMinimum(0);
 	if(color != kBlue)
 	{
 		htemp->SetFillStyle(3005);
