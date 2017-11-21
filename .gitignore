@@ -1,4 +1,5 @@
 # Prerequisites
+*.pdf
 *.d
 FlavorTagging/*
 grid/*
@@ -8,6 +9,7 @@ mc-v08/*
 mc-v09/*
 pdf/*
 scripts/rootpandas.ipynb
+scripts/MVA.ipynb
 
 # Object files
 *.o
