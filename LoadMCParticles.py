@@ -44,6 +44,7 @@ photons = ('gamma:gen', '')
 electrons = ('e-:gen', '')
 muons = ('mu-:gen', '')
 pionsM = ('pi-:gen', '')
+pions0 = ('pi0:gen', '')
 kaons = ('K_S0:gen', '')
 kaonsS = ('K_10:gen', '')
 protons = ('anti-p-:gen', '')
@@ -54,7 +55,7 @@ b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daug
 ks0cut = "countDaughters( ) == 2 and abs(daughter(1,mcPDG)) == 22 and abs(daughter(0,mcPDG)) == 310"
 gammacut = "E > 1.5  and abs(genMotherPDG) == 511"
 
-fillParticleListsFromMC([electrons, muons, pionsM])
+fillParticleListsFromMC([electrons, muons, pionsM, pions0])
 
 fillParticleListsFromMC(("Upsilon(4S):gen",''),True)
 fillParticleListsFromMC(("K_10:gen",'abs(genMotherPDG) == 511'),True)
@@ -68,7 +69,7 @@ fillParticleListsFromMC(("gamma:gen", gammacut),True)
 applyCuts('gamma:gen','abs(genMotherPDG) == 511')
 applyCuts('pi-:gen','abs(genMotherPDG) == 323 or abs(genMotherPDG) == 113 or abs(genMotherPDG) == 10313')
 
-applyCuts('K_10:gen','abs(mcPDG) == 10313 and abs(genMotherPDG) == 511 ')
+applyCuts('K_10:gen','abs(mcPDG) == 10313 and abs(genMotherPDG) == 511 and daughter(0,mcPDG) == 223')
 reconstructDecay('B0:genSig -> K_S0:gen pi+:gen pi-:gen gamma:gen', '5.<M<5.5')
 
 matchMCTruth('B0:genSig')

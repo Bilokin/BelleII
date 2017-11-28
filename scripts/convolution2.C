@@ -27,7 +27,7 @@ void convolution2(TTree* tree = NULL, float fsignorm = 0.7, float wnorm = 0.21, 
 	string name = "MC";
 	// Parameters
 	RooRealVar dt("dt","#Delta t [ps]",-10,10) ;
-	dt.setBins(50) ;
+	//dt.setBins(50) ;
 
 
 	RooCategory q("q","Flavour of the tagged B0") ;

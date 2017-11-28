@@ -43,7 +43,7 @@ applyCuts('gamma:loose','1.4 < E < 4')
 #vertexRave('K_S0:all',0.01)
 vertexKFit('K_S0:all',0.01)
 reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
-reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
+reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
 vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
 
 rankByHighest('B0:signal',ratingVar, 1, outputVariable='myRating')

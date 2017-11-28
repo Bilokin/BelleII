@@ -11,8 +11,9 @@ void makePretty(TF1* htemp, int color = kBlue)
 }
 
 
-void deltaT(string filename = "test.root")
+fitSettings deltaT(string filename = "test.root")
 {
+	bool gen =false;
 	fitSettings fitResult;
 	string cut = getCuts();
 	//cut += " && B0_CSMVA > 0.1";
@@ -38,15 +39,16 @@ void deltaT(string filename = "test.root")
 	deltaTBtrueHist->Draw("same");
 	deltaTBbkgHist->Draw("same");
 	//TF1 * deltat = new TF1("deltat","[0]*TMath::Gaus(x,[1],[2])+ [3]*TMath::Gaus(x,0,[4])",-10,10);	
-	TF1 * bkgPdf = new TF1("bkgPdf","[0]*TMath::Gaus(x,0,[1])+ [2]*TMath::Gaus(x,0,[3])",-10,10);
+	TF1 * bkgPdf = new TF1("bkgPdf","[0]*TMath::Gaus(x,0,[1],1)+ [2]*TMath::Gaus(x,0,[3],1)",-10,10);
 	bkgPdf->SetParLimits(1,0.1,10);
 	bkgPdf->SetParLimits(3,0.01,2);
 	deltaTBbkgHist->Fit("bkgPdf");
 	float fbkg = bkgPdf->GetParameter(0)/(bkgPdf->GetParameter(2)+bkgPdf->GetParameter(0));
-	fitResult.fbkg[0] = bkgPdf->GetParameter(0)/(bkgPdf->GetParameter(2)+bkgPdf->GetParameter(0));
+	fitResult.fbkg.push_back(bkgPdf->GetParameter(0)/(bkgPdf->GetParameter(2)+bkgPdf->GetParameter(0)));
+	fitResult.fbkg.push_back(bkgPdf->GetParameter(2)/(bkgPdf->GetParameter(2)+bkgPdf->GetParameter(0)));
 	fitResult.fsig = neventstrue/nevents;
-	fitResult.sigmabkg[0] = bkgPdf->GetParameter(1);
-	fitResult.sigmabkg[1] = bkgPdf->GetParameter(3);
+	fitResult.sigmabkg.push_back(bkgPdf->GetParameter(1));
+	fitResult.sigmabkg.push_back(bkgPdf->GetParameter(3));
 	//coreT->Draw("same");
 	c1->cd(3);
 	
@@ -86,6 +88,8 @@ void deltaT(string filename = "test.root")
 	float purity =       tagBtrueHist->Integral( 1 ,2)/(tagBbartrueHist->Integral( 1, 2) + tagBtrueHist->Integral( 1, 2));
 	//float shift = (tagBtrueHist->Integral(-qhigh,qhigh)-tagBbartrueHist->Integral(-qhigh,qhigh))/(tagBbartrueHist->Integral(-qhigh,qhigh) + tagBtrueHist->Integral(-qhigh,qhigh));
 	float shift = purity - puritybar;
+	fitResult.w = 0.2; std::cout << "-----------------\nCRUNCH: w is not a real value!!!!\n--------------------" << std::endl;
+	fitResult.dw = 0.01; std::cout << "-----------------\nCRUNCH: dw is not a real value!!!!\n--------------------" << std::endl;
 	c1->cd(4);
 	
 	TH1F * deltaTResHist = new TH1F("deltaTResHist", ";#Delta t [ps]", 50,-10,10.);
@@ -97,17 +101,18 @@ void deltaT(string filename = "test.root")
 	B0Signal->Project("deltaT2Hist", "abs((B0_DeltaT-B0_TruthDeltaT)/B0_TruthDeltaT) : abs(B0_TagVz-B0_Z)", (cut + trueB).c_str());
 	B0Signal->Project("deltaTResHist", "(B0_DeltaT-B0_TruthDeltaT)", (cut + trueB).c_str());
 	B0Signal->Project("deltaTResAllHist", "((B0_DeltaT-B0_TruthDeltaT))", (cut).c_str());
+	//deltaTResHist->Scale(1./deltaTResHist->GetEntries());
+	//deltaTResAllHist->Scale(1./deltaTResHist->GetEntries());
 	makePretty(deltaTResHist);
 	makePretty(deltaTResAllHist, kGray+1);
 	deltaT2Hist->Draw("colz");
-	deltaTResAllHist->Draw();
-	deltaTResHist->Draw("same");
+	deltaTResAllHist->Draw("he");
+	deltaTResHist->Draw("samehe");
 	//TF1 * deltatRes = new TF1("deltatRes","gaus+gaus(3)",-10,10);
-
 	//TF1 * deltatRes = new TF1("deltatRes","[0]*TMath::Gaus(x,[1],[2]) + (1.-[0])*([3]*TMath::Gaus(x,[4],[5]) + (1.-[3]) * TMath::Gaus(x,[6],[7]) )",-10,10);
 	//TF1 * deltatRes = new TF1("deltatRes","[0]*TMath::Gaus(x,[1],[2]) + [3]*TMath::Gaus(x,[4],[5]) + [6] * TMath::Gaus(x,[7],[8])",-10,10);
-	TF1 * deltatRes = new TF1("deltatRes","[0]*TMath::Gaus(x,0,[1]) + [2]*TMath::Gaus(x,0,[3]) + [4] * TMath::Gaus(x,0,[5])",-10,10);
-	makePretty(deltatRes, kGray+1);
+	TF1 * deltatRes = new TF1("deltatRes","[0]*TMath::Gaus(x,0,[1],1) + [2]*TMath::Gaus(x,0,[3],1) + [4] * TMath::Gaus(x,0,[5],1)",-10,10);
+	makePretty(deltatRes, kBlue+1);
 	//deltatRes->SetParLimits(0, nevents/1000, nevents);
 	//deltatRes->SetParLimits(1, -0.1, 0.1);
 	deltatRes->SetParLimits(1, 0.1, 2);
@@ -117,9 +122,6 @@ void deltaT(string filename = "test.root")
 	//deltatRes->SetParLimits(7, -0.2, 0.2);
 	deltatRes->SetParLimits(5, 0.01, 5);
 	deltaTResHist->Fit("deltatRes");
-	float fres1 = deltatRes->GetParameter(0)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
-	float fres2 = deltatRes->GetParameter(2)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
-	float fres3 = deltatRes->GetParameter(4)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
 	TF1 * core = new TF1("core", "gaus", -10,10);
 	core->SetParameters(deltatRes->GetParameter(0), 0,deltatRes->GetParameter(1));
 	makePretty(core);
@@ -130,12 +132,12 @@ void deltaT(string filename = "test.root")
 	bkg2->SetParameters(deltatRes->GetParameter(6), deltatRes->GetParameter(7),deltatRes->GetParameter(8));
 	makePretty(bkg2, kGreen);
 	cout << "P: " << deltatRes->GetParameter(0) << endl;
-	fitResult.fres[0] = deltatRes->GetParameter(0)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
-	fitResult.fres[1] = deltatRes->GetParameter(2)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
-	fitResult.fres[2] = deltatRes->GetParameter(4)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4));
-	fitResult.sigmares[0] = deltatRes->GetParameter(1);
-	fitResult.sigmares[1] = deltatRes->GetParameter(3);
-	fitResult.sigmares[2] = deltatRes->GetParameter(5);
+	fitResult.fres.push_back(deltatRes->GetParameter(0)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4)));
+	fitResult.fres.push_back(deltatRes->GetParameter(2)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4)));
+	fitResult.fres.push_back(deltatRes->GetParameter(4)/(deltatRes->GetParameter(2)+deltatRes->GetParameter(0) + deltatRes->GetParameter(4)));
+	fitResult.sigmares.push_back(deltatRes->GetParameter(1));
+	fitResult.sigmares.push_back(deltatRes->GetParameter(3));
+	fitResult.sigmares.push_back(deltatRes->GetParameter(5));
 	//core->Draw("same");
 	//bkg1->Draw("same");
 	//bkg2->Draw("same");
@@ -164,39 +166,42 @@ void deltaT(string filename = "test.root")
 
 	deltaTErr->Draw();
 	deltaTtrueErr->Draw("same");
-	
-	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 500, 500);
-	c2->cd();
-	int nbins = 50;
-	string dalitzcut = "";
-	TH1F * BHist = new TH1F("BHist", ";#Delta t [ps]", nbins,-10,10);
-	TH1F * BbarHist = new TH1F("BbarHist", ";#Delta t [ps]", nbins,-10,10);
-	TH1F * genBHist = new TH1F("genBHist", ";#Delta t [ps]", nbins,-10,10);
-	TH1F * genBbarHist = new TH1F("genBbarHist", ";#Delta t [ps]", nbins,-10,10);
+	if (gen) 
+	{
+		TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 500, 500);
+		c2->cd();
+		int nbins = 50;
+		string dalitzcut = "";
+		TH1F * BHist = new TH1F("BHist", ";#Delta t [ps]", nbins,-10,10);
+		TH1F * BbarHist = new TH1F("BbarHist", ";#Delta t [ps]", nbins,-10,10);
+		TH1F * genBHist = new TH1F("genBHist", ";#Delta t [ps]", nbins,-10,10);
+		TH1F * genBbarHist = new TH1F("genBbarHist", ";#Delta t [ps]", nbins,-10,10);
 
-        B0Signal->Project("genBHist", "B0_TruthDeltaT", (cut + dalitzcut + "&& B0_mcPDG == 511").c_str());
-        B0Signal->Project("genBbarHist", "B0_TruthDeltaT", (cut + dalitzcut +"&& B0_mcPDG == -511").c_str());
-        B0Signal->Project("BHist", "B0_DeltaT", (cut +dalitzcut+ "&& B0_FANN_qrCombined > 0.6").c_str());
-        B0Signal->Project("BbarHist", "B0_DeltaT", (cut + dalitzcut+"&& B0_FANN_qrCombined < -0.6").c_str());
-	makePretty(BHist);
-	makePretty(BbarHist,kRed);
-	//genBHist->Scale(BHist->GetMaximum()/genBHist->GetMaximum());
-	//genBbarHist->Scale(BHist->GetMaximum()/genBbarHist->GetMaximum());
-	genBHist->SetLineWidth(3);
-	genBHist->SetLineColor(kGray);
-	genBbarHist->SetLineWidth(3);
-	genBbarHist->SetLineColor(kGray+1);
-	genBHist->Scale(1./genBHist->GetEntries());
-	genBbarHist->Scale(1./genBbarHist->Integral());
-	genBHist->Draw("h");
-	genBbarHist->Draw("esame");
-        TF1 * myBdeltaT = new TF1("myBdeltaT",      "0.81*exp(-abs(x)/1.5)/(4*1.5)*( 1 + ([0]*cos(0.51*x)+[1]*sin(0.51*x)) )",-10,10);
-	genBHist->Fit("myBdeltaT");
+		B0Signal->Project("genBHist", "B0_TruthDeltaT", (cut + dalitzcut + "&& B0_mcPDG == 511").c_str());
+		B0Signal->Project("genBbarHist", "B0_TruthDeltaT", (cut + dalitzcut +"&& B0_mcPDG == -511").c_str());
+		B0Signal->Project("BHist", "B0_DeltaT", (cut +dalitzcut+ "&& B0_FANN_qrCombined > 0.6").c_str());
+		B0Signal->Project("BbarHist", "B0_DeltaT", (cut + dalitzcut+"&& B0_FANN_qrCombined < -0.6").c_str());
+		makePretty(BHist);
+		makePretty(BbarHist,kRed);
+		//genBHist->Scale(BHist->GetMaximum()/genBHist->GetMaximum());
+		//genBbarHist->Scale(BHist->GetMaximum()/genBbarHist->GetMaximum());
+		genBHist->SetLineWidth(3);
+		genBHist->SetLineColor(kGray);
+		genBbarHist->SetLineWidth(3);
+		genBbarHist->SetLineColor(kGray+1);
+		genBHist->Scale(1./genBHist->GetEntries());
+		genBbarHist->Scale(1./genBbarHist->Integral());
+		genBHist->Draw("h");
+		genBbarHist->Draw("esame");
+		TF1 * myBdeltaT = new TF1("myBdeltaT",      "0.81*exp(-abs(x)/1.5)/(4*1.5)*( 1 + ([0]*cos(0.51*x)+[1]*sin(0.51*x)) )",-10,10);
+		genBHist->Fit("myBdeltaT");
+	}
 		std::cout << "-------------------------------------------------"  << std::endl;
 	cout <<  "nEvents: " << nevents << " signal fraction: " << fitResult.fsig << endl;
 	std::cout << "Purity: " << puritybar << " shift: " << shift << std::endl;
 	std::cout << "fres1: " << fitResult.fres[0] << " fres2: " << fitResult.fres[1] << " fres3: " << fitResult.fres[2] << " | s1: " << fitResult.sigmares[0]  << " s2: " << fitResult.sigmares[1] << " s3: " << fitResult.sigmares[2]  << std::endl;
 	std::cout << "fbkg: " <<  fitResult.fbkg[0] << " s1: " << fitResult.sigmabkg[0]  << " s2: " << fitResult.sigmabkg[1]  << std::endl;
+	return fitResult;
 	//BHist->Draw("hesame");
 	//BbarHist->Draw("hesame");
 }

@@ -2,17 +2,18 @@ void B0reco(string filename = "test.root")
 {
 	string l0 =  "sqrt(B0_K_10_pi0__z0*B0_K_10_pi0__z0 + B0_K_10_pi0__d0*B0_K_10_pi0__d0) / abs(B0_K_10_pi0_cosTheta)";
 	string l1 =  "sqrt(B0_K_10_pi1__z0*B0_K_10_pi1__z0 + B0_K_10_pi1__d0*B0_K_10_pi1__d0) / abs(B0_K_10_pi1_cosTheta)";
-	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1500,1000);
+	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1980,1000);
 	string chi2 = "pow((B0_deltae -0.0524)/0.0977,2) + pow((B0_mbc-5.277)/0.0128,2) + pow((B0_cosTheta - 0.966)/0.0263,2) +  pow((B0_K_10_K_S0_M - 0.5)/0.005,2)";
 	int nbins = 150;	
-	c1->Divide(3,2);
+	c1->Divide(4,2);
 	c1->cd(1);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string cut = getCuts();
 	string angleCMS = "B0_K_10_useCMSFrame__bodaughterAngleInBetween__bo0__cm1__bc__bc";
 	//cut += "&& " + angleCMS + " < 1.75";
-	string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
+	//string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
+	string mccut= "(B0_isSignal) &&";
 	string mccutrho = " abs(B0_K_10_pi0_MC_MOTHER_ID) ==113 &&";
 	//string mccutrho = " abs(B0_pi0_MC_MOTHER_ID) ==113 &&";
 	//string mccut= "abs(B0_mcPDG) ==511 &&";
@@ -21,14 +22,14 @@ void B0reco(string filename = "test.root")
 	int allB = B0Signal->Draw("B0_mcPDG", ("abs(B0_mcPDG) > -1 &&"+cut).c_str());
 	float trueB = B0Signal->Draw("B0_mcPDG",(mccut+cut).c_str());
 	int totalEntries = 1000;
-	TH1F * deltaEHist = new TH1F("deltaEHist", ";axis []", 50,-0.5,0.5);
-	TH1F * deltaEAllHist = new TH1F("deltaEAllHist", ";#Delta E [GeV]", 50,-0.5,0.5);
+	TH1F * deltaEHist = new TH1F("deltaEHist", ";axis []", 50,-0.2,0.2);
+	TH1F * deltaEAllHist = new TH1F("deltaEAllHist", ";#Delta E [GeV]", 50,-0.2,0.2);
 	
 	TH1F * MHist = new TH1F("MHist", ";axis []", 50,5,5.5);
 	TH1F * MAllHist = new TH1F("MAllHist", ";M [GeV]", 50,5,5.5);
 	
-	TH1F * MbcHist = new TH1F("MbcHist", ";M_{bc} []", 50,5.25,5.3);
-	TH1F * MbcAllHist = new TH1F("MbcAllHist", ";M_{bc} [GeV]", 50,5.25,5.3);
+	TH1F * MbcHist = new TH1F("MbcHist", ";M_{bc} []", 50,5.2,5.3);
+	TH1F * MbcAllHist = new TH1F("MbcAllHist", ";M_{bc} [GeV]", 50,5.2,5.3);
 	
 	TH1F * cosHist = new TH1F("cosHist", ";cos#theta []", 50,0.8,1);
 	TH1F * cosAllHist = new TH1F("cosAllHist", ";cos#theta []", 50,0.8,1);
@@ -103,6 +104,38 @@ void B0reco(string filename = "test.root")
 	myBW->SetParLimits(4,0.48,0.52);
 	myBW->SetParLimits(5,0.001,1);
 	chiHist->Fit("myBW","L");
+	c1->cd(7);
+	TH1F * KsRhoHist = new TH1F("KsRhoHist", ";axis []", 150,0,10.5);
+	TH1F * KsRhoAllHist = new TH1F("KsRhoAllHist", ";#rho [cm]", 150,0,10.5);
+	//string ksrho = "B0_K_10_K_S0_significanceOfDistance";
+	string ksrho = "B0_K_10_K_S0_Rho";
+	//string ksrho = "B0_K_10_K_S0_Z";
+	B0Signal->Project("KsRhoAllHist",ksrho.c_str(),cut.c_str());
+	B0Signal->Project("KsRhoHist",ksrho.c_str(),(mccut+cut).c_str(), "same");
+	
+	KsRhoAllHist->Draw();
+	makePretty(KsRhoHist);
+	makePretty(KsRhoAllHist, kGray+1);
+	KsRhoHist->Draw("same");
+	
+	c1->cd(8);
+	TH1F * KsVtxHist = new TH1F("KsVtxHist", ";axis []", 150,0,1);
+	TH1F * KsVtxAllHist = new TH1F("KsVtxAllHist", ";p-value []", 150,0,1);
+	//string vtx = "B0_K_10_K_S0_VtxPvalue";
+	string vtx = "B0_VtxPvalue";
+	//string vtx = "B0_K_10_pi0_z0";
+
+	B0Signal->Project("KsVtxAllHist",vtx.c_str(),cut.c_str());
+	B0Signal->Project("KsVtxHist",vtx.c_str(),(mccut+cut).c_str(), "same");
+	
+	KsVtxAllHist->Draw();
+	makePretty(KsVtxHist);
+	makePretty(KsVtxAllHist, kGray+1);
+	KsVtxHist->Draw("same");
+	//----------------------------------------------------------------//
+	//----------------------------------------------------------------//
+	//----------------------------------------------------------------//
+	//----------------------------------------------------------------//
 	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 1000, 500);
 	c2->Divide(2,1);
 	c2->cd(1);

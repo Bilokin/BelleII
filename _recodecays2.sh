@@ -10,8 +10,8 @@ fi
 fileNames=""
 for file in `ls $query`
 do
-	echo "basf2 RecoDecays.py $file tmp-$outFileName$number$root > /dev/null &"
-	basf2 RecoDecays.py $file tmp-$outFileName$number$root > /dev/null &
+	echo "basf2 _RecoDecayspi0.py $file tmp-$outFileName$number$root > /dev/null &"
+	basf2 _RecoDecayspi0.py $file tmp-$outFileName$number$root > /dev/null &
 	fileNames+=tmp-$outFileName$number$root" "
 	if [[ $number%$parallelProcesses -eq 0 ]]; then
 		echo "And now we wait..."

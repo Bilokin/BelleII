@@ -1,15 +1,3 @@
-void makePretty(TH1F* htemp, int color = kBlue)
-{
-	htemp->SetLineWidth(3);
-	htemp->SetFillStyle(3004);
-	htemp->SetFillColor(color);
-	htemp->SetLineColor(color);
-	if(color != kBlue)
-	{
-		htemp->SetFillStyle(3005);
-	}
-
-}
 void K0reco(string filename = "test.root")
 {
 	TFile * file = TFile::Open(filename.c_str());
