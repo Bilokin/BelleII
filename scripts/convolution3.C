@@ -16,7 +16,7 @@
 #include "RooPlot.h"
 using namespace RooFit ;
 
-void convolution(fitSettings set, TTree* tree = NULL)
+void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false)
 {
 	std::cout << " ____________________________" << std::endl;
 	std::cout << "|                            |" << std::endl;
@@ -33,26 +33,28 @@ void convolution(fitSettings set, TTree* tree = NULL)
 	RooCategory q("q","Flavour of the tagged B0") ;
 		q.defineType("B0",1) ;
 		q.defineType("B0bar",-1) ;
+	//RooRealVar w("w","flavour mistag rate",set.w);
+	RooRealVar w("w","flavour mistag rate",0,0.5);
 
 	RooDataSet* data = NULL;
+	RooDataSet* wdata = NULL;
 	if (tree) 
 	{
-		data = new RooDataSet(name.c_str(), name.c_str(), RooArgSet(dt,q), Import(*tree));
+		data = new RooDataSet(name.c_str(), name.c_str(), RooArgSet(dt,q,w), Import(*tree));
 	}
 	
 	RooRealVar fsig1("fsig1","fsig parameter",set.fsig);
 	RooRealVar fsig2("fsig2","fsig parameter",1-set.fsig);
 	RooRealVar dm("dm","delta m(B0)",0.509);
 	RooRealVar tau("tau","tau (B0)",1.547);
-	RooRealVar w("w","flavour mistag rate",set.w);
 	RooRealVar dw("dw","delta mistag rate for B0/B0bar",set.dw);
 	// Use delta function resolution model
 	//RooTruthModel truthModel("tm","truth model",dt);
 
 	// Additional parameters needed for B decay with CPV
 	RooRealVar CPeigen("CPeigen","CP eigen value",1);
-	RooRealVar A("A","A",0.1,-0.5,0.5);
-	RooRealVar S("S","S",0.3,-0.5,0.5);
+	RooRealVar A("A","A",0.1,-1,1);
+	RooRealVar S("S","S",0.3,-1,1);
 	RooRealVar effR("effR","B0/B0bar reco efficiency ratio",0.) ;
 
 	RooRealVar fres1("fres1","fres parameter",set.fres[0]);
@@ -91,17 +93,19 @@ void convolution(fitSettings set, TTree* tree = NULL)
 	if (!data) 
 	{
 		int nevents = 1315.12/set.fsig;   // PHASE III  2 ab^-1 DATASET
-		nevents = 32877.9/set.fsig; // FULL      50 ab^-1 DATASET
+		//nevents = 32877.9/set.fsig; // FULL      50 ab^-1 DATASET
 		//nevents = 20725/set.fsig; // Total MC DATASET
-		//nevents = 30000;
+		w.setRange(0.,0.39);
+		RooGenericPdf wpdf("wpdf","0.0161275-0.229947*w+3.25998*pow(w,2)-18.8331*pow(w,3)+45.926*pow(w,4)-37.8687*pow(w,5)",RooArgList(w));
 		std::cout << " _________________________________________ \n" << std::endl;
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
-		data = combinedQ.generate(RooArgSet(dt,q), nevents);
+		wdata = wpdf.generate(RooArgSet(w),nevents);
+		//data = combinedQ.generate(RooArgSet(dt,q), nevents);
+		data = combinedQ.generate(RooArgSet(dt,q), ProtoData(*wdata));
 		A.setVal(0);
 		S.setVal(0);
 	}
-	data->get(0)->Print();
 	RooFitResult* resb = combinedQ.fitTo(*data, Save()) ;
 	// Plot B0 and B0bar tagged data separately
 	RooPlot* frame = dt.frame(Title("B decay (B0/B0bar)")) ;
@@ -123,24 +127,31 @@ void convolution(fitSettings set, TTree* tree = NULL)
 	resb->plotOn(frame2,A,S,"MEHV") ;
 	c->cd(2);
 	gPad->SetLeftMargin(0.15) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
+	if (showSecCanvas) 
+	{
+		TCanvas* cw = new TCanvas("cw","w",500,500) ;
+		RooPlot* framew = w.frame(Title("w (B0/B0bar)"));
+		data->plotOn(framew) ;
+		gPad->SetLeftMargin(0.15) ; framew->GetYaxis()->SetTitleOffset(1.6) ; framew->Draw() ;
+	}
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
-	combinedSignalRes.coefList().Print();
 	std::cout << "-----------------------------" << std::endl;
 	resb->Print();
 }
 
-void convolution3(float fsig = 0.7)
+void convolution3(float fsig = 0.7, bool showSecCanvas = false)
 {
 	fitSettings settings;
 	settings.fsig = fsig;
 	settings.dw = 0.01;
-	settings.w = 0.2;
+	settings.w = 0.26;
 	settings.fres = {0.67, 0.05, 0.28};
 	settings.fbkg = {0.22, 0.78};
 	settings.sigmabkg = {4.3, 1.5};
+	settings.wparameters = {0.501543, 0.316146};
 	settings.sigmares = {0.57, 4.6, 1.46};
 	
-	convolution(settings, NULL);
+	convolution(settings, NULL, showSecCanvas);
 }
 

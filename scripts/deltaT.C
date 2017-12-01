@@ -24,6 +24,7 @@ fitSettings deltaT(string filename = "test.root")
 	c1->Divide(3,2);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(1);
 	TH1F * deltaTBtrueHist = new TH1F("deltaTBtrueHist", ";#Delta t [ps]", 50,-10,10);
 	TH1F * deltaTBbkgHist = new TH1F("deltaTBbkgHist", ";#Delta t [ps]", 50,-10,10);
@@ -64,17 +65,20 @@ fitSettings deltaT(string filename = "test.root")
 	deltaTPullAllHist->Draw();
 	deltaTPullHist->Draw("same");
 	deltaTPullHist->Fit("gaus");
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(2);
 	int nbinsf = 100;
 	TH1F * tagBtrueHist = new TH1F("tagBtrueHist", ";FBDT []; Purity", nbinsf,-1,1);
 	TH1F * tagBAllHist = new TH1F("tagBAllHist", ";FBDT []", nbinsf,-1,1);
 	TH1F * tagBbartrueHist = new TH1F("tagBbartrueHist", ";FBDT []", nbinsf,-1,1);
+	TH1F * wHist = new TH1F("wHist", ";w []", nbinsf,0,0.5);
 	tagBtrueHist->Sumw2();
 	tagBbartrueHist->Sumw2();
 	tagBAllHist->Sumw2();
-	B0Signal->Project("tagBtrueHist", "B0_FANN_qrCombined", (cut + trueB + "&& B0_mcPDG == 511").c_str());
-	B0Signal->Project("tagBAllHist", "B0_FANN_qrCombined", (cut+trueB).c_str());
-	B0Signal->Project("tagBbartrueHist", "B0_FANN_qrCombined", (cut + trueB + "&& B0_mcPDG == -511").c_str());
+	B0Signal->Project("tagBtrueHist", "B0_FBDT_qrCombined", (cut + trueB + "&& B0_qrMC == 1").c_str());
+	B0Signal->Project("tagBAllHist", "B0_FBDT_qrCombined", (cut+trueB).c_str());
+	B0Signal->Project("tagBbartrueHist", "B0_FBDT_qrCombined", (cut + trueB + "&& B0_qrMC == -1").c_str());
+	//wHist->Divide(tagBbartrueHist, tagBAllHist);
 	tagBtrueHist->Divide(tagBAllHist);
 	tagBbartrueHist->Divide(tagBAllHist);
 	makePretty(tagBtrueHist);
@@ -84,12 +88,21 @@ fitSettings deltaT(string filename = "test.root")
 	tagBtrueHist->Draw("he");
 	tagBbartrueHist->Draw("samehe");
 	float qlow = 0.5; float qhigh = 1.;
-	float puritybar = tagBbartrueHist->Integral(3,4)/(tagBbartrueHist->Integral(3,4) + tagBtrueHist->Integral(3,4));
-	float purity =       tagBtrueHist->Integral( 1 ,2)/(tagBbartrueHist->Integral( 1, 2) + tagBtrueHist->Integral( 1, 2));
-	//float shift = (tagBtrueHist->Integral(-qhigh,qhigh)-tagBbartrueHist->Integral(-qhigh,qhigh))/(tagBbartrueHist->Integral(-qhigh,qhigh) + tagBtrueHist->Integral(-qhigh,qhigh));
-	float shift = purity - puritybar;
-	fitResult.w = 0.2; std::cout << "-----------------\nCRUNCH: w is not a real value!!!!\n--------------------" << std::endl;
-	fitResult.dw = 0.01; std::cout << "-----------------\nCRUNCH: dw is not a real value!!!!\n--------------------" << std::endl;
+	TF1 * wFunc = new TF1("wFunc","[0]+[1]*x",0,1);
+	TF1 * wFuncbar = new TF1("wFuncbar","[0]+[1]*x",0,1);
+	wFuncbar->SetLineColor(kRed+1);
+	wFunc->SetLineColor(kBlue+1);
+	tagBbartrueHist->Fit(wFuncbar);
+	tagBtrueHist->Fit(wFunc);
+	float wratio = wFunc->Integral(0,1)/ wFuncbar->Integral(-1,0);
+	std::cout << "wratio: " << wratio  << std::endl;
+	fitResult.dw = -abs(1-wratio);
+	fitResult.wparameters = {(float)wFuncbar->GetParameter(0), (float)wFuncbar->GetParameter(1)};
+	B0Signal->Project("wHist", ("(" + to_string(fitResult.wparameters[0]) +"+"+ to_string(fitResult.wparameters[1]) + "*abs(B0_FANN_qrCombined))").c_str(), (cut + trueB +  "&& abs(B0_qrMC) == 1").c_str());
+	wHist->Scale(1./wHist->GetEntries());
+	makePretty(wHist);
+	fitResult.w = wHist->GetMean();// std::cout << "-----------------\nCRUNCH: w is not a real value!!!!\n--------------------" << std::endl;
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(4);
 	
 	TH1F * deltaTResHist = new TH1F("deltaTResHist", ";#Delta t [ps]", 50,-10,10.);
@@ -141,6 +154,7 @@ fitSettings deltaT(string filename = "test.root")
 	//core->Draw("same");
 	//bkg1->Draw("same");
 	//bkg2->Draw("same");
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(5);
 
 	TH1F * deltaTBPHist = new TH1F("deltaTBPHist", ";#Delta t [ps]", 50,-10,10);
@@ -154,7 +168,13 @@ fitSettings deltaT(string filename = "test.root")
 	makePretty(deltaTBbarPHist,kRed);
 	deltaTBPHist->Draw();
 	deltaTBbarPHist->Draw("same");
+	TF1 * wPDF = new TF1("wPDF", "pol5",0.,0.38);
+	wPDF->SetLineColor(kBlue+1);
+	wHist->Draw("he");
+	wHist->Fit("wPDF","QR");
 	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(6);
 	TH1F * deltaTErr = new TH1F("deltaTErr", ";#Delta t uncertainty [ps]", 50,0,5);
 	TH1F * deltaTtrueErr = new TH1F("deltaTtrueErr", ";#Delta t [ps]", 50,0,5);
@@ -166,6 +186,7 @@ fitSettings deltaT(string filename = "test.root")
 
 	deltaTErr->Draw();
 	deltaTtrueErr->Draw("same");
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (gen) 
 	{
 		TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 500, 500);
@@ -198,9 +219,11 @@ fitSettings deltaT(string filename = "test.root")
 	}
 		std::cout << "-------------------------------------------------"  << std::endl;
 	cout <<  "nEvents: " << nevents << " signal fraction: " << fitResult.fsig << endl;
-	std::cout << "Purity: " << puritybar << " shift: " << shift << std::endl;
-	std::cout << "fres1: " << fitResult.fres[0] << " fres2: " << fitResult.fres[1] << " fres3: " << fitResult.fres[2] << " | s1: " << fitResult.sigmares[0]  << " s2: " << fitResult.sigmares[1] << " s3: " << fitResult.sigmares[2]  << std::endl;
-	std::cout << "fbkg: " <<  fitResult.fbkg[0] << " s1: " << fitResult.sigmabkg[0]  << " s2: " << fitResult.sigmabkg[1]  << std::endl;
+	fitResult.Print();
+	std::cout << wPDF->GetExpFormula("p") << std::endl;
+	//std::cout << "Purity: " << fitResult.w << " shift: " << fitResult.dw << std::endl;
+	//std::cout << "fres1: " << fitResult.fres[0] << " fres2: " << fitResult.fres[1] << " fres3: " << fitResult.fres[2] << " | s1: " << fitResult.sigmares[0]  << " s2: " << fitResult.sigmares[1] << " s3: " << fitResult.sigmares[2]  << std::endl;
+	//std::cout << "fbkg: " <<  fitResult.fbkg[0] << " s1: " << fitResult.sigmabkg[0]  << " s2: " << fitResult.sigmabkg[1]  << std::endl;
 	return fitResult;
 	//BHist->Draw("hesame");
 	//BbarHist->Draw("hesame");

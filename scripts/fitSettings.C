@@ -15,11 +15,17 @@ struct fitSettings {
 	vector<float> sigmares;//[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
 	float w = 0.0;
 	float dw = 0.0;
-
+	vector<float> wparameters;
 	void Print()
 	{
 		std::cout << "Signal fraction: " << fsig << std::endl;
 		std::cout << "Flavor contamination w: " << w << " dw: " << dw << std::endl;
+		std::cout << "w parameters: ";
+		for (unsigned int i = 0; i < wparameters.size(); i++) 
+		{
+			std::cout <<  wparameters[i] << " ";
+		}
+		std::cout << std::endl;
 		std::cout << "Signal resolution fractions:  ";
 		for (unsigned int i = 0; i < fres.size(); i++) 
 		{

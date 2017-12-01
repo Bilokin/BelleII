@@ -60,8 +60,9 @@ string getCuts()
 	cut += "&& B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
 	cut += " && abs(B0_DeltaT) < 20";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
+	cut += " && abs(B0_FANN_qrCombined) > 0. ";
 	//cut += " && (B0_m23 > 0.95 ||  B0_m23 < 0.85) && (B0_m13 > 0.95 ||  B0_m13 < 0.85)";
-	cut += " && abs(B0_FANN_qrCombined) > 0.5 ";
+	//cut += " && abs(B0_FANN_qrCombined) > 0.5 ";
 	return cut;
 }
 

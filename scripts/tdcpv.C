@@ -2,15 +2,17 @@
 #include "convolution3.C"
 #include "deltaT.C"
 
-void addBranches(TTree* T)
+void addBranches(TTree* T, fitSettings set)
 {
 	float dt = 0;
 	float dterr = 0;
 	int q = 1;
+	float w = 0;
 	float fann = 0;
 	TBranch *bdt = T->Branch("dt",&dt,"dt/F");
-	TBranch *bdterr = T->Branch("dterr",&dt,"dterr/F");
+	TBranch *bdterr = T->Branch("dterr",&dterr,"dterr/F");
 	TBranch *bq = T->Branch("q",&q,"q/I");
+	TBranch *bw = T->Branch("w",&w,"w/F");
 	T->SetBranchAddress("B0_FANN_qrCombined",&fann);
 	T->SetBranchAddress("B0_DeltaT",&dt);
 	T->SetBranchAddress("B0_DeltaTErr",&dterr);
@@ -23,9 +25,12 @@ void addBranches(TTree* T)
 	{
 		T->GetEntry(i);
 		q = TMath::Sign(1,fann);
+		w = (set.wparameters[0]+set.wparameters[1]*abs(fann));
+		//std::cout << "w: " << w << std::endl;
 		bdt->Fill();
 		bdterr->Fill();
 		bq->Fill();
+		bw->Fill();
 	}
 	T->Write();
 	//T->Print();
@@ -38,13 +43,14 @@ void tdcpv(string filename = "test.root")
 	string cutB = "&& B0_FANN_qrCombined > 0.5";
 	string cutBbar = "&& B0_FANN_qrCombined < -0.5";
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 500,500);
+	fitSettings settings = deltaT(filename);
 	//c1->Divide(3,2);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	TFile * f2 = new TFile("tmp-branch.root","recreate");
 	TTree* B0Signal2 = B0Signal->CopyTree(cut.c_str());
 	//B0Signal2->Scan("B0_DeltaTErr");
-	addBranches(B0Signal2);
+	addBranches(B0Signal2, settings);
 	f2->Write();
 	file->cd();
 	//c1->cd(1);
@@ -61,7 +67,6 @@ void tdcpv(string filename = "test.root")
 	deltaTBbarHist->Draw("hesame");
 	std::cout << "B: " << neventsb << " Bbar: " << neventsbbar << std::endl;
 	f2->cd();
-	fitSettings settings = deltaT(filename);
 	//convolution2(B0Signal2, 0.8);
 	convolution(settings, B0Signal2);
 	//convolution(createRooHist(deltaTBHist), createRooHist(deltaTBbarHist));

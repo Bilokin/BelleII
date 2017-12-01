@@ -74,7 +74,7 @@ matchMCTruth('K_10:all')
 matchMCTruth('gamma:loose')
 #rankByHighest()
 
-toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
+toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
 toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
@@ -90,7 +90,7 @@ toolsB0_meson += ['DeltaEMbc','^B0']
 toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^K_10 -> pi+ pi- K_S0] gamma']
 toolsB0_meson += ['Dalitz', '^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['TrackHits','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
+toolsB0_meson += ['TrackHits','B0 -> [K_10 -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
 toolsB0_meson += ['TagVertex', '^B0']
 toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']

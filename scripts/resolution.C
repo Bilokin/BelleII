@@ -15,8 +15,8 @@ void resolution(string filename = "test.root")
 	makePretty(deltaTResAllHist, kGray+1);
 	//deltaTResAllHist->Draw();
 	//deltaTResHist->Draw("same");
-
-	TH2F * deltaTRes2Hist = new TH2F("deltaTRes2Hist", "Residual #Delta t ;#Delta t error", 25,0.2,1, 50,-5,5);
+	int nbins = 100;
+	TH2F * deltaTRes2Hist = new TH2F("deltaTRes2Hist", "Residual #Delta t ;#Delta t error", nbins,0.3,2.5, 50,-5,5);
 	B0Signal->Project("deltaTRes2Hist", "(B0_DeltaT-B0_TruthDeltaT):B0_DeltaTErr", (cut + trueB).c_str());
 	c1->cd(1);
 	//gPad->SetLogz();
@@ -24,4 +24,11 @@ void resolution(string filename = "test.root")
 	c1->cd(2);
 	TProfile* profile = deltaTRes2Hist->ProfileX("Profile",1,-1,"s");
 	profile->Draw();
+	TH1F * rmsHist = new TH1F("rmsHist", ";axis []", nbins,0.3,2.5);
+	for (unsigned int i = 0; i < nbins; i++) 
+	{
+		rmsHist->SetBinContent(i+1,profile->GetBinError(i+1));
+	}
+	makePretty(rmsHist);
+	rmsHist->Draw("h");
 }
