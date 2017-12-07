@@ -10,6 +10,7 @@ mc-v09/*
 pdf/*
 scripts/rootpandas.ipynb
 scripts/MVA.ipynb
+*.swp
 
 # Object files
 *.o
