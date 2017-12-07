@@ -9,6 +9,29 @@ void makePretty(TF1* htemp, int color = kBlue)
 	}
 	
 }
+TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err", float r1 = 0, float r2 = 1, string mccut =  "(B0_isSignal) &&")
+{
+	int nbins = 100;	
+	string observable = name;
+	string histname = name;
+	if (histname.size() > 10) 
+	{
+		histname =  name.substr(1,5)+title.substr(0,4);
+	}
+	TH1F * xPullHist = new TH1F((histname+"Hist").c_str(), (";"+title).c_str(), nbins,r1, r2);
+	TH1F * xPullAllHist = new TH1F((histname+"AllHist").c_str(), (";"+title).c_str(), nbins, r1, r2);
+	
+	B0Signal->Project((histname+"Hist").c_str(), observable.c_str(),(mccut+cut).c_str());
+	B0Signal->Project((histname+"AllHist").c_str(), observable.c_str(),(cut).c_str(), "same");
+	
+	makePretty(xPullHist);
+	makePretty(xPullAllHist, kGray+1);
+	
+	xPullAllHist->Draw("he");
+	xPullHist->Draw("hesame");
+	return xPullHist;
+}
+
 
 
 fitSettings deltaT(string filename = "test.root")
@@ -26,18 +49,12 @@ fitSettings deltaT(string filename = "test.root")
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(1);
-	TH1F * deltaTBtrueHist = new TH1F("deltaTBtrueHist", ";#Delta t [ps]", 50,-10,10);
-	TH1F * deltaTBbkgHist = new TH1F("deltaTBbkgHist", ";#Delta t [ps]", 50,-10,10);
-	TH1F * deltaTBHist = new TH1F("deltaTBHist", ";#Delta t [ps]", 50,-10,10);
-	
-	float neventstrue = B0Signal->Project("deltaTBtrueHist", "(B0_DeltaT)", (cut + trueB).c_str());
+	TH1F * deltaTBbkgHist = new TH1F("deltaTBbkgHist", ";#Delta t [ps]", 100,-10,10);
 	float neventsbkg = B0Signal->Project("deltaTBbkgHist", "(B0_DeltaT)", (cut + bkgB).c_str());
-	float nevents = B0Signal->Project("deltaTBHist", "(B0_DeltaT)", (cut).c_str());
-	makePretty(deltaTBtrueHist);
 	makePretty(deltaTBbkgHist, kGreen +1);
-	makePretty(deltaTBHist, kGray+1);
-	deltaTBHist->Draw();
-	deltaTBtrueHist->Draw("same");
+	TH1F * deltaTBtrueHist = drawHists(B0Signal, "B0_DeltaT", cut, "#Deltat [ps]",-10,10);
+	float neventstrue =  deltaTBtrueHist->GetEntries();
+	float nevents = deltaTBtrueHist->GetEntries() + neventsbkg;
 	deltaTBbkgHist->Draw("same");
 	//TF1 * deltat = new TF1("deltat","[0]*TMath::Gaus(x,[1],[2])+ [3]*TMath::Gaus(x,0,[4])",-10,10);	
 	TF1 * bkgPdf = new TF1("bkgPdf","[0]*TMath::Gaus(x,0,[1],1)+ [2]*TMath::Gaus(x,0,[3],1)",-10,10);
@@ -53,21 +70,11 @@ fitSettings deltaT(string filename = "test.root")
 	//coreT->Draw("same");
 	c1->cd(3);
 	
-	TH1F * deltaTPullHist = new TH1F("deltaTPullHist", ";#Delta t [ps]", 50,-10,10.);
-	TH1F * deltaTPullAllHist = new TH1F("deltaTPullAllHist", ";pull #Delta t ", 50,-10,10.);
-	TH2F * ddeltaT2Hist = new TH2F("ddeltaT2Hist", ";#Delta#Delta t [ps]", 50,0,3, 50,0,10 );
-	B0Signal->Project("ddeltaT2Hist", "(B0_DeltaT-B0_TruthDeltaT) : B0_DeltaTErr", (cut + trueB ).c_str());
-	B0Signal->Project("deltaTPullHist", "(B0_DeltaT-B0_TruthDeltaT)/B0_DeltaTErr", (cut + trueB).c_str());
-	B0Signal->Project("deltaTPullAllHist", "((B0_DeltaT-B0_TruthDeltaT))/B0_DeltaTErr", (cut).c_str());
-	ddeltaT2Hist->Draw();
-	makePretty(deltaTPullHist);
-	makePretty(deltaTPullAllHist, kGray+1);
-	deltaTPullAllHist->Draw();
-	deltaTPullHist->Draw("same");
+	TH1F * deltaTPullHist = drawHists(B0Signal, "(B0_DeltaT-B0_TruthDeltaT)/B0_DeltaTErr", cut, "pull #Deltat [sigma]",-10,10);
 	deltaTPullHist->Fit("gaus");
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(2);
-	int nbinsf = 100;
+	int nbinsf = 50;
 	TH1F * tagBtrueHist = new TH1F("tagBtrueHist", ";FBDT []; Purity", nbinsf,-1,1);
 	TH1F * tagBAllHist = new TH1F("tagBAllHist", ";FBDT []", nbinsf,-1,1);
 	TH1F * tagBbartrueHist = new TH1F("tagBbartrueHist", ";FBDT []", nbinsf,-1,1);
@@ -76,7 +83,7 @@ fitSettings deltaT(string filename = "test.root")
 	tagBbartrueHist->Sumw2();
 	tagBAllHist->Sumw2();
 	B0Signal->Project("tagBtrueHist", "B0_FBDT_qrCombined", (cut + trueB + "&& B0_qrMC == 1").c_str());
-	B0Signal->Project("tagBAllHist", "B0_FBDT_qrCombined", (cut+trueB).c_str());
+	B0Signal->Project("tagBAllHist", "B0_FBDT_qrCombined", (cut+trueB+ "&& abs(B0_qrMC)  == 1").c_str());
 	B0Signal->Project("tagBbartrueHist", "B0_FBDT_qrCombined", (cut + trueB + "&& B0_qrMC == -1").c_str());
 	//wHist->Divide(tagBbartrueHist, tagBAllHist);
 	tagBtrueHist->Divide(tagBAllHist);
@@ -85,7 +92,7 @@ fitSettings deltaT(string filename = "test.root")
 	makePretty(tagBAllHist, kGray+1);
 	makePretty(tagBbartrueHist,kRed);
 	//tagBAllHist->Draw();
-	tagBtrueHist->Draw("he");
+	tagBtrueHist->Draw("samehe");
 	tagBbartrueHist->Draw("samehe");
 	float qlow = 0.5; float qhigh = 1.;
 	TF1 * wFunc = new TF1("wFunc","[0]+[1]*x",0,1);
@@ -97,29 +104,16 @@ fitSettings deltaT(string filename = "test.root")
 	float wratio = wFunc->Integral(0,1)/ wFuncbar->Integral(-1,0);
 	std::cout << "wratio: " << wratio  << std::endl;
 	fitResult.dw = -abs(1-wratio);
+	//fitResult.wparameters = {0.5, -0.5};
 	fitResult.wparameters = {(float)wFuncbar->GetParameter(0), (float)wFuncbar->GetParameter(1)};
-	B0Signal->Project("wHist", ("(" + to_string(fitResult.wparameters[0]) +"+"+ to_string(fitResult.wparameters[1]) + "*abs(B0_FANN_qrCombined))").c_str(), (cut + trueB +  "&& abs(B0_qrMC) == 1").c_str());
+	B0Signal->Project("wHist", ("abs(" + to_string(fitResult.wparameters[0]) +"+"+ to_string(fitResult.wparameters[1]) + "*abs(B0_FANN_qrCombined))").c_str(), (cut + trueB +  "&& abs(B0_qrMC) == 1").c_str());
 	wHist->Scale(1./wHist->GetEntries());
 	makePretty(wHist);
 	fitResult.w = wHist->GetMean();// std::cout << "-----------------\nCRUNCH: w is not a real value!!!!\n--------------------" << std::endl;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(4);
-	
-	TH1F * deltaTResHist = new TH1F("deltaTResHist", ";#Delta t [ps]", 50,-10,10.);
-	TH1F * deltaTResAllHist = new TH1F("deltaTResAllHist", ";Residual #Delta t ", 50,-10,10.);
-	//TH2F * deltaT2Hist = new TH2F("deltaT2Hist", ";#Delta t [ps]", 50,-10,10, 50,-10,10 );
-	TH2F * deltaT2Hist = new TH2F("deltaT2Hist", ";#Delta t [ps]", 50,0,0.1, 50,0,3 );
-	
-	//B0Signal->Project("deltaT2Hist", "B0_DeltaT:B0_TruthDeltaT", (cut + trueB).c_str());
-	B0Signal->Project("deltaT2Hist", "abs((B0_DeltaT-B0_TruthDeltaT)/B0_TruthDeltaT) : abs(B0_TagVz-B0_Z)", (cut + trueB).c_str());
-	B0Signal->Project("deltaTResHist", "(B0_DeltaT-B0_TruthDeltaT)", (cut + trueB).c_str());
-	B0Signal->Project("deltaTResAllHist", "((B0_DeltaT-B0_TruthDeltaT))", (cut).c_str());
-	//deltaTResHist->Scale(1./deltaTResHist->GetEntries());
-	//deltaTResAllHist->Scale(1./deltaTResHist->GetEntries());
-	makePretty(deltaTResHist);
-	makePretty(deltaTResAllHist, kGray+1);
-	deltaT2Hist->Draw("colz");
-	deltaTResAllHist->Draw("he");
+	TH1F * deltaTResHist = drawHists(B0Signal, "(B0_DeltaT-B0_TruthDeltaT)", cut, "Residual #Deltat [ps]",-10,10);
+
 	deltaTResHist->Draw("samehe");
 	//TF1 * deltatRes = new TF1("deltatRes","gaus+gaus(3)",-10,10);
 	//TF1 * deltatRes = new TF1("deltatRes","[0]*TMath::Gaus(x,[1],[2]) + (1.-[0])*([3]*TMath::Gaus(x,[4],[5]) + (1.-[3]) * TMath::Gaus(x,[6],[7]) )",-10,10);
@@ -156,7 +150,6 @@ fitSettings deltaT(string filename = "test.root")
 	//bkg2->Draw("same");
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(5);
-
 	TH1F * deltaTBPHist = new TH1F("deltaTBPHist", ";#Delta t [ps]", 50,-10,10);
 	TH1F * deltaTBbarPHist = new TH1F("deltaTBbarPHist", ";#Delta t [ps]", 50,-10,10);
 
@@ -168,24 +161,14 @@ fitSettings deltaT(string filename = "test.root")
 	makePretty(deltaTBbarPHist,kRed);
 	deltaTBPHist->Draw();
 	deltaTBbarPHist->Draw("same");
-	TF1 * wPDF = new TF1("wPDF", "pol5",0.,0.38);
+	TF1 * wPDF = new TF1("wPDF", "pol5",0.0,0.5);
 	wPDF->SetLineColor(kBlue+1);
 	wHist->Draw("he");
 	wHist->Fit("wPDF","QR");
-	
-	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	c1->cd(6);
-	TH1F * deltaTErr = new TH1F("deltaTErr", ";#Delta t uncertainty [ps]", 50,0,5);
-	TH1F * deltaTtrueErr = new TH1F("deltaTtrueErr", ";#Delta t [ps]", 50,0,5);
-
-        B0Signal->Project("deltaTtrueErr", "B0_DeltaTErr", (cut + trueB).c_str());
-        B0Signal->Project("deltaTErr", "B0_DeltaTErr", (cut ).c_str());
-	makePretty(deltaTtrueErr);
-	makePretty(deltaTErr,kGray+1);
-
-	deltaTErr->Draw();
-	deltaTtrueErr->Draw("same");
+	TH1F * deltaTErrHist = drawHists(B0Signal, "(B0_DeltaTErr)", cut, "Uncertainty #Deltat [ps]",0,5);
+	deltaTErrHist->Fit("landau");
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (gen) 
 	{

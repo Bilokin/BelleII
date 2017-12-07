@@ -26,7 +26,7 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 	std::cout << "____________________________\n" << std::endl;
 	string name = "MC";
 	// Parameters
-	RooRealVar dt("dt","#Delta t [ps]",-10,10) ;
+	RooRealVar dt("dt","#Delta t [ps]",-20,20) ;
 	//dt.setBins(50) ;
 
 
@@ -46,7 +46,7 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 	RooRealVar fsig1("fsig1","fsig parameter",set.fsig);
 	RooRealVar fsig2("fsig2","fsig parameter",1-set.fsig);
 	RooRealVar dm("dm","delta m(B0)",0.509);
-	RooRealVar tau("tau","tau (B0)",1.547);
+	RooRealVar tau("tau","tau (B0)",1.52);
 	RooRealVar dw("dw","delta mistag rate for B0/B0bar",set.dw);
 	// Use delta function resolution model
 	//RooTruthModel truthModel("tm","truth model",dt);
@@ -94,9 +94,9 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 	{
 		int nevents = 1315.12/set.fsig;   // PHASE III  2 ab^-1 DATASET
 		//nevents = 32877.9/set.fsig; // FULL      50 ab^-1 DATASET
-		//nevents = 20725/set.fsig; // Total MC DATASET
-		w.setRange(0.,0.39);
-		RooGenericPdf wpdf("wpdf","0.0161275-0.229947*w+3.25998*pow(w,2)-18.8331*pow(w,3)+45.926*pow(w,4)-37.8687*pow(w,5)",RooArgList(w));
+		//nevents = 47471; // Total MC DATASET
+		w.setRange(0.,0.5);
+		RooGenericPdf wpdf("wpdf","0.0275595+-0.350588*w+3.81378*pow(w,2)+-17.1999*pow(w,3)+33.2703*pow(w,4)+-22.3068*pow(w,5)",RooArgList(w));
 		std::cout << " _________________________________________ \n" << std::endl;
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
@@ -108,8 +108,9 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 	}
 	RooFitResult* resb = combinedQ.fitTo(*data, Save()) ;
 	// Plot B0 and B0bar tagged data separately
+	dt.setRange(-10,10);
 	RooPlot* frame = dt.frame(Title("B decay (B0/B0bar)")) ;
-
+	
 	data->plotOn(frame,Cut("q==q::B0"),MarkerColor(kBlue), MarkerStyle(22)) ;
 	combinedQ.plotOn(frame, Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
 	//combinedSignalRes.plotOn(frame, Normalization(1,RooAbsReal::Relative), LineStyle(kDashed), LineColor(kMagenta)) ;
@@ -144,13 +145,13 @@ void convolution3(float fsig = 0.7, bool showSecCanvas = false)
 {
 	fitSettings settings;
 	settings.fsig = fsig;
-	settings.dw = 0.01;
-	settings.w = 0.26;
-	settings.fres = {0.67, 0.05, 0.28};
-	settings.fbkg = {0.22, 0.78};
-	settings.sigmabkg = {4.3, 1.5};
-	settings.wparameters = {0.501543, 0.316146};
-	settings.sigmares = {0.57, 4.6, 1.46};
+	settings.dw = -0.005;
+	settings.w = 0.27;
+	settings.fbkg =     {0.49, 0.51};
+	settings.sigmabkg = {4.23,  1.4};
+	settings.fres =     {0.35, 0.23, 0.42};
+	settings.sigmares = {0.57, 4.65,  1.48};
+	settings.wparameters = {0.50072, -0.505257};
 	
 	convolution(settings, NULL, showSecCanvas);
 }

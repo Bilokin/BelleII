@@ -16,7 +16,7 @@ void DalitzReco(string filename = "test.root")
 	//string mccut = "abs(B0_mcPDG) == 511";
 	//string mccut = "B0_isSignal == 1";
 	//string mccut = "1";
-	string mccut = "B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
+	string mccut = getCuts(); //"B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
 
 	c1->cd(1);
 	//K1Signal->Draw( (m12).c_str() );

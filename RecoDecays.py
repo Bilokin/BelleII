@@ -28,6 +28,16 @@ if len(sys.argv)==3:
 use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
+variables.addAlias('pi0veto_M','extraInfo(pi0veto_M)')
+variables.addAlias('pi0veto_mcPDG','extraInfo(pi0veto_mcPDG)')
+variables.addAlias('pi0veto_cosTheta','extraInfo(pi0veto_cosTheta)')
+variables.addAlias('pi0veto_gamma0_E','extraInfo(pi0veto_gamma0_E)')
+variables.addAlias('pi0veto_gamma1_E','extraInfo(pi0veto_gamma1_E)')
+variables.addAlias('eta0veto_M','extraInfo(eta0veto_M)')
+variables.addAlias('eta0veto_mcPDG','extraInfo(eta0veto_mcPDG)')
+variables.addAlias('eta0veto_cosTheta','extraInfo(eta0veto_cosTheta)')
+variables.addAlias('eta0veto_gamma0_E','extraInfo(eta0veto_gamma0_E)')
+variables.addAlias('eta0veto_gamma1_E','extraInfo(eta0veto_gamma1_E)')
 variables.addAlias('myRatingCriteria',ratingVar)
 
 # load input ROOT file2
@@ -74,18 +84,58 @@ matchMCTruth('K_10:all')
 matchMCTruth('gamma:loose')
 #rankByHighest()
 
+# ----------------
+# VETO starts here
+
+roe_path = create_path()
+deadEndPath = create_path()
+
+signalSideParticleFilter('B0:signal', '', roe_path, deadEndPath)
+
+fillParticleList('gamma:roe', 'isInRestOfEvent == 1 and E > 0.050', path=roe_path)
+
+fillSignalSideParticleList('gamma:sig', 'B0 -> K_10 ^gamma', roe_path)
+
+reconstructDecay('pi0:veto -> gamma:sig gamma:roe', '0.080 < M < 0.200', path=roe_path)
+reconstructDecay('eta:veto -> gamma:sig gamma:roe', '0.5 < M < 0.6', path=roe_path)
+
+rankByLowest('pi0:veto', 'abs(dM)', 1, path=roe_path)
+rankByLowest('eta:veto', 'abs(dM)', 1, path=roe_path)
+matchMCTruth('pi0:veto', path=roe_path) 
+matchMCTruth('eta:veto', path=roe_path) 
+
+variableToSignalSideExtraInfo('pi0:veto', {'M': 'pi0veto_M'}, path=roe_path)
+variableToSignalSideExtraInfo('pi0:veto', {'daughter(0,E)': 'pi0veto_gamma0_E'}, path=roe_path)
+variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,E)': 'pi0veto_gamma1_E'}, path=roe_path)
+variableToSignalSideExtraInfo('pi0:veto', {'mcPDG': 'pi0veto_mcPDG'}, path=roe_path)
+variableToSignalSideExtraInfo('pi0:veto', {'cosTheta': 'pi0veto_cosTheta'}, path=roe_path)
+
+variableToSignalSideExtraInfo('eta:veto', {'M': 'eta0veto_M'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto', {'daughter(0,E)': 'eta0veto_gamma0_E'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto', {'daughter(1,E)': 'eta0veto_gamma1_E'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto', {'mcPDG': 'eta0veto_mcPDG'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto', {'cosTheta': 'eta0veto_cosTheta'}, path=roe_path)
+analysis_main.for_each('RestOfEvent', 'RestOfEvents', roe_path)
+
+# VETO ends here
+# ----------------
+
+
+
 toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
+toolsB0_meson += ['CustomFloats[pi0veto_M:pi0veto_gamma0_E:pi0veto_gamma1_E:pi0veto_mcPDG:pi0veto_cosTheta]', '^B0']
+toolsB0_meson += ['CustomFloats[eta0veto_M:eta0veto_gamma0_E:eta0veto_gamma1_E:eta0veto_mcPDG:eta0veto_cosTheta]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
 toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
+toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['Vertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['CustomFloats[significanceOfDistance]', '^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['MCVertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
 #toolsB0_meson += ['PDGCode','^B0']
 toolsB0_meson += ['InvMass','^B0 -> [^K_10 -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
-#toolsB0_meson += ['PID','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
+toolsB0_meson += ['PID','B0 -> [K_10 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
 #toolsB0_meson += ['MCReconstructible', 'B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
 toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^K_10 -> pi+ pi- K_S0] gamma']
@@ -147,10 +197,15 @@ K0starInfo += ['MCTruth','^K_10']
 K0starInfo += ['InvMass','^K_10']
 K0starInfo += ['Vertex','^K_10']
 
+pi0Info = ['Kinematics','^pi0 -> ^gamma ^gamma']
+pi0Info += ['MCTruth','^pi0 -> ^gamma ^gamma']
+
+
 ntupleFile(outputFilename)
 ntupleTree('B0Signal', 'B0:signal', toolsB0_meson)
 ntupleTree('pions', 'pi+:all', PiInfo)
 ntupleTree('K0Signal', 'K_S0:all', K0Info)
+#ntupleTree('Pi0Veto', 'pi0:veto', pi0Info, roe_path)
 #ntupleTree('GammaSignal', 'gamma:loose', gammaInfo)
 #ntupleTree('K1Signal', 'K_10:all', K0starInfo)
 # Process the events
