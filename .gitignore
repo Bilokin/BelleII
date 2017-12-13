@@ -11,7 +11,7 @@ pdf/*
 scripts/rootpandas.ipynb
 scripts/MVA.ipynb
 *.swp
-
+*.log
 # Object files
 *.o
 *.root
