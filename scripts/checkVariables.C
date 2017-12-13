@@ -1,4 +1,4 @@
-void checkVariables(string signalname = "test.root", string continuumname = "", bool signalEnhanced = true)
+void checkVariables(string signalname = "test.root", string continuumname = "", bool signalEnhanced = false)
 {
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1500,500);
 	c1->Divide(3,1);
@@ -9,6 +9,7 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 	TH1F * MVAqqHist = NULL;
 	
 	string cut = getBasicCuts();
+	//cut += " && B0_gamma_MC_MOTHER_ID != 111 && B0_gamma_MC_MOTHER_ID != 221";
 	string trueB = "&& B0_isSignal == 1";
 	//string scfB = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 ";
 	//string xsgBkg = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 && 0";
@@ -52,7 +53,7 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 	B0Signal->Project("MVAscfHist", "B0_CSMVA", ( cut + decut + mbccut + scfB ).c_str());
 	B0Signal->Project("MVAXsGHist", "B0_CSMVA", ( cut + decut + mbccut + xsgBkg ).c_str());
 	B0Signal->Project("MVAHist", "B0_CSMVA", ( cut + decut + mbccut + trueB ).c_str());
-	float fsignal = 0.02;
+	float fsignal = 0.0181956;
 	dEHist->Scale(fsignal);
 	dEscfHist->Scale(fsignal);
 	dEXsGHist->Scale(fsignal);

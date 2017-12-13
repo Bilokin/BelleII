@@ -1,14 +1,15 @@
 #
-#
-#       II 
-#                               
-#       II  PPPP   HH  HH    CCCC   
-#       II  PP  P  HH  HH  CC 
-#       II  PPPP   HH  HH  CC
-#       II  PP     HHHHHH  CC
-#       II  PP     HH  HH    CCCC    STRASBOURG 2017
-#
-#       Author: Bilokin S.    
+#      	  
+#      II 
+#                                
+#      II  PPPP   HH  HH    CCCC   
+#      II  PP  P  HH  HH  CC 
+#      II  PPPP   HH  HH  CC
+#      II  PP     HHHHHH  CC
+#      II  PP     HH  HH    CCCC    STRASBOURG 2017
+#      
+#        
+#                        Author: Bilokin S.    
 #
 from basf2 import *
 from modularAnalysis import *
@@ -60,7 +61,7 @@ stdKshorts()
 stdPhotons('loose')
 stdPi0s()
 stdPi('all')
-applyCuts('gamma:loose','1.4 < E < 4')
+#applyCuts('gamma:loose','1.4 < E < 4')
 #vertexRave('K_S0:all',0.01)
 vertexKFit('K_S0:all',0.01)
 reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
@@ -108,12 +109,12 @@ fillParticleList('gamma:roe', 'isInRestOfEvent == 1 and E > 0.050', path=roe_pat
 fillSignalSideParticleList('gamma:sig', 'B0 -> K_10 ^gamma', roe_path)
 
 reconstructDecay('pi0:veto -> gamma:sig gamma:roe', '0.080 < M < 0.200', path=roe_path)
-reconstructDecay('eta:veto -> gamma:sig gamma:roe', '0.45 < M < 0.65', path=roe_path)
+reconstructDecay('eta:veto2 -> gamma:sig gamma:roe', '0.45 < M < 0.65', path=roe_path)
 
 rankByLowest('pi0:veto', 'abs(dM)', 1, path=roe_path)
-rankByLowest('eta:veto', 'abs(dM)', 1, path=roe_path)
+rankByLowest('eta:veto2', 'abs(dM)', 1, path=roe_path)
 matchMCTruth('pi0:veto', path=roe_path) 
-matchMCTruth('eta:veto', path=roe_path) 
+matchMCTruth('eta:veto2', path=roe_path) 
 
 variableToSignalSideExtraInfo('pi0:veto', {'M': 'pi0veto_M'}, path=roe_path)
 variableToSignalSideExtraInfo('pi0:veto', {'daughter(0,E)': 'pi0veto_gamma0_E'}, path=roe_path)
@@ -121,11 +122,11 @@ variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,E)': 'pi0veto_gamma1_E'},
 variableToSignalSideExtraInfo('pi0:veto', {'mcPDG': 'pi0veto_mcPDG'}, path=roe_path)
 variableToSignalSideExtraInfo('pi0:veto', {'cosTheta': 'pi0veto_cosTheta'}, path=roe_path)
 
-variableToSignalSideExtraInfo('eta:veto', {'M': 'eta0veto_M'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto', {'daughter(0,E)': 'eta0veto_gamma0_E'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto', {'daughter(1,E)': 'eta0veto_gamma1_E'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto', {'mcPDG': 'eta0veto_mcPDG'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto', {'cosTheta': 'eta0veto_cosTheta'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto2', {'M': 'eta0veto_M'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto2', {'daughter(0,E)': 'eta0veto_gamma0_E'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,E)': 'eta0veto_gamma1_E'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto2', {'mcPDG': 'eta0veto_mcPDG'}, path=roe_path)
+variableToSignalSideExtraInfo('eta:veto2', {'cosTheta': 'eta0veto_cosTheta'}, path=roe_path)
 analysis_main.for_each('RestOfEvent', 'RestOfEvents', roe_path)
 
 # VETO ends here
