@@ -9,7 +9,7 @@ void makePretty(TF1* htemp, int color = kBlue)
 	}
 	
 }
-TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err", float r1 = 0, float r2 = 1, string mccut =  "(B0_isSignal) &&")
+TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err", float r1 = 0, float r2 = 1, string mccut =  "(B0_isSignal || abs(B0_K_10_mcPDG) == 30343) &&")
 {
 	int nbins = 100;	
 	string observable = name;
@@ -40,7 +40,7 @@ fitSettings deltaT(string filename = "test.root")
 	fitSettings fitResult;
 	string cut = getCuts();
 	//cut += " && B0_CSMVA > 0.1";
-	string trueB = "&& B0_isSignal == 1";
+	string trueB = "&& (B0_isSignal)";
 	string bkgB = "&& B0_isSignal == 0";
 
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1500,1000);
@@ -86,8 +86,8 @@ fitSettings deltaT(string filename = "test.root")
 	B0Signal->Project("tagBAllHist", "B0_FBDT_qrCombined", (cut+trueB+ "&& abs(B0_qrMC)  == 1").c_str());
 	B0Signal->Project("tagBbartrueHist", "B0_FBDT_qrCombined", (cut + trueB + "&& B0_qrMC == -1").c_str());
 	//wHist->Divide(tagBbartrueHist, tagBAllHist);
-	tagBtrueHist->Divide(tagBAllHist);
-	tagBbartrueHist->Divide(tagBAllHist);
+	//tagBtrueHist->Divide(tagBAllHist);
+	//tagBbartrueHist->Divide(tagBAllHist);
 	makePretty(tagBtrueHist);
 	makePretty(tagBAllHist, kGray+1);
 	makePretty(tagBbartrueHist,kRed);

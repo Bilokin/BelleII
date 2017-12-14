@@ -55,7 +55,7 @@ string getBasicCuts()
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
-	//cut += " abs(B0_pi0veto_MVA) < 0.6";
+	cut += " && abs(B0_pi0veto_MVA) < 0.3";
 	//cut += " && abs(B0_eta0veto_gamma1_E) < 1";
 	//cut += " && "+cosflight+" > 0.995";
 	cut += " && iCand == 0 ";
