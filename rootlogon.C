@@ -38,7 +38,7 @@
 
     gROOT->SetStyle("MyStyle"); //uncomment to set this style
 }
-string getBasicCuts()
+string getBasicCuts(bool enableVeto = true)
 {
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
@@ -55,16 +55,19 @@ string getBasicCuts()
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
-	cut += " && abs(B0_pi0veto_MVA) < 0.3";
-	//cut += " && abs(B0_eta0veto_gamma1_E) < 1";
+	if (enableVeto) 
+	{
+		cut += " && abs(B0_pi0veto_MVA) < 0.3";
+		cut += " && abs(B0_eta0veto_gamma1_E) < 1";
+	}
 	//cut += " && "+cosflight+" > 0.995";
 	cut += " && iCand == 0 ";
 	return cut;
 }
 
-string getCuts()
+string getCuts(bool enableVeto = true)
 {
-	string cut = getBasicCuts();
+	string cut = getBasicCuts(enableVeto);
 	//cut += " &&  B0_K_10_pi0_nPXDHits + B0_K_10_pi1_nPXDHits > 1 ";
 	//cut += " &&  B0_K_10_pi0_nSVDHits + B0_K_10_pi1_nSVDHits > 1 ";
 	//cut += " && B0_cosTheta > 0.9 ";

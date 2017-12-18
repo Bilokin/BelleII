@@ -125,7 +125,7 @@ deadEndPath = create_path()
 
 signalSideParticleFilter('B0:signal', '', roe_path, deadEndPath)
 
-fillParticleList('gamma:roe', 'isInRestOfEvent == 1 and E > 0.050', path=roe_path)
+fillParticleList('gamma:roe', 'isInRestOfEvent == 1 and E > 0.050 and cosTheta > -0.65', path=roe_path)
 
 fillSignalSideParticleList('gamma:sig', 'B0 -> K_10 ^gamma', roe_path)
 

@@ -24,7 +24,7 @@ void B0reco(string filename = "test.root")
 	c1->cd(1);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
-	string cut = getCuts();
+	string cut = getBasicCuts();
 	//string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
 	string mccut= "(B0_isSignal) &&";
 	string mccutrho = " abs(B0_K_10_pi0_MC_MOTHER_ID) ==113 &&";

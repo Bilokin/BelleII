@@ -19,7 +19,7 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 	
 	string decut = "&& B0_deltae > -0.15 && B0_deltae < 0.1";
 	string mbccut = "&& B0_mbc > 5.27";
-	string mvacut = "&& B0_CSMVA > 0.3";
+	string mvacut = "&&1";//"&& B0_CSMVA > 0.3";
 	if (!signalEnhanced) 
 	{
 		decut = "&& 1";
@@ -53,7 +53,7 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 	B0Signal->Project("MVAscfHist", "B0_CSMVA", ( cut + decut + mbccut + scfB ).c_str());
 	B0Signal->Project("MVAXsGHist", "B0_CSMVA", ( cut + decut + mbccut + xsgBkg ).c_str());
 	B0Signal->Project("MVAHist", "B0_CSMVA", ( cut + decut + mbccut + trueB ).c_str());
-	float fsignal = 0.00115474*4;
+	float fsignal = 0.000577368*4;
 	dEHist->Scale(fsignal);
 	dEscfHist->Scale(fsignal);
 	dEXsGHist->Scale(fsignal);
