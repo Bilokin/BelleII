@@ -38,7 +38,7 @@ fitSettings deltaT(string filename = "test.root")
 {
 	bool gen =false;
 	fitSettings fitResult;
-	string cut = getCuts();
+	string cut = getCuts(0);
 	//cut += " && B0_CSMVA > 0.1";
 	string trueB = "&& (B0_isSignal)";
 	string bkgB = "&& B0_isSignal == 0";
@@ -86,8 +86,8 @@ fitSettings deltaT(string filename = "test.root")
 	B0Signal->Project("tagBAllHist", "B0_FBDT_qrCombined", (cut+trueB+ "&& abs(B0_qrMC)  == 1").c_str());
 	B0Signal->Project("tagBbartrueHist", "B0_FBDT_qrCombined", (cut + trueB + "&& B0_qrMC == -1").c_str());
 	//wHist->Divide(tagBbartrueHist, tagBAllHist);
-	//tagBtrueHist->Divide(tagBAllHist);
-	//tagBbartrueHist->Divide(tagBAllHist);
+	tagBtrueHist->Divide(tagBAllHist);
+	tagBbartrueHist->Divide(tagBAllHist);
 	makePretty(tagBtrueHist);
 	makePretty(tagBAllHist, kGray+1);
 	makePretty(tagBbartrueHist,kRed);

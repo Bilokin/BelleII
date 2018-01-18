@@ -52,5 +52,15 @@ struct fitSettings {
 		std::cout << std::endl;
 	}
 } /* optional variable list */;
-
+/*! \struct f
+ *  \brief Brief struct description
+ *
+ *  Detailed description
+ */
+struct fitSettingsMbcdE {
+	vector<float> deSigPar;
+	vector<float> deBkgPar;
+	vector<float> mbcSigPar; // CB pars: mean, sigma, alpha, n
+	vector<float> mbcBkgPar; // Argus pars: limit
+} /* optional variable list */;
 #endif

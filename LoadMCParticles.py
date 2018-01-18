@@ -50,8 +50,8 @@ kaonsS = ('K_10:gen', '')
 protons = ('anti-p-:gen', '')
 b0s = ('B0:gen', '')
 
-kshortcut = "abs(daughter(0,mcPDG)) == 211 and  hasAncestor(10313, 0) "
-b0cut = "countDaughters( ) == 2 and abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
+kshortcut = "abs(daughter(0,mcPDG)) == 211 "
+b0cut = "countDaughters( ) == 2  and abs(daughter(1,mcPDG)) == 22"
 ks0cut = "countDaughters( ) == 2 and abs(daughter(1,mcPDG)) == 22 and abs(daughter(0,mcPDG)) == 310"
 gammacut = "E > 1.5  and abs(genMotherPDG) == 511"
 
@@ -67,7 +67,7 @@ fillParticleListsFromMC(("gamma:gen", gammacut),True)
 #applyCuts('K_S0:my','abs(genMotherPDG) == 10313 or abs(genMotherPDG) == 323')
 
 applyCuts('gamma:gen','abs(genMotherPDG) == 511')
-applyCuts('pi-:gen','abs(genMotherPDG) == 323 or abs(genMotherPDG) == 113 or abs(genMotherPDG) == 10313')
+#applyCuts('pi-:gen','abs(genMotherPDG) == 323 or abs(genMotherPDG) == 113 or abs(genMotherPDG) == 10313')
 
 applyCuts('K_10:gen','abs(mcPDG) == 10313 and abs(genMotherPDG) == 511 and daughter(0,mcPDG) == 223')
 reconstructDecay('B0:genSig -> K_S0:gen pi+:gen pi-:gen gamma:gen', '5.<M<5.5')
@@ -105,11 +105,13 @@ toolsB0 += ['CustomFloats[daughter(0,mcPDG):daughter(1,mcPDG)]', 'B0 -> ^K_10 ga
 toolsB0 += ['CustomFloats[cosTheta]', '^B0 -> ^K_10 ^gamma']
 toolsB0 += ['CustomFloats[nDaughters]', '^B0 -> ^K_10 ^gamma']
 
-toolsB0SIG = ['Kinematics', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
+toolsB0SIG = ['Kinematics', '^B0 -> ^K_S0 ^pi+ ^pi- ^gamma']
 toolsB0SIG += ['InvMass', '^B0']
 toolsB0SIG += ['MCTruth', '^B0']
 toolsB0SIG += ['MCVertex', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
 toolsB0SIG += ['Dalitz', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
+toolsB0SIG += ['MCHierarchy', 'B0 -> ^K_S0 pi+ pi- gamma']
+toolsB0SIG += ['CustomFloats[daughterInvariantMass(0, 1, 2)]', '^B0 -> K_S0 pi+ pi- gamma']
 toolsB0SIG += ['CustomFloats[cosTheta:phi]', '^B0']
 toolsB0SIG += ['CustomFloats[nDaughters]', '^B0']
 toolsB0SIG += ['CustomFloats[daughter(0,E)]', '^B0']

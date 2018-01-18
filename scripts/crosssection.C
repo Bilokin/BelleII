@@ -7,7 +7,7 @@ void crosssection()
 	float BRK1gamma = 0.0000135; // as in DECAY BELLE II DEC
 	float BRK2gamma = 0.0000166; // as in DECAY BELLE II DEC
 	//float BRKpipigamma = 1e-5; // as in PDG 
-	float BRKpipigamma = 20.5e-6; // as in G. Eigen 1510.04446 
+	float BRKpipigamma = 10.25e-6; // as in G. Eigen 1510.04446 
 
 	float phase3L = 0.8e18; // barn^-1
 	//phase3L = 0.426e18; // barn^-1 as in BABAR

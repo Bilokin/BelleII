@@ -38,7 +38,8 @@ Decay Upsilon(4S)
 Enddecay
 
 Decay MyB0
-1.000    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
+1.000     Xsd gamma BTOXSGAMMA 2;
+#1.000    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
 #0.433    MyK*0  gamma  HELAMP 1.0 0.0 1.0 0.0;
 #0.143    MyK10  gamma  HELAMP 1.0 0.0 1.0 0.0;
 #0.069    MyK'10  gamma  HELAMP 1.0 0.0 1.0 0.0;

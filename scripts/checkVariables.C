@@ -1,20 +1,57 @@
-void checkVariables(string signalname = "test.root", string continuumname = "", bool signalEnhanced = false)
+TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva, string continuumname, vector<string> cuts, float scale, int color, int style, int nbins = 50)
 {
+	string cut = cuts[0];
+	string mbccut = cuts[1];
+	string decut = cuts[2];
+	string mvacut = cuts[3];
+	TFile * fileBkg = TFile::Open(continuumname.c_str());
+	TTree* B0Continuum = (TTree*)fileBkg->Get("B0Signal");
+	TH1F * dEqqHist = new TH1F("dEqqHist", ";#Delta E [GeV]", nbins,-0.2,0.2);
+	TH1F * MbcqqHist = new TH1F("MbcqqHist", ";M_{bc} [GeV]", nbins,5.2,5.3);
+	TH1F * MVAqqHist = new TH1F("MVAqqHist", ";MVA", nbins,0,1);
+	B0Continuum->Project("dEqqHist", "B0_deltae", ( cut + mvacut + mbccut).c_str());
+	B0Continuum->Project("MbcqqHist", "B0_mbc", ( cut + mvacut + decut).c_str());
+	B0Continuum->Project("MVAqqHist", "B0_CSMVA", ( cut + mbccut + decut).c_str());
+	makePretty(dEqqHist, color,style);
+	makePretty(MbcqqHist, color,style);
+	makePretty(MVAqqHist, color,style);
+	dEqqHist->Scale(scale);
+	MbcqqHist->Scale(scale);
+	MVAqqHist->Scale(scale);
+	stackmbc->Add(MbcqqHist);
+	stackde->Add(dEqqHist);
+	stackmva->Add(MVAqqHist);
+	return dEqqHist;
+}
+
+void checkVariables(string signalname = "mixed/lumi630fb.root", string lightname = "light/lumi630fb.root", string ccbarname = "ccbar/lumi630fb.root", string chargedname = "charged/lumi630fb.root", bool signalEnhanced = 0)
+{
+	float signalK1Lumi = 0.7; // ab-1
+	float ccbarLumi = 0.7; // ab-1
+	float uubarLumi = 0.7; // ab-1
+	float ssbarLumi = 0.7; // ab-1
+	float ddbarLumi = 0.7; // ab-1
+	float bcharLumi = 0.7; // ab-1
+	float bneutLumi = 0.7; // ab-1
+	float minLumi = 0.7;
+	
+	float fsignal = minLumi / signalK1Lumi; 
+	float fccbar = minLumi / ccbarLumi;
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1500,500);
 	c1->Divide(3,1);
 	c1->cd(1);
-	int nbins = 50;
+	int nbins = 40;
 	TH1F * dEqqHist = NULL;
 	TH1F * MbcqqHist = NULL;
 	TH1F * MVAqqHist = NULL;
 	
 	string cut = getBasicCuts();
 	//cut += " && B0_gamma_MC_MOTHER_ID != 111 && B0_gamma_MC_MOTHER_ID != 221";
-	string trueB = "&& B0_isSignal == 1";
+	string trueB = "&& (abs(B0_K_10_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511)";
 	//string scfB = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 ";
-	//string xsgBkg = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 && 0";
+	string xsgBkg = "&& B0_isContinuumEvent == 0 && !(abs(B0_K_10_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511)";
 	string scfB = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 && (B0_mcErrors == 306 || B0_mcErrors == 512)";
-	string xsgBkg = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 && B0_mcErrors != 306 && B0_mcErrors != 512";
+	//string xsgBkg = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 && B0_mcErrors != 306 && B0_mcErrors != 512";
 	string continuum = "&& B0_isContinuumEvent == 1";
 	
 	string decut = "&& B0_deltae > -0.15 && B0_deltae < 0.1";
@@ -26,6 +63,7 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 		mbccut = "&& 1";
 		mvacut = "&& 1";
 	}
+	vector<string> cuts = {cut, mbccut, decut, mvacut};
 	  /////////////////////////////////////////
 	 //	    SIGNAL+SCF+XsGamma	        //
 	/////////////////////////////////////////	
@@ -53,7 +91,6 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 	B0Signal->Project("MVAscfHist", "B0_CSMVA", ( cut + decut + mbccut + scfB ).c_str());
 	B0Signal->Project("MVAXsGHist", "B0_CSMVA", ( cut + decut + mbccut + xsgBkg ).c_str());
 	B0Signal->Project("MVAHist", "B0_CSMVA", ( cut + decut + mbccut + trueB ).c_str());
-	float fsignal = 0.000577368*4;
 	dEHist->Scale(fsignal);
 	dEscfHist->Scale(fsignal);
 	dEXsGHist->Scale(fsignal);
@@ -72,13 +109,13 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 	makePretty(MbcscfHist,kBlue+1);
 	makePretty(MVAscfHist,kBlue+1);
 	
-	makePretty(MVAXsGHist,kGreen+1, 3002, kGreen);
-	makePretty(dEXsGHist,kGreen+1, 3002, kGreen);
-	makePretty(MbcXsGHist,kGreen+1, 3002, kGreen);
+	makePretty(MVAXsGHist,kBlue+1, 3002, kBlue);
+	makePretty(dEXsGHist,kBlue+1, 3002, kBlue);
+	makePretty(MbcXsGHist,kBlue+1, 3002, kBlue);
 	  /////////////////////////////////////////
 	 //		CONTINUUM		//
 	/////////////////////////////////////////	
-	if (continuumname!="") 
+	/*if (continuumname!="") 
 	{
 		TFile * fileBkg = TFile::Open(continuumname.c_str());
 		TTree* B0Continuum = (TTree*)fileBkg->Get("B0Signal");
@@ -91,36 +128,47 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 		makePretty(dEqqHist, kGray+1,3001);
 		makePretty(MbcqqHist, kGray+1,3001);
 		makePretty(MVAqqHist, kGray+1,3001);
-	}
+	}*/
 
 	
-
-
 	THStack * stackmbc = new THStack("stackmbc","stackde");
 	stackmbc->Add(MbcXsGHist);
-	stackmbc->Add(MbcqqHist);
-	stackmbc->Add(MbcscfHist);
+
+	THStack * stackde = new THStack("stackde","");
+	stackde->Add(dEXsGHist);
+	
+	THStack * stackmva = new THStack("stackmva","");
+	stackmva->Add(MVAXsGHist);
+	
+	TH1F * chargeHist = addBkg(stackmbc, stackde, stackmva, chargedname, cuts, fccbar, kBlue+2, 3001, nbins);
+	TH1F * lightHist = addBkg(stackmbc, stackde, stackmva, lightname, cuts, fccbar, kGray+1, 3001, nbins);
+	TH1F * ccbarHist = addBkg(stackmbc, stackde, stackmva, ccbarname, cuts, fccbar, kGray+2, 3001, nbins);
+
+	//stackmbc->Add(MbcscfHist);
 	stackmbc->Add(MbcHist);
+	//stackmva->Add(MVAscfHist);
+	stackmva->Add(MVAHist);
+	//stackde->Add(dEscfHist);
+	stackde->Add(dEHist);
+	//stackmbc->Add(MbcqqHist);
 	stackmbc->Draw("he");
 	stackmbc->SetMaximum( stackmbc->GetMaximum()*1.15 );
-	TLegend *legendMean2 = new TLegend(0.15,0.65,0.5,0.85,NULL,"brNDC");
+	TLegend *legendMean2 = new TLegend(0.15,0.55,0.5,0.85,NULL,"brNDC");
 	legendMean2->SetFillStyle(0);
 	legendMean2->SetBorderSize(0);
 	legendMean2->AddEntry(MbcHist,"Signal","f");
-	legendMean2->AddEntry(MbcscfHist,"SCF","f");
-	legendMean2->AddEntry(MbcqqHist,"Continuum","f");
-	legendMean2->AddEntry(MbcXsGHist,"X_{s} #gamma bkg","f");
+	//legendMean2->AddEntry(MbcscfHist,"SCF","f");
+	legendMean2->SetHeader("L = 630 fb^{-1}", "C");
+	legendMean2->AddEntry(ccbarHist,"c#bar{c}","f");
+	legendMean2->AddEntry(lightHist,"u#bar{u}+d#bar{d}+s#bar{s}","f");
+	legendMean2->AddEntry(MbcXsGHist,"B^{0}#bar{B}^{0}","f");
+	legendMean2->AddEntry(chargeHist,"B^{+}#bar{B}^{-}","f");
 	legendMean2->Draw();
 	stackmbc->SetTitle(";M_{bc} [GeV]");
 	stackmbc->GetXaxis()->SetLabelSize(0.04);
 	stackmbc->GetYaxis()->SetLabelSize(0.04);
 	c1->cd(2);
 
-	THStack * stackde = new THStack("stackde","");
-	stackde->Add(dEXsGHist);
-	stackde->Add(dEqqHist);
-	stackde->Add(dEscfHist);
-	stackde->Add(dEHist);
 	stackde->Draw("he");
 	stackde->SetTitle(";#Delta E [GeV]");
 	stackde->GetXaxis()->SetLabelSize(0.04);
@@ -128,11 +176,6 @@ void checkVariables(string signalname = "test.root", string continuumname = "", 
 	stackde->SetMaximum( stackde->GetMaximum()*1.15 );
 	c1->cd(3);
 
-	THStack * stackmva = new THStack("stackmva","");
-	stackmva->Add(MVAXsGHist);
-	stackmva->Add(MVAqqHist);
-	stackmva->Add(MVAscfHist);
-	stackmva->Add(MVAHist);
 	stackmva->Draw("he");
 	stackmva->SetTitle(";MVA score");
 	stackmva->GetXaxis()->SetLabelSize(0.04);

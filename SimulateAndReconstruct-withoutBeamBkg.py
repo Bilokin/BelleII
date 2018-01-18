@@ -52,10 +52,10 @@ add_beamparameters(analysis_main, 'Y4S')
 inputMdst('None', inputFilename)
 
 # simulation
-add_simulation(analysis_main, use_vxdtf2=True)
+add_simulation(analysis_main)
 
 # reconstruction
-add_reconstruction(analysis_main, use_vxdtf2=True)
+add_reconstruction(analysis_main)
 
 # dump in MDST format
 add_mdst_output(analysis_main, True, outputFilename)

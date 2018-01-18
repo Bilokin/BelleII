@@ -57,8 +57,9 @@ string getBasicCuts(bool enableVeto = true)
 	cut += " && abs(B0_DeltaT) < 20";
 	if (enableVeto) 
 	{
-		cut += " && abs(B0_pi0veto_MVA) < 0.3";
-		cut += " && abs(B0_eta0veto_gamma1_E) < 1";
+		cut += " && abs(B0_pi0veto_MVA) < 0.5";
+		cut += " && abs(B0_eta0veto_MVA) < 0.6";
+		cut += " && B0_CSMVA > 0.25";
 	}
 	//cut += " && "+cosflight+" > 0.995";
 	cut += " && iCand == 0 ";
@@ -68,12 +69,8 @@ string getBasicCuts(bool enableVeto = true)
 string getCuts(bool enableVeto = true)
 {
 	string cut = getBasicCuts(enableVeto);
-	//cut += " &&  B0_K_10_pi0_nPXDHits + B0_K_10_pi1_nPXDHits > 1 ";
-	//cut += " &&  B0_K_10_pi0_nSVDHits + B0_K_10_pi1_nSVDHits > 1 ";
-	//cut += " && B0_cosTheta > 0.9 ";
-	cut += "&& B0_mbc > 5.27 && B0_deltae > -0.2 && B0_deltae < 0.1"; // BEST
+	cut += "&& B0_mbc > 5.27 && B0_deltae > -0.15 && B0_deltae < 0.1"; // BEST
 	//cut += " && (B0_m23 > 0.95 ||  B0_m23 < 0.85) && (B0_m13 > 0.95 ||  B0_m13 < 0.85)";
-	//cut += " && abs(B0_FANN_qrCombined) > 0.5 ";
 	return cut;
 }
 

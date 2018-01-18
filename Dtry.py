@@ -6,7 +6,7 @@ from stdV0s import stdKshorts
 from stdPhotons import *
 from stdCharged import *
 from stdFSParticles import *
-from flavorTagger import *
+#from flavorTagger import *
 
 from beamparameters import *
 # check if the required input file exists (from B2A101 example)
@@ -32,6 +32,7 @@ add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
 #stdMu('all')
 stdKshorts()
+stdK('95eff')
 stdPhotons('loose')
 stdPi0s()
 stdPi('all')
@@ -39,35 +40,44 @@ applyCuts('gamma:loose','1.4 < E < 4')
 #applyCuts('K_S0:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
 #vertexRave('K_S0:all',0.01)
 vertexKFit('K_S0:all',0.0)
-reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
-reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
-vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
-
-buildRestOfEvent('B0:signal')
+#reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
+#reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
+#vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
+reconstructDecay('rho+:signal -> pi+:all pi0:veryLoose','0.7 < M < 0.9')
+reconstructDecay('D0:signal -> K-:95eff pi+:all',' 1.8< M < 1.9')
+reconstructDecay('D*0:signal -> D0:signal pi0:veryLoose', '1.9 < M < 2.1')
+#buildRestOfEvent('B0:signal')
 
 oldMask = ('oldMask', 'useCMSFrame(p)<=3.2', 'p >= 0.05 and useCMSFrame(p)<=3.2')
 
 # define the "cleaner" mask
-eclCut = '[E > 0.062 and abs(clusterTiming) < 18 and clusterReg==1] or \
-[E>0.060 and abs(clusterTiming) < 20 and clusterReg==2] or \
-[E>0.056 and abs(clusterTiming) < 44 and clusterReg==3]'
-cleanMask = ('cleanMask', 'abs(d0) < 10.0 and abs(z0) < 20.0', eclCut)
+#eclCut = '[E > 0.062 and abs(clusterTiming) < 18 and clusterReg==1] or \
+#[E>0.060 and abs(clusterTiming) < 20 and clusterReg==2] or \
+#[E>0.056 and abs(clusterTiming) < 44 and clusterReg==3]'
+#cleanMask = ('cleanMask', 'abs(d0) < 10.0 and abs(z0) < 20.0', eclCut)
 
 # append both masks to ROE
-appendROEMasks('B0:signal', [oldMask,cleanMask])
+#appendROEMasks('B0:signal', [oldMask,cleanMask])
 
 # choose one mask which is applied
-buildContinuumSuppression('B0:signal', 'cleanMask')
+#buildContinuumSuppression('B0:signal', 'cleanMask')
 
-matchMCTruth('B0:signal')
+matchMCTruth('D0:signal')
+matchMCTruth('D*0:signal')
 
-TagV('B0:signal', 'breco')
+#TagV('B0:signal', 'breco')
 
-flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
-matchMCTruth('pi+:all')
-matchMCTruth('K_10:all')
-matchMCTruth('gamma:loose')
+#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
+#matchMCTruth('pi+:all')
+#matchMCTruth('K_10:all')
+#matchMCTruth('gamma:loose')
 #rankByHighest()
+
+toolsD0_meson = ['Kinematics','^D*0 -> [D0 -> ^K- ^pi+] ^pi0']
+toolsD0_meson += ['MCTruth','^D*0 -> [D0 -> ^K- ^pi+] ^pi0']
+toolsD0_meson += ['InvMass','^D*0 -> [^D0 -> K- pi+] ^pi0'] 
+toolsD0_meson += ['DeltaEMbc','^D*0']
+
 
 toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent]', '^B0']
@@ -141,9 +151,9 @@ K0starInfo += ['InvMass','^K_10']
 K0starInfo += ['Vertex','^K_10']
 
 ntupleFile(outputFilename)
-ntupleTree('B0Signal', 'B0:signal', toolsB0_meson)
-ntupleTree('pions', 'pi+:all', PiInfo)
-ntupleTree('K0Signal', 'K_S0:all', K0Info)
+ntupleTree('D0Signal', 'D*0:signal', toolsD0_meson)
+#ntupleTree('pions', 'pi+:all', PiInfo)
+#ntupleTree('K0Signal', 'K_S0:all', K0Info)
 #ntupleTree('GammaSignal', 'gamma:loose', gammaInfo)
 #ntupleTree('K1Signal', 'K_10:all', K0starInfo)
 # Process the events
