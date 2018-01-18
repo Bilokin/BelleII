@@ -668,6 +668,16 @@
     <Parents>/home/sbilokin/BelleII/test/mc-v08/evtgen8.root</Parents>
   </File>
   <File>
+    <LFN>/home/sbilokin/BelleII/test/mc-v09-nopi0/evtgen.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/mc-v09-nopi0/evtgen.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
     <LFN>/home/sbilokin/BelleII/test/mc-v09//evtgen5.root</LFN>
     <PFN>/home/sbilokin/BelleII/test/mc-v09//evtgen5.root</PFN>
     <ExperimentLow>1</ExperimentLow>

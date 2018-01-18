@@ -82,8 +82,8 @@ stdPi('all')
 vertexKFit('K_S0:all',0.01)
 reconstructDecay("Xsd:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
 reconstructDecay("B0:signal -> Xsd:all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
-#vertexRave('B0:signal',0.01, 'B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] gamma')
-vertexTree('B0:signal',0.0001)
+vertexRave('B0:signal',0.01, 'B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] gamma')
+#vertexTree('B0:signal',0.0001)
 
 rankByHighest('B0:signal',ratingVar, 1, outputVariable='myRating')
 
@@ -187,6 +187,7 @@ toolsB0_meson += ['MCVertex','^B0 -> [Xsd -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['InvMass','^B0 -> [^Xsd -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
 toolsB0_meson += ['PID','B0 -> [Xsd -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
+toolsB0_meson += ['CustomFloats[chiProb]','B0 -> [Xsd -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
 toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['CustomFloats[clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> [Xsd -> pi+ pi- K_S0] ^gamma']
 toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^Xsd -> pi+ pi- K_S0] gamma']

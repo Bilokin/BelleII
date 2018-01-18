@@ -59,7 +59,7 @@ string getBasicCuts(bool enableVeto = true)
 	{
 		cut += " && abs(B0_pi0veto_MVA) < 0.5";
 		cut += " && abs(B0_eta0veto_MVA) < 0.6";
-		cut += " && B0_CSMVA > 0.25";
+		cut += " && B0_CSMVA > 0.2";
 	}
 	//cut += " && "+cosflight+" > 0.995";
 	cut += " && iCand == 0 ";
