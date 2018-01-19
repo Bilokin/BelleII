@@ -38,19 +38,19 @@
 
     gROOT->SetStyle("MyStyle"); //uncomment to set this style
 }
-string getBasicCuts(bool enableVeto = true)
+string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
 {
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
-	cut += " abs(B0_K_10_K_S0_M - 0.4976) < 0.011";
-	cut += " && B0_K_10_K_S0_Rho > 0.1";
-	cut += " && B0_K_10_K_S0_significanceOfDistance > 5";
-	cut += " && B0_K_10_K_S0_VtxPvalue > 0.01";
-	cut += " && B0_K_10_M < 1.8 ";
-	cut += " && B0_K_10_pi0_PIDpi > 0.005 ";
-	cut += " && B0_K_10_pi1_PIDpi > 0.005 ";
-	cut += " && B0_K_10_K_S0_pi0_PIDpi > 0.005 ";
-	cut += " && B0_K_10_K_S0_pi1_PIDpi > 0.005 ";
+	cut += " abs(B0_"+Kres+"_K_S0_M - 0.4976) < 0.011";
+	cut += " && B0_"+Kres+"_K_S0_Rho > 0.1";
+	cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 5";
+	cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
+	cut += " && B0_"+Kres+"_M < 1.8 ";
+	cut += " && B0_"+Kres+"_pi0_PIDpi > 0.005 ";
+	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
+	cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
+	cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
 	cut += " && abs(B0_FANN_qrCombined) > 0. ";
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
@@ -66,11 +66,10 @@ string getBasicCuts(bool enableVeto = true)
 	return cut;
 }
 
-string getCuts(bool enableVeto = true)
+string getCuts(bool enableVeto = true, string Kres = "K_10")
 {
-	string cut = getBasicCuts(enableVeto);
+	string cut = getBasicCuts(enableVeto, Kres);
 	cut += "&& B0_mbc > 5.27 && B0_deltae > -0.15 && B0_deltae < 0.1"; // BEST
-	//cut += " && (B0_m23 > 0.95 ||  B0_m23 < 0.85) && (B0_m13 > 0.95 ||  B0_m13 < 0.85)";
 	return cut;
 }
 

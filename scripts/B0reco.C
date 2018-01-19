@@ -17,7 +17,7 @@ TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err",
 	return xPullHist;
 }
 
-void B0reco(string filename = "test.root")
+void B0reco(string filename = "test.root", string Kres = "K_10")
 {
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1980,1000);
 	c1->Divide(4,2);
@@ -26,9 +26,9 @@ void B0reco(string filename = "test.root")
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string cut = getCuts();
 	//string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
-	string mccut = "(abs(B0_K_10_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511) && ";
+	string mccut = "(abs(B0_"+Kres+"_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511) && ";
 	//string mccut= "(B0_isSignal) &&";
-	string mccutrho = " abs(B0_K_10_pi0_MC_MOTHER_ID) ==113 &&";
+	string mccutrho = " abs(B0_"+Kres+"_pi0_MC_MOTHER_ID) ==113 &&";
 	
 	int allB = B0Signal->Draw("B0_mcPDG", (cut).c_str());
 	float trueB = B0Signal->Draw("B0_mcPDG",(mccut+cut).c_str());
@@ -48,7 +48,7 @@ void B0reco(string filename = "test.root")
 	drawHists(B0Signal, "cosTheta", cut, "cos#Theta",0.8,1,mccut);
 	
 	c1->cd(5);
-	TH1F * rhoHist = drawHists(B0Signal, "K_10_M", cut, "M(K_{1}^{0}) [GeV]",0.8,2, mccut);
+	TH1F * rhoHist = drawHists(B0Signal, Kres+"_M", cut, "M(K_{1}^{0}) [GeV]",0.8,2, mccut);
 	TF1 * myBW1 = new TF1("myBW1","TMath::BreitWigner(x,[0],[1])*[2]*TMath::Gaus(x,[3],[4])",1,2.);
 	myBW1->SetParLimits(0,1.2,1.35);
 	myBW1->SetParLimits(1,0.0001,0.5);
@@ -58,7 +58,7 @@ void B0reco(string filename = "test.root")
 	rhoHist->Fit("myBW1","RLQ");
 
 	c1->cd(6);
-	TH1F * chiHist = drawHists(B0Signal, "K_10_K_S0_M", cut, "M(K_{S}^{0}) [GeV]",0.45,0.55,mccut);
+	TH1F * chiHist = drawHists(B0Signal, Kres+"_K_S0_M", cut, "M(K_{S}^{0}) [GeV]",0.45,0.55,mccut);
 	TF1 * myBW = new TF1("myBW","gaus(0)+gaus(3)",0.45,0.55);
 	myBW->SetParLimits(0,10,100000);
 	myBW->SetParLimits(1,0.49,0.51);
@@ -68,8 +68,8 @@ void B0reco(string filename = "test.root")
 	myBW->SetParLimits(5,0.001,0.1);
 	chiHist->Fit("myBW","L");
 	c1->cd(7);
-	string ksrho = "B0_K_10_K_S0_Rho";
-	drawHists(B0Signal, "K_10_K_S0_Rho", cut, "#rho [cm]",0,10,mccut);
+	string ksrho = "B0_"+Kres+"_K_S0_Rho";
+	drawHists(B0Signal, Kres+"_K_S0_Rho", cut, "#rho [cm]",0,10,mccut);
 	
 	c1->cd(8);
 	drawHists(B0Signal, "VtxPvalue", cut, "p-value",0,1,mccut);
