@@ -108,9 +108,9 @@ void mbcdeFit_test(string filename = "signal-veto2/mergegrids.root", string file
 	gPad->SetLeftMargin(0.15) ; deframe2->GetYaxis()->SetTitleOffset(1.6) ; deframe2->Draw() ;
 }
 
-fitSettingsMbcdE getStdSettings()
+fitSettings getStdSettings()
 {
-	fitSettingsMbcdE settings;
+	fitSettings settings;
 	settings.mbcSigPar = {5.27952, 3.12605e-03, 1.2978, 1.837e1};
 	settings.mbcBkgPar = {5.29};
 	settings.deSigPar = { -0.01, 4.16911e-02, 6.16997e-01, 1.0};

@@ -9,7 +9,7 @@ void makePretty(TF1* htemp, int color = kBlue)
 	}
 	
 }
-TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err", float r1 = 0, float r2 = 1, string mccut =  "(B0_isSignal || abs(B0_K_10_mcPDG) == 30343) &&")
+TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err", float r1 = 0, float r2 = 1, string mccut =  "B0_isSignal  &&")
 {
 	int nbins = 100;	
 	string observable = name;
@@ -34,11 +34,11 @@ TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err",
 
 
 
-fitSettings deltaT(string filename = "test.root")
+fitSettings deltaT(string filename = "test.root", string Kres = "K_10")
 {
 	bool gen =false;
 	fitSettings fitResult;
-	string cut = getCuts(0);
+	string cut = getCuts(0, Kres);
 	//cut += " && B0_CSMVA > 0.1";
 	string trueB = "&& (B0_isSignal)";
 	string bkgB = "&& B0_isSignal == 0";

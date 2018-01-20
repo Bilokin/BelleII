@@ -8,6 +8,8 @@
 #ifndef __fitSettings_C_
 #define __fitSettings_C_
 struct fitSettings {
+	//
+	bool useDeltaResolution = false;
 	float fsig = 0.0;
 	vector<float> fbkg;// {0.0, 0.0, 0.0, 0.0, 0.0};
 	vector<float> sigmabkg;//[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
@@ -16,6 +18,11 @@ struct fitSettings {
 	float w = 0.0;
 	float dw = 0.0;
 	vector<float> wparameters;
+	//Mbc De parameters
+	vector<float> deSigPar;
+	vector<float> deBkgPar;
+	vector<float> mbcSigPar; // CB pars: mean, sigma, alpha, n
+	vector<float> mbcBkgPar; // Argus pars: limit
 	void Print()
 	{
 		std::cout << "Signal fraction: " << fsig << std::endl;
@@ -57,10 +64,6 @@ struct fitSettings {
  *
  *  Detailed description
  */
-struct fitSettingsMbcdE {
-	vector<float> deSigPar;
-	vector<float> deBkgPar;
-	vector<float> mbcSigPar; // CB pars: mean, sigma, alpha, n
-	vector<float> mbcBkgPar; // Argus pars: limit
-} /* optional variable list */;
+//struct fitSettingsMbcdE {
+//} /* optional variable list */;
 #endif

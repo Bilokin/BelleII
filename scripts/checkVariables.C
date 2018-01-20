@@ -49,7 +49,7 @@ void checkVariables(string signalname = "mixed/lumi630fb.root", string lightname
 	//cut += " && B0_gamma_MC_MOTHER_ID != 111 && B0_gamma_MC_MOTHER_ID != 221";
 	string trueB = "&& (abs(B0_K_10_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511)";
 	//string scfB = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 ";
-	string xsgBkg = "&& B0_isContinuumEvent == 0 && !(abs(B0_K_10_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511)";
+	string xsgBkg = "&& B0_isContinuumEvent == 0 && !(abs(B0_K_10_mcPDG) == 30343)";
 	string scfB = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 && (B0_mcErrors == 306 || B0_mcErrors == 512)";
 	//string xsgBkg = "&& B0_isSignal == 0 && B0_isContinuumEvent == 0 && B0_mcErrors != 306 && B0_mcErrors != 512";
 	string continuum = "&& B0_isContinuumEvent == 1";

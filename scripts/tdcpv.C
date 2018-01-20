@@ -36,14 +36,14 @@ void addBranches(TTree* T, fitSettings set)
 	//T->Print();
 }
 
-void tdcpv(string filename = "test.root")
+void tdcpv(string filename = "test.root", string Kres = "K_10")
 {
-	string cut = getCuts();
+	string cut = getCuts(0, Kres);
 	string trueB = "&& B0_isSignal == 1";
 	string cutB = "&& B0_FANN_qrCombined > 0.5";
 	string cutBbar = "&& B0_FANN_qrCombined < -0.5";
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 500,500);
-	fitSettings settings = deltaT(filename);
+	fitSettings settings = deltaT(filename, Kres);
 	//c1->Divide(3,2);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
