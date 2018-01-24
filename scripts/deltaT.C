@@ -38,7 +38,7 @@ fitSettings deltaT(string filename = "test.root", string Kres = "K_10")
 {
 	bool gen =false;
 	fitSettings fitResult;
-	string cut = getCuts(0, Kres);
+	string cut = getBasicCuts(0, Kres);
 	//cut += " && B0_CSMVA > 0.1";
 	string trueB = "&& (B0_isSignal)";
 	string bkgB = "&& B0_isSignal == 0";
@@ -104,8 +104,8 @@ fitSettings deltaT(string filename = "test.root", string Kres = "K_10")
 	float wratio = wFunc->Integral(0,1)/ wFuncbar->Integral(-1,0);
 	std::cout << "wratio: " << wratio  << std::endl;
 	fitResult.dw = -abs(1-wratio);
-	//fitResult.wparameters = {0.5, -0.5};
-	fitResult.wparameters = {(float)wFuncbar->GetParameter(0), (float)wFuncbar->GetParameter(1)};
+	fitResult.wparameters = {0.5, -0.5};
+	//fitResult.wparameters = {(float)wFuncbar->GetParameter(0), (float)wFuncbar->GetParameter(1)};
 	B0Signal->Project("wHist", ("abs(" + to_string(fitResult.wparameters[0]) +"+"+ to_string(fitResult.wparameters[1]) + "*abs(B0_FANN_qrCombined))").c_str(), (cut + trueB +  "&& abs(B0_qrMC) == 1").c_str());
 	wHist->Scale(1./wHist->GetEntries());
 	makePretty(wHist);

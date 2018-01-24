@@ -16,7 +16,7 @@
 #include "TAxis.h"
 #include "RooPlot.h"
 using namespace RooFit ;
-void mbcdeFit_test(string filename = "signal-veto2/mergegrids.root", string filenameBkg = "ccbar-veto2/mergegrids7-new.root")
+void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "merged-xsd/ccbar.root")
 {
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
@@ -24,7 +24,7 @@ void mbcdeFit_test(string filename = "signal-veto2/mergegrids.root", string file
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string mccut= "(B0_isSignal) &&";
-	string cut = getBasicCuts(false);
+	string cut = getBasicCuts(0,"Xsd");
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);
 	TH1F * deHist = new TH1F("deHist", ";M [GeV]", 50,-0.2,0.2);
 	B0Signal->Project("mbcHist","B0_mbc",(mccut+cut).c_str());

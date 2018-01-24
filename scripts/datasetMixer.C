@@ -14,7 +14,7 @@ void resizeFile(string inname = "test.root", string outname = "outtest.root", fl
 	infile->Close();
 }
 
-void datasetMixer(string mixedname = "mixed/mixed.root",string chargedname = "charged/charged.root" , string lightname = "light/light.root", string ccbarname = "ccbar/ccbar.root")
+void datasetMixer(string mixedname = "merged-xsd2/mixed.root",string chargedname = "merged-xsd2/charged.root", string lightname = "merged-xsd2/light.root", string ccbarname = "merged-xsd2/ccbar.root")
 {
 	//int signalK1Nevents = 1e7;
 	//float sigmaY4S = 0.5346e-9;
@@ -30,12 +30,13 @@ void datasetMixer(string mixedname = "mixed/mixed.root",string chargedname = "ch
 	float ddbarXs = .4e-9;
 	float mixedXs = .565e-9;
 	float chargedXs = .535e-9;
-	int ccbarNevents = 1329e6*0.8;
-	int ssbarNevents = 170308794+119590617;
-	int ddbarNevents = 0;
-	int uubarNevents = 1.22749e+09;
-	int mixedNevents = 415360000;
-	int chargedNevents = 360000000;
+	
+	int ccbarNevents = 1329e6*0.8 * 0.85; 
+	int ssbarNevents = 383e6*0.8 * 1.;
+	int ddbarNevents = 401e6*0.8 * 0;
+	int uubarNevents = 1605e6*0.8 * 0.8;
+	int mixedNevents = 534.6e6*0.8 * 1.;
+	int chargedNevents = 565.4e6*0.8 * 0.76;
 	float factor = 1e-18;
 	
 	
@@ -49,14 +50,14 @@ void datasetMixer(string mixedname = "mixed/mixed.root",string chargedname = "ch
 	std::cout << "light integrated lumi:  \t" << lightLumi << " ab-1" << std::endl;
 	std::cout << "charged integrated lumi:\t" << chargedLumi << " ab-1" << std::endl;
 	std::cout << "mixed integrated lumi:  \t" << mixedLumi << " ab-1" << std::endl;
-	float targetLumi = 0.63;
+	float targetLumi = 0.555;
 	bool resize = 1;
 	if (resize) 
 	{
-		resizeFile(mixedname, "mixed/lumi630fb.root", targetLumi/mixedLumi);
-		resizeFile(chargedname, "charged/lumi630fb.root", targetLumi/chargedLumi);
-		resizeFile(ccbarname, "ccbar/lumi630fb.root", targetLumi/ccbarLumi);
-		resizeFile(lightname, "light/lumi630fb.root", targetLumi/lightLumi);
+		resizeFile(mixedname, "mixed/lumi555fb.root", targetLumi/mixedLumi);
+		resizeFile(chargedname, "charged/lumi555fb.root", targetLumi/chargedLumi);
+		resizeFile(ccbarname, "ccbar/lumi555fb.root", targetLumi/ccbarLumi);
+		resizeFile(lightname, "light/lumi555fb.root", targetLumi/lightLumi);
 	}
 	
 }

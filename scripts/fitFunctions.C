@@ -1,7 +1,12 @@
+
+#ifndef __fitFunctions_C_
+#define __fitFunctions_C_
 #include "fitSettings.C"
+#ifndef __MYROOFIT__
+#define __MYROOFIT__
+
 #include "RooGlobalFunc.h"
 #include "RooRealVar.h"
-#include "RooDataSet.h"
 #include "RooConstVar.h"
 #include "RooBCPEffDecay.h"
 #include "RooBDecay.h"
@@ -10,6 +15,7 @@
 #include "RtypesCore.h"
 #include "RooCategory.h"
 using namespace RooFit ;
+#endif
 
 RooResolutionModel * getDeltaTResolution(fitSettings & set, RooRealVar & dt)
 {
@@ -87,7 +93,7 @@ RooAbsPdf * getMbcSignal(fitSettings & set, RooRealVar & mbc)
 	return CBall;
 }
 
-RooAbsPdf * getMbcCombined(fitSettings & set, RooRealVar & mbc, RooRealVar* fbkg)
+RooAbsPdf * getMbcCombined(fitSettings & set, RooRealVar & mbc, RooRealVar& fbkg)
 {
 	RooAbsPdf * CBall = getMbcSignal(set,mbc);
 // --- Build Argus background PDF ---
@@ -95,7 +101,7 @@ RooAbsPdf * getMbcCombined(fitSettings & set, RooRealVar & mbc, RooRealVar* fbkg
 	RooArgusBG * argus = new RooArgusBG("argus","Argus PDF",mbc,RooConst(set.mbcBkgPar[0]),*argpar) ;
 // --- Build signal+ background PDF ---
 	RooArgList * mbclist = new RooArgList(*CBall,*argus);
-	RooAddPdf * mbcsum = new RooAddPdf("mbcsum","g+a mbc", *mbclist,RooArgList(*fbkg)) ;
+	RooAddPdf * mbcsum = new RooAddPdf("mbcsum","g+a mbc", *mbclist,RooArgList(fbkg)) ;
 	return mbcsum;
 }
 RooAbsPdf * getDeSignal(fitSettings & set,  RooRealVar & de)
@@ -108,7 +114,7 @@ RooAbsPdf * getDeSignal(fitSettings & set,  RooRealVar & de)
 	RooCBShape * deCBall = new RooCBShape("deCBall", "Crystal Ball shape", de, *demean, *desigma, *dealpha, *den);
 	return deCBall;
 }
-RooAbsPdf * getDeCombined(fitSettings & set,  RooRealVar & de, RooRealVar* fbkg)
+RooAbsPdf * getDeCombined(fitSettings & set,  RooRealVar & de, RooRealVar& fbkg)
 {
 	RooAbsPdf * deCBall = getDeSignal(set,de);
 // --- Build Chebychev background PDF ---
@@ -119,17 +125,17 @@ RooAbsPdf * getDeCombined(fitSettings & set,  RooRealVar & de, RooRealVar* fbkg)
 
 // --- Build signal+ background PDF ---
 	RooArgList * delist = new RooArgList(*deCBall,*chebychev);
-	RooAddPdf * desum = new RooAddPdf("desum","g+a de", *delist,RooArgList(*fbkg)) ;
+	RooAddPdf * desum = new RooAddPdf("desum","g+a de", *delist,RooArgList(fbkg)) ;
 	return desum;
 }
-RooAbsPdf * getMbcDe(fitSettings & set, RooRealVar & mbc, RooRealVar & de)
+RooAbsPdf * getMbcDe(fitSettings & set, RooRealVar & mbc, RooRealVar & de, RooRealVar & fbkg)
 {
 	//RooRealVar* nsig = new RooRealVar("nsig","#signal events",100,0.,10000) ;
 	//RooRealVar* nbkg = new RooRealVar("nbkg","#background events",800,0.,10000);
-	RooRealVar* fbkg = new RooRealVar("fbkg","#background events",0.076,0.,1);
 	RooAbsPdf * mbcsum = getMbcCombined(set, mbc, fbkg);
 	RooAbsPdf * desum = getDeCombined(set, de, fbkg);
 // --- Build Product PDF ---
 	RooProdPdf * result = new RooProdPdf("result","de*mbc",*mbcsum, *desum);
 	return result;
 }
+#endif

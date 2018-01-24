@@ -24,7 +24,7 @@ void B0reco(string filename = "test.root", string Kres = "K_10")
 	c1->cd(1);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
-	string cut = getBasicCuts(false, Kres);
+	string cut = getBasicCuts(1, Kres);
 	//string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
 	string mccut = "(abs(B0_"+Kres+"_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511) && ";
 	//string mccut= "(B0_isSignal) &&";
@@ -55,7 +55,7 @@ void B0reco(string filename = "test.root", string Kres = "K_10")
 	myBW1->SetParLimits(2,0.1,1000000);
 	myBW1->SetParLimits(3,1,2);
 	myBW1->SetParLimits(4,0.1,1);
-	rhoHist->Fit("myBW1","RLQ");
+	//rhoHist->Fit("myBW1","RLQ");
 
 	c1->cd(6);
 	TH1F * chiHist = drawHists(B0Signal, Kres+"_K_S0_M", cut, "M(K_{S}^{0}) [GeV]",0.45,0.55,mccut);
@@ -66,7 +66,7 @@ void B0reco(string filename = "test.root", string Kres = "K_10")
 	myBW->SetParLimits(3,10,10000);
 	myBW->SetParLimits(4,0.48,0.52);
 	myBW->SetParLimits(5,0.001,0.1);
-	chiHist->Fit("myBW","L");
+	//chiHist->Fit("myBW","L");
 	c1->cd(7);
 	string ksrho = "B0_"+Kres+"_K_S0_Rho";
 	drawHists(B0Signal, Kres+"_K_S0_Rho", cut, "#rho [cm]",0,10,mccut);
@@ -78,13 +78,13 @@ void B0reco(string filename = "test.root", string Kres = "K_10")
 	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 1000, 500);
 	c2->Divide(2,1);
 	c2->cd(1);
-	TH1F * MpipiRhoHist = new TH1F("MpipiRhoHist", ";M [GeV]", 100,0.2,1.4);
+	TH1F * MpipiRhoHist = new TH1F("MpipiRhoHist", ";M [GeV]", 50,0.2,1.4);
 	B0Signal->Project("MpipiRhoHist","B0_m12",(mccut+mccutrho+cut).c_str());
 	makePretty(MpipiRhoHist, kBlue+2);
 	drawHists(B0Signal, "m12", cut, "M(#pi #pi) [GeV]", 0.2,1.4);
 	MpipiRhoHist->Draw("same");
 	c2->cd(2);
-	TH1F * MKpiRhoHist = new TH1F("MKpiRhoHist", ";M [GeV]", 100,0.6,1.6);
+	TH1F * MKpiRhoHist = new TH1F("MKpiRhoHist", ";M [GeV]",50,0.6,1.6);
 	B0Signal->Project("MKpiRhoHist","B0_m23",(mccut+mccutrho+cut).c_str());
 	makePretty(MKpiRhoHist, kBlue+2);
 	drawHists(B0Signal, "m23", cut, "M(K#pi) [GeV]", 0.6,1.6);

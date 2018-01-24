@@ -1,12 +1,15 @@
 
+#ifndef	__mbcdeFit__
+#define __mbcdeFit__
 
 #include "fitSettings.C"
 #include "fitFunctions.C"
+#ifndef __MYROOFIT__
+#define __MYROOFIT__
+
 #include "RooGlobalFunc.h"
 #include "RooRealVar.h"
 #include "RooDataSet.h"
-#include "RooGaussian.h"
-#include "RooConstVar.h"
 #include "RooCategory.h"
 #include "RooBMixDecay.h"
 #include "RooBCPEffDecay.h"
@@ -18,6 +21,7 @@
 #include "TAxis.h"
 #include "RooPlot.h"
 using namespace RooFit ;
+#endif
 
 fitSettings getStdSettings()
 {
@@ -29,25 +33,35 @@ fitSettings getStdSettings()
 	return settings;
 }
 
-void mbcdeFit(string filename = "signal-veto2/mergegrids.root", string filenameBkg = "ccbar-veto2/mergegrids7-new.root")
+void mbcdeFit(TTree* tree = NULL)
 {
 
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
+	RooRealVar fbkg("fbkg","#background events",0.076,0.,1);
 	fitSettings settings = getStdSettings();
-	RooAbsPdf * function = getMbcDe(settings, mbc, de);
+	//RooAbsPdf * function = getMbcDe(settings, mbc, de, fbkg);
+	RooAbsPdf * mbcsum = getMbcCombined(settings, mbc, fbkg);
+	RooAbsPdf * desum = getDeCombined(settings, de, fbkg);
+	// --- Build Product PDF ---
+	RooProdPdf * function = new RooProdPdf("result","de*mbc",*mbcsum, *desum);
 	RooDataSet* data = NULL;
-	bool useToyMC = true;
+	bool useToyMC = 0;
+	string name = "MC";
 	
 	if (useToyMC) 
 	{
 		int nevents = 2750;
 		data = function->generate(RooArgSet(mbc,de),nevents);
 	}
-	
+	else 
+	{
+		data = new RooDataSet(name.c_str(), name.c_str(), RooArgSet(mbc,de), Import(*tree));
+		
+	}
 	RooFitResult* resb = function->fitTo(*data, Save()) ;
 
-	mbc.setBins(40) ;
+	mbc.setBins(50) ;
 	de.setBins(20) ;
 	RooPlot* frame = mbc.frame(Title("M_{bc}")) ;
 	data->plotOn(frame, MarkerStyle(22)) ;
@@ -67,3 +81,4 @@ void mbcdeFit(string filename = "signal-veto2/mergegrids.root", string filenameB
 	std::cout << "-----------------------------" << std::endl;
 	resb->Print();
 }
+#endif
