@@ -34,11 +34,14 @@ TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err",
 
 
 
-fitSettings deltaT(string filename = "test.root", string Kres = "K_10")
+fitSettings deltaT(string filename = "test.root", string Kres = "K_10", string cut = "")
 {
 	bool gen =false;
 	fitSettings fitResult;
-	string cut = getBasicCuts(0, Kres);
+	if (cut == "") 
+	{
+		cut = getCuts(1, Kres);
+	}
 	//cut += " && B0_CSMVA > 0.1";
 	string trueB = "&& (B0_isSignal)";
 	string bkgB = "&& B0_isSignal == 0";

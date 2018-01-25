@@ -19,6 +19,11 @@ using namespace RooFit ;
 
 RooResolutionModel * getDeltaTResolution(fitSettings & set, RooRealVar & dt)
 {
+	if (set.fres.size() < 2 || set.sigmares.size() < 2) 
+	{
+		std::cout << "Error in getDeltaTResolution: Input parameters not set!" << std::endl;
+		return NULL;
+	}
 	if (set.useDeltaResolution) 
 	{
 		return new RooTruthModel("tm","truth model",dt);
@@ -41,17 +46,27 @@ RooResolutionModel * getDeltaTResolution(fitSettings & set, RooRealVar & dt)
 	return combinedSignalRes;
 }
 
-RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt)
+RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters = false)
 {
-	RooRealVar* fbkg1 = new RooRealVar("fbkg1","fbkg parameter",set.fbkg[0]);
-	RooRealVar* fbkg2 = new RooRealVar("fbkg2","fbkg parameter",set.fbkg[1]);
+	if (set.fbkg.size() < 1 || set.sigmabkg.size() < 2) 
+	{
+		std::cout << "Error in getDeltaTBkg: Input parameters not set!" << std::endl;
+		return NULL;
+	}
 	RooRealVar* mgBkg = new RooRealVar("mgBkg","mg2",0);
-	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0]);
-	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1]);
+	RooRealVar* fbkg1 = new RooRealVar("fbkg1","fbkg parameter",set.fbkg[0],0,1);
+	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0],0,10);
+	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1],0.,10);
+	if (fixParameters) 
+	{
+		fbkg1->setConstant();
+		sgBkg1->setConstant();
+		sgBkg2->setConstant();
+	}
 	RooGaussian* gaussBkg1 = new RooGaussian("gaussBkg1","gauss",dt,*mgBkg,*sgBkg1);
 	RooGaussian* gaussBkg2 = new RooGaussian("gaussBkg2","gauss",dt,*mgBkg,*sgBkg2);
 	
-	RooAddPdf* combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", RooArgList(*gaussBkg2,*gaussBkg1), RooArgList(*fbkg2, *fbkg1));
+	RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg2,*gaussBkg1)), *(new RooArgList(*fbkg1)));
 
 	return combinedBkg;
 }
@@ -84,6 +99,11 @@ RooAbsPdf * getDeltaTCombined(fitSettings & set, RooRealVar & dt, RooCategory & 
 
 RooAbsPdf * getMbcSignal(fitSettings & set, RooRealVar & mbc)
 {
+	if (set.mbcSigPar.size() < 3 ) 
+	{
+		std::cout << "Error in getMbcSignal: Input parameters not set!" << std::endl;
+		return NULL;
+	}
 // --- Build Mbc CB signal PDF ---
 	RooRealVar*  sigmean = new RooRealVar("sigmean","B^{#pm} mass",set.mbcSigPar[0]);//, 5.2, 5.3) ;
 	RooRealVar * sigsigma = new RooRealVar("sigsigma","B^{#pm} width",set.mbcSigPar[1]);//,0.000001,1.) ;
@@ -92,20 +112,58 @@ RooAbsPdf * getMbcSignal(fitSettings & set, RooRealVar & mbc)
 	RooCBShape * CBall = new RooCBShape("CBall", "Crystal Ball shape", mbc, *sigmean, *sigsigma, *sigalpha, *sign);
 	return CBall;
 }
+RooAbsPdf * getMbcBkg(fitSettings & set, RooRealVar & mbc, bool fixParameters = false)
+{
+	if (set.mbcBkgPar.size() < 1) 
+	{
+		std::cout << "Error in getMbcBkg: Input parameters not set!" << std::endl;
+		return NULL;
+	}
+	RooRealVar * argpar = new RooRealVar("argpar","argus shape parameter",-30.0,-200.,-1.) ;
+	if (fixParameters) 
+	{
+		argpar->setConstant();
+	}
+	RooArgusBG * argus = new RooArgusBG("argus","Argus PDF",mbc,RooConst(set.mbcBkgPar[0]),*argpar) ;
+	return argus;	
+}
 
 RooAbsPdf * getMbcCombined(fitSettings & set, RooRealVar & mbc, RooRealVar& fbkg)
 {
 	RooAbsPdf * CBall = getMbcSignal(set,mbc);
 // --- Build Argus background PDF ---
-	RooRealVar * argpar = new RooRealVar("argpar","argus shape parameter",-30.0,-100.,-1.) ;
-	RooArgusBG * argus = new RooArgusBG("argus","Argus PDF",mbc,RooConst(set.mbcBkgPar[0]),*argpar) ;
+	RooAbsPdf* argus = getMbcBkg(set, mbc);
 // --- Build signal+ background PDF ---
 	RooArgList * mbclist = new RooArgList(*CBall,*argus);
 	RooAddPdf * mbcsum = new RooAddPdf("mbcsum","g+a mbc", *mbclist,RooArgList(fbkg)) ;
 	return mbcsum;
 }
+RooAbsPdf * getDeBkg(fitSettings & set,  RooRealVar & de, bool fixParameters = false)
+{
+	if (set.deBkgPar.size() < 2) 
+	{
+		std::cout << "Error in getDeBkg: Input parameters not set!" << std::endl;
+		return NULL;
+	}
+	RooRealVar * c0 = new RooRealVar("c0","coefficient #0", set.deBkgPar[0],-1.,1.) ;
+	RooRealVar * c1 = new RooRealVar("c1","coefficient #1", set.deBkgPar[1],-1.,1.) ;
+	RooRealVar * c2 = new RooRealVar("c2","coefficient #2", set.deBkgPar[2],-1.,1.) ;
+	if (fixParameters) 
+	{
+		c0->setConstant();
+		c1->setConstant();
+		c2->setConstant();
+	}
+	RooChebychev * chebychev = new RooChebychev("chebychev","background p.d.f.",de,RooArgList(*c0,*c1,*c2)) ; 
+	return chebychev;	
+}
 RooAbsPdf * getDeSignal(fitSettings & set,  RooRealVar & de)
 {
+	if (set.deSigPar.size() < 3) 
+	{
+		std::cout << "Error in getDeSignal: Input parameters not set!" << std::endl;
+		return NULL;
+	}
 // --- Build deltaE CB signal PDF ---
 	RooRealVar * demean = new RooRealVar("demean","B^{#pm} mass", set.deSigPar[0]) ;
 	RooRealVar * desigma = new RooRealVar("desigma","B^{#pm} width",set.deSigPar[1]);//,0.001,1.) ;
@@ -113,29 +171,5 @@ RooAbsPdf * getDeSignal(fitSettings & set,  RooRealVar & de)
 	RooRealVar * den = new RooRealVar("den","B^{#pm} width", set.deSigPar[3]);//,0.5,20.) ;
 	RooCBShape * deCBall = new RooCBShape("deCBall", "Crystal Ball shape", de, *demean, *desigma, *dealpha, *den);
 	return deCBall;
-}
-RooAbsPdf * getDeCombined(fitSettings & set,  RooRealVar & de, RooRealVar& fbkg)
-{
-	RooAbsPdf * deCBall = getDeSignal(set,de);
-// --- Build Chebychev background PDF ---
-	RooRealVar * c0 = new RooRealVar("c0","coefficient #0", set.deBkgPar[0],-1.,1.) ;
-	RooRealVar * c1 = new RooRealVar("c1","coefficient #1", set.deBkgPar[1],-1.,1.) ;
-	RooRealVar * c2 = new RooRealVar("c2","coefficient #2", set.deBkgPar[2],-1.,1.) ;
-	RooChebychev * chebychev = new RooChebychev("chebychev","background p.d.f.",de,RooArgList(*c0,*c1,*c2)) ; 
-
-// --- Build signal+ background PDF ---
-	RooArgList * delist = new RooArgList(*deCBall,*chebychev);
-	RooAddPdf * desum = new RooAddPdf("desum","g+a de", *delist,RooArgList(fbkg)) ;
-	return desum;
-}
-RooAbsPdf * getMbcDe(fitSettings & set, RooRealVar & mbc, RooRealVar & de, RooRealVar & fbkg)
-{
-	//RooRealVar* nsig = new RooRealVar("nsig","#signal events",100,0.,10000) ;
-	//RooRealVar* nbkg = new RooRealVar("nbkg","#background events",800,0.,10000);
-	RooAbsPdf * mbcsum = getMbcCombined(set, mbc, fbkg);
-	RooAbsPdf * desum = getDeCombined(set, de, fbkg);
-// --- Build Product PDF ---
-	RooProdPdf * result = new RooProdPdf("result","de*mbc",*mbcsum, *desum);
-	return result;
 }
 #endif

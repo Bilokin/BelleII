@@ -41,8 +41,8 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
-#use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
-use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
+use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
+#use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
 variables.addAlias('pi0veto_M','extraInfo(pi0veto_M)')
@@ -78,12 +78,9 @@ stdPhotons('loose')
 stdPi0s()
 stdPi('all')
 applyCuts('gamma:loose','1.4 < E < 4')
-#vertexRave('K_S0:all',0.01)
-vertexKFit('K_S0:all',0.0)
-reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "")
-#reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
-reconstructDecay("B0:signal -> K_10:all gamma:loose", "")
-#reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
+vertexKFit('K_S0:all',0.01)
+reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
+reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
 vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
 #vertexTree('B0:signal',0.000)
 

@@ -20,7 +20,7 @@
 using namespace RooFit ;
 #endif
 
-void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false)
+void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 {
 	std::cout << " ____________________________" << std::endl;
 	std::cout << "|                            |" << std::endl;
@@ -47,21 +47,23 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 	{
 		std::cout << "Importing tree: ";// << std::endl;
 		data = new RooDataSet(name.c_str(), name.c_str(), RooArgSet(dt,q,w), Import(*tree));
+		data->Print();
 		std::cout << "Done!" << std::endl;
 	}
 	//RooAbsPdf * combinedQ = getDeltaTCombined(set, dt,q,w, A, S);
+	bool fixBkgShape = true;
 	RooRealVar* fsig1  = new RooRealVar("fsig1","fsig parameter",set.fsig);
-	RooRealVar* fsig2 = new RooRealVar("fsig2","fsig parameter",1-set.fsig);
 
 	RooAbsPdf * bcp = getDeltaTSignal(set,dt,q,w,A,S);
-	RooAbsPdf * combinedBkg = getDeltaTBkg(set,dt);
+	RooAbsPdf * combinedBkg = getDeltaTBkg(set,dt, fixBkgShape);
 	
 	RooAddPdf * combinedQ = new RooAddPdf("combinedQ","combinedQ", RooArgList(*bcp,*combinedBkg), RooArgList(*fsig1));
+	combinedQ->Print();
 	//RooAbsPdf * combinedBkg = (RooAbsPdf*)combinedQ->pdfList().at(1);
 	// Generate some data
 	if (!data) 
 	{
-		int nevents = 131.12/set.fsig;   // 
+		int nevents = 1300;   // 
 		//int nevents = 1315.12/set.fsig;   // PHASE III  2 ab^-1 DATASET
 		//nevents = 32877.9/set.fsig; // FULL      50 ab^-1 DATASET
 		//nevents = 47471; // Total MC DATASET
@@ -71,11 +73,13 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
 		wdata = wpdf.generate(RooArgSet(w),nevents);
-		data = combinedQ->generate(RooArgSet(dt,q), ProtoData(*wdata));
+		data = combinedQ->generate(RooArgSet(dt,q), nevents);
+		data->merge(wdata);
 		A.setVal(0);
 		S.setVal(0);
 	}
 	RooFitResult* resb = combinedQ->fitTo(*data, Save()) ;
+		std::cout << "Here!" << std::endl;
 	// Plot B0 and B0bar tagged data separately
 	dt.setRange(-10,10);
 	RooPlot* frame = dt.frame(Title("B decay (B0/B0bar)")) ;
@@ -95,11 +99,12 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 	float Srange[2] = {-0.3, 0.3};
 	RooPlot* frame2 = new RooPlot(A,S,Arange[0], Arange[1],Srange[0],Srange[1]) ;
 	frame2->SetTitle("Ellipse") ;
-	//resb->plotOn(frame2,A,S,"MEHV") ;
+	resb->plotOn(frame2,A,S,"MEHV") ;
 	c->cd(2);
 	gPad->SetLeftMargin(0.15) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
 	if (showSecCanvas) 
 	{
+		w.setBins(50) ;
 		TCanvas* cw = new TCanvas("cw","w",500,500) ;
 		RooPlot* framew = w.frame(Title("w (B0/B0bar)"));
 		data->plotOn(framew) ;
@@ -108,10 +113,10 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = false
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
-	//resb->Print();
+	resb->Print();
 }
 
-void convolution3(float fsig = 0.7, bool showSecCanvas = false)
+void convolution3(float fsig = 0.84, bool showSecCanvas = false)
 {
 	fitSettings settings;
 	//settings.useDeltaResolution = true;

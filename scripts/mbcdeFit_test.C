@@ -24,7 +24,7 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "me
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string mccut= "(B0_isSignal) &&";
-	string cut = getBasicCuts(0,"Xsd");
+	string cut = getBasicCuts(1,"Xsd");
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);
 	TH1F * deHist = new TH1F("deHist", ";M [GeV]", 50,-0.2,0.2);
 	B0Signal->Project("mbcHist","B0_mbc",(mccut+cut).c_str());
@@ -74,10 +74,10 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "me
 	RooDataSet *data = sum.generate(mbc,2000) ;
 // --- Perform extended ML fit of composite PDF to toy data ---
 	//sum.fitTo(*data,Extended()) ;
-	CBall.fitTo(mbcRooHist);
-	deCBall.fitTo(deRooHist);
-	argus.fitTo(mbcBkgRooHist);
-	chebychev.fitTo(deBkgRooHist);
+	RooFitResult* resMbcSig = CBall.fitTo(mbcRooHist,Save());
+	RooFitResult* resDeSig = deCBall.fitTo(deRooHist,Save());
+	RooFitResult* resMbcBkg = argus.fitTo(mbcBkgRooHist,Save());
+	RooFitResult* resDeBkg = chebychev.fitTo(deBkgRooHist,Save());
 // --- Plot toy data and composite PDF overlaid ---
 	TCanvas* c = new TCanvas("bphysics","bphysics",1000,1000) ;
 	c->Divide(2,2);
@@ -106,6 +106,14 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "me
 	deBkgRooHist.plotOn(deframe2) ;
 	chebychev.plotOn(deframe2) ;
 	gPad->SetLeftMargin(0.15) ; deframe2->GetYaxis()->SetTitleOffset(1.6) ; deframe2->Draw() ;
+	std::cout << "-----------------------------------" << std::endl;
+	resMbcSig->Print();
+	std::cout << "-----------------------------------" << std::endl;
+	resDeSig->Print();
+	std::cout << "-----------------------------------" << std::endl;
+	resMbcBkg->Print();
+	std::cout << "-----------------------------------" << std::endl;
+	resDeBkg->Print();
 }
 
 fitSettings getStdSettings()
