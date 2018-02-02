@@ -1,5 +1,6 @@
 TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva, string continuumname, vector<string> cuts, float scale, int color, int style, int nbins = 50)
 {
+	float mvaup = 0.6;
 	int nbinsde = 20;
 	string cut = cuts[0];
 	string mbccut = cuts[1];
@@ -9,7 +10,7 @@ TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva, string
 	TTree* B0Continuum = (TTree*)fileBkg->Get("B0Signal");
 	TH1F * dEqqHist = new TH1F("dEqqHist", ";#Delta E [GeV]", nbinsde,-0.2,0.2);
 	TH1F * MbcqqHist = new TH1F("MbcqqHist", ";M_{bc} [GeV]", nbins,5.2,5.3);
-	TH1F * MVAqqHist = new TH1F("MVAqqHist", ";MVA", nbins,0,1);
+	TH1F * MVAqqHist = new TH1F("MVAqqHist", ";MVA", nbins,0,mvaup);
 	B0Continuum->Project("dEqqHist", "B0_deltae", ( cut + mvacut + mbccut).c_str());
 	B0Continuum->Project("MbcqqHist", "B0_mbc", ( cut + mvacut + decut).c_str());
 	B0Continuum->Project("MVAqqHist", "B0_CSMVA", ( cut + mbccut + decut).c_str());
@@ -75,6 +76,7 @@ void checkVariables(string signalname = "mixed/lumi555fb.root",
 	  /////////////////////////////////////////
 	 //	    SIGNAL+SCF+XsGamma	        //
 	/////////////////////////////////////////	
+	float mvaup = 0.6;
 	TFile * fileSig = TFile::Open(signalname.c_str());
 	fileSig->cd();
 	TTree* B0Signal = (TTree*)fileSig->Get("B0Signal");
@@ -86,9 +88,9 @@ void checkVariables(string signalname = "mixed/lumi555fb.root",
 	TH1F * MbcscfHist = new TH1F("MbcscfHist", ";M_{bc} [GeV]", nbins,5.2,5.3);
 	TH1F * MbcXsGHist = new TH1F("MbcXsGHist", ";M_{bc} [GeV]", nbins,5.2,5.3);
 	
-	TH1F * MVAHist = new TH1F("MVAHist", ";MVA", nbins,0,1);
-	TH1F * MVAscfHist = new TH1F("MVAscfHist", ";MVA", nbins,0,1);
-	TH1F * MVAXsGHist = new TH1F("MVAXsGHist", ";MVA", nbins,0,1);
+	TH1F * MVAHist = new TH1F("MVAHist", ";MVA", nbins,0,mvaup);
+	TH1F * MVAscfHist = new TH1F("MVAscfHist", ";MVA", nbins,0,mvaup);
+	TH1F * MVAXsGHist = new TH1F("MVAXsGHist", ";MVA", nbins,0,mvaup);
 	B0Signal->Project("dEMbcHist", "B0_mbc : B0_deltae", ( cut ).c_str());
 	int nsignal = B0Signal->Project("dEHist", "B0_deltae", ( cut + mvacut + mbccut + trueB ).c_str());
 	B0Signal->Project("MbcHist", "B0_mbc", ( cut + decut + mvacut + trueB ).c_str());

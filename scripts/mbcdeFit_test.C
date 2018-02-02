@@ -16,7 +16,7 @@
 #include "TAxis.h"
 #include "RooPlot.h"
 using namespace RooFit ;
-void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "merged-xsd/ccbar.root")
+void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "signal-xsd.root")
 {
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
@@ -24,6 +24,7 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "me
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string mccut= "(B0_isSignal) &&";
+	string bkgcut= "(!B0_isSignal) &&";
 	string cut = getBasicCuts(1,"Xsd");
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);
 	TH1F * deHist = new TH1F("deHist", ";M [GeV]", 50,-0.2,0.2);
@@ -37,8 +38,8 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "me
 	TTree* B0SignalBkg = (TTree*)filebkg->Get("B0Signal");
 	TH1F * mbcBkgHist = new TH1F("mbcBkgHist", ";M [GeV]", 100,5.2,5.3);
 	TH1F * deBkgHist = new TH1F("deBkgHist", ";de [GeV]", 100,-0.2,0.2);
-	B0SignalBkg->Project("mbcBkgHist","B0_mbc",(cut).c_str());
-	B0SignalBkg->Project("deBkgHist","B0_deltae",(cut).c_str());
+	B0SignalBkg->Project("mbcBkgHist","B0_mbc",(bkgcut+cut).c_str());
+	B0SignalBkg->Project("deBkgHist","B0_deltae",(bkgcut+cut).c_str());
 
 	RooDataHist mbcBkgRooHist("mbcBkgRooHist","mbcBkgRooHist",mbc,Import(*mbcBkgHist)) ;
 	RooDataHist deBkgRooHist("deBkgRooHist","deBkgRooHist",de,Import(*deBkgHist)) ;

@@ -55,8 +55,8 @@ RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters 
 	}
 	RooRealVar* mgBkg = new RooRealVar("mgBkg","mg2",0);
 	RooRealVar* fbkg1 = new RooRealVar("fbkg1","fbkg parameter",set.fbkg[0],0,1);
-	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0],0,10);
-	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1],0.,10);
+	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0],0,15);
+	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1],0.,15);
 	if (fixParameters) 
 	{
 		fbkg1->setConstant();

@@ -38,8 +38,8 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 		q.defineType("B0bar",-1) ;
 	//RooRealVar w("w","flavour mistag rate",set.w);
 	RooRealVar w("w","flavour mistag rate",0,0.5);
-	RooRealVar A("A","A",0.1,-1,1);
-	RooRealVar S("S","S",0.3,-1,1);
+	RooRealVar A("A","A",0.,-1,1);
+	RooRealVar S("S","S",0.8,-1,1);
 
 	RooDataSet* data = NULL;
 	RooDataSet* wdata = NULL;
@@ -63,7 +63,7 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 	// Generate some data
 	if (!data) 
 	{
-		int nevents = 1300;   // 
+		int nevents = 13000;   // 
 		//int nevents = 1315.12/set.fsig;   // PHASE III  2 ab^-1 DATASET
 		//nevents = 32877.9/set.fsig; // FULL      50 ab^-1 DATASET
 		//nevents = 47471; // Total MC DATASET
@@ -73,10 +73,11 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
 		wdata = wpdf.generate(RooArgSet(w),nevents);
-		data = combinedQ->generate(RooArgSet(dt,q), nevents);
-		data->merge(wdata);
-		A.setVal(0);
-		S.setVal(0);
+		///data = combinedQ->generate(RooArgSet(dt,q), nevents);
+		data = combinedQ->generate(RooArgSet(dt,q), ProtoData(*wdata));
+		//data->merge(wdata);
+		//A.setVal(0);
+		//S.setVal(0);
 	}
 	RooFitResult* resb = combinedQ->fitTo(*data, Save()) ;
 		std::cout << "Here!" << std::endl;
@@ -119,7 +120,7 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 void convolution3(float fsig = 0.84, bool showSecCanvas = false)
 {
 	fitSettings settings;
-	//settings.useDeltaResolution = true;
+	settings.useDeltaResolution = true;
 	settings.fsig = fsig;
 	settings.dw = -0.005;
 	settings.w = 0.27;

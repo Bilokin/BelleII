@@ -41,10 +41,10 @@ void B0reco(string filename = "test.root", string Kres = "K_10")
 	cout << "Purity B0: " << trueB/allB*100 << "%\n";
 	drawHists(B0Signal, "deltae", cut, "#DeltaE [GeV]",-0.2,0.2, mccut);
 	c1->cd(2);
-	drawHists(B0Signal, "M", cut, "M(B_{0}) [GeV]",5,5.5,mccut);
-	c1->cd(3);
+	//drawHists(B0Signal, "M", cut, "M(B_{0}) [GeV]",5,5.5,mccut);
+	//c1->cd(3);
 	drawHists(B0Signal, "mbc", cut, "M_{bc} [GeV]",5.2,5.3,mccut);
-	c1->cd(4);
+	c1->cd(3);
 	drawHists(B0Signal, "cosTheta", cut, "cos#Theta",0.8,1,mccut);
 	
 	c1->cd(5);
@@ -68,10 +68,10 @@ void B0reco(string filename = "test.root", string Kres = "K_10")
 	myBW->SetParLimits(5,0.001,0.1);
 	//chiHist->Fit("myBW","L");
 	c1->cd(7);
-	string ksrho = "B0_"+Kres+"_K_S0_Rho";
-	drawHists(B0Signal, Kres+"_K_S0_Rho", cut, "#rho [cm]",0,10,mccut);
+	//string ksrho = "B0_"+Kres+"_K_S0_Rho";
+	//drawHists(B0Signal, Kres+"_K_S0_Rho", cut, "#rho [cm]",0,10,mccut);
 	
-	c1->cd(8);
+	//c1->cd(8);
 	drawHists(B0Signal, "VtxPvalue", cut, "p-value",0,1,mccut);
 	//----------------------------------------------------------------//
 	//----------------------------------------------------------------//

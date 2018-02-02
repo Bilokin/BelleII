@@ -51,7 +51,7 @@ void datasetMixer(string mixedname = "merged-xsd2/mixed.root",string chargedname
 	std::cout << "charged integrated lumi:\t" << chargedLumi << " ab-1" << std::endl;
 	std::cout << "mixed integrated lumi:  \t" << mixedLumi << " ab-1" << std::endl;
 	float targetLumi = 0.555;
-	bool resize = 1;
+	bool resize = 0;
 	if (resize) 
 	{
 		resizeFile(mixedname, "mixed/lumi555fb.root", targetLumi/mixedLumi);

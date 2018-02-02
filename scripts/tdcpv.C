@@ -64,15 +64,17 @@ void addBranches(TTree* T, fitSettings set)
 	//T->Print();
 }
 
-void tdcpv(string filename = "test.root", bool fullFit = false, string Kres = "Xsd")
+void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "merged-xsd2/lumi555fb-merged.root")
 {
 	string outputfilename = "tmp-branch.root";
 	string cut = getCuts(1, Kres);
+	
 	if (fullFit) 
 	{
 		cut = getBasicCuts(1,Kres);
+		signalname = "signal-xsd.root";
 	}
-	fitSettings settings = deltaT(filename, Kres, cut);
+	fitSettings settings = deltaT(signalname, Kres, cut);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	TFile * f2 = new TFile(outputfilename.c_str(),"recreate");
@@ -88,7 +90,10 @@ void tdcpv(string filename = "test.root", bool fullFit = false, string Kres = "X
 	TTree* B0Signal3 = (TTree*)fileoutput->Get("B0Signal");
 	if (fullFit) 
 	{
-		mbcdedtFit(B0Signal3);
+		fitSettings fullsettings = getStdSettings();
+		fullsettings.sigmares = settings.sigmares;
+		fullsettings.fres = settings.fres;
+		mbcdedtFit(B0Signal3, fullsettings);
 	}
 	else 
 	{

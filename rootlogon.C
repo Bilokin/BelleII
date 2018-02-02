@@ -12,8 +12,8 @@
    myStyle->SetCanvasColor(0);
    myStyle->SetTitleColor(1);
    myStyle->SetStatColor(0);
-   myStyle->SetTitleSize(0.045,"xyz");
-   myStyle->SetLabelSize(0.045,"xyz"); // size of axis values
+   myStyle->SetTitleSize(0.05,"xyz");
+   myStyle->SetLabelSize(0.047,"xyz"); // size of axis values
 
    // default canvas positioning
    myStyle->SetCanvasDefX(900);
@@ -21,10 +21,10 @@
    myStyle->SetCanvasDefH(550);
    myStyle->SetCanvasDefW(540);
 
-   myStyle->SetPadBottomMargin(0.1);
-   myStyle->SetPadTopMargin(0.1);
-   myStyle->SetPadLeftMargin(0.1);
-   myStyle->SetPadRightMargin(0.1);
+   myStyle->SetPadBottomMargin(0.15);
+   myStyle->SetPadTopMargin(0.05);
+   myStyle->SetPadLeftMargin(0.15);
+   myStyle->SetPadRightMargin(0.03);
 
 
    myStyle->SetPadTickX(1);
@@ -51,9 +51,9 @@ string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
 	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
-	cut += " && abs(B0_FANN_qrCombined) > 0. ";
+	cut += " && (B0_FANN_qrCombined) > -1. ";
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
-	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
+	//cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
 	if (enableVeto) 
 	{
@@ -61,6 +61,7 @@ string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
 		cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
 		cut += " &&( B0_CSMVA > 0.05)";
 	}
+	//cut += " && B0_"+Kres+"_pi0_nPXDHits + B0_"+Kres+"_pi1_nPXDHits > 0";
 	//cut += " && "+cosflight+" > 0.995";
 	cut += " && iCand == 0 ";
 	return cut;
