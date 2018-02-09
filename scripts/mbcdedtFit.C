@@ -23,31 +23,16 @@
 using namespace RooFit ;
 #endif
 
-fitSettings getStdSettings()
-{
-	fitSettings settings;
-	//settings.mbcSigPar = {5.27952, 3.12605e-03, 1.2978, 1.837e1};
-	settings.mbcSigPar = {5.27952, 3.02605e-03, 1.3, 20.};
-	settings.mbcBkgPar = {5.29};
-	//settings.deSigPar = { -0.01, 4.16911e-02, 6.16997e-01, 1.0};
-	settings.deSigPar = { -0.01, 4.111e-02, 5.8e-01, 20.0};
-	settings.deBkgPar = {-3.99680e-01, 8.18152e-02, -2.90946e-02};
-	settings.fsig = 0.5;
-	settings.dw = -0.005;
-	settings.w = 0.27;
-	settings.fbkg =     {0.49, 0.51};
-	settings.sigmabkg = {4.23,  1.4};
-	settings.fres =     {0.35, 0.23, 0.42};
-	settings.sigmares = {0.57, 4.65,  1.48};
-	settings.wparameters = {0.50072, -0.505257};
-	return settings;
-}
 
 void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 {
+	std::cout << " ____________________________" << std::endl;
+	std::cout << "|                            |" << std::endl;
+	std::cout << "|   FINAL FIT version 0.3    |" << std::endl;
+	std::cout << "|____________________________|\n" << std::endl;
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
-	RooRealVar fsig("fsig","#background events",0.07, 0, 1);
+	RooRealVar fsig("fsig","#background events",0.062, 0, 1);
 	RooRealVar dt("dt","#Delta t [ps]",-20,20) ;
 
 
@@ -83,26 +68,18 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	
 	if (useToyMC) 
 	{
-		int nevents = 2438; //0.555 ab-1
+		int nevents = 2846; //0.555 ab-1
 		nevents *= 9.001; //5 ab-1
 		nevents *= 10;    //50 ab-1
-		//int nevents = 53500;
 		std::cout << " _________________________________________ \n" << std::endl;
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
-		//w.setRange(0.,0.5);
-		w.setVal(0.24);
+		w.setVal(0.232);
 		w.setConstant();
-		//RooGenericPdf wpdf("wpdf","0.0275595+-0.350588*w+3.81378*pow(w,2)+-17.1999*pow(w,3)+33.2703*pow(w,4)+-22.3068*pow(w,5)",RooArgList(w));
-		//RooDataSet * wdata = wpdf.generate(RooArgSet(w),nevents);
-		//RooDataSet * mbcdedata = combined->generate(RooArgSet(mbc,de),  ProtoData(*wdata));
 		std::cout << " _________________________________________ " << std::endl;
-		//wdata->Print();
 		std::cout << " _________________________________________ " << std::endl;
 		data = combined->generate(RooArgSet(mbc,de,dt,q), nevents);
-		//data = combined->generate(RooArgSet(dt,q), ProtoData(*mbcdedata));
 		std::cout << " _________________________________________ " << std::endl;
-		//data->merge(dtdata);
 		data->Print();
 		std::cout << " _________________________________________ " << std::endl;
 	}

@@ -51,15 +51,15 @@ string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
 	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
-	cut += " && (B0_FANN_qrCombined) > -1. ";
+	cut += " && abs(B0_FBDT_qrCombined) > 0. ";
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
-	//cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
+	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
 	if (enableVeto) 
 	{
 		cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
 		cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
-		cut += " &&( B0_CSMVA > 0.05)";
+		cut += " &&( B0_CSMVA > 0.08)";
 	}
 	//cut += " && B0_"+Kres+"_pi0_nPXDHits + B0_"+Kres+"_pi1_nPXDHits > 0";
 	//cut += " && "+cosflight+" > 0.995";

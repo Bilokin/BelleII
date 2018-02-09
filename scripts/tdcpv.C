@@ -21,6 +21,20 @@
 using namespace RooFit ;
 #endif
 
+
+float computeW(float fann, fitSettings set)
+{
+	for (unsigned int i = 0; i < set.wvalues.size(); i++) 
+	{
+		if (abs(fann) > set.qbins[i] && abs(fann) <  set.qbins[i+1]  ) 
+		{
+			return set.wvalues[i];
+		}
+	}
+	std::cout << "Q has wrong value!!!" << std::endl;
+	return -1;
+}
+
 void addBranches(TTree* T, fitSettings set)
 {
 	float dt = 0;
@@ -36,7 +50,7 @@ void addBranches(TTree* T, fitSettings set)
 	TBranch *bdterr = T->Branch("dterr",&dterr,"dterr/F");
 	TBranch *bq = T->Branch("q",&q,"q/I");
 	TBranch *bw = T->Branch("w",&w,"w/F");
-	T->SetBranchAddress("B0_FANN_qrCombined",&fann);
+	T->SetBranchAddress("B0_FBDT_qrCombined",&fann);
 	T->SetBranchAddress("B0_DeltaT",&dt);
 	T->SetBranchAddress("B0_DeltaTErr",&dterr);
 	T->SetBranchAddress("B0_deltae",&de);
@@ -51,7 +65,7 @@ void addBranches(TTree* T, fitSettings set)
 		T->GetEntry(i);
 		q = TMath::Sign(1,fann);
 		w = (set.wparameters[0]+set.wparameters[1]*abs(fann));
-		
+		w = computeW(fann, set);	
 		//std::cout << "w: " << w << std::endl;
 		bdt->Fill();
 		bde->Fill();
@@ -64,15 +78,15 @@ void addBranches(TTree* T, fitSettings set)
 	//T->Print();
 }
 
-void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "merged-xsd2/lumi555fb-merged.root")
+void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "signal-newcsmva.root")
 {
 	string outputfilename = "tmp-branch.root";
-	string cut = getCuts(1, Kres);
+	string cut = getCuts(0, Kres);
 	
 	if (fullFit) 
 	{
 		cut = getBasicCuts(1,Kres);
-		signalname = "signal-xsd.root";
+		signalname = "signal-newcsmva.root";
 	}
 	fitSettings settings = deltaT(signalname, Kres, cut);
 	TFile * file = TFile::Open(filename.c_str());

@@ -119,7 +119,7 @@ RooAbsPdf * getMbcBkg(fitSettings & set, RooRealVar & mbc, bool fixParameters = 
 		std::cout << "Error in getMbcBkg: Input parameters not set!" << std::endl;
 		return NULL;
 	}
-	RooRealVar * argpar = new RooRealVar("argpar","argus shape parameter",-30.0,-200.,-1.) ;
+	RooRealVar * argpar = new RooRealVar("argpar","argus shape parameter",set.mbcBkgPar[1],-200.,-1.) ;
 	if (fixParameters) 
 	{
 		argpar->setConstant();

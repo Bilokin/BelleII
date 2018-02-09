@@ -14,7 +14,10 @@ void resizeFile(string inname = "test.root", string outname = "outtest.root", fl
 	infile->Close();
 }
 
-void datasetMixer(string mixedname = "merged-xsd2/mixed.root",string chargedname = "merged-xsd2/charged.root", string lightname = "merged-xsd2/light.root", string ccbarname = "merged-xsd2/ccbar.root")
+void datasetMixer(string mixedname = "merged-xsd-newcsmva/mixed.root",
+		  string chargedname = "merged-xsd-newcsmva/charged.root", 
+		  string lightname = "merged-xsd-newcsmva/light.root", 
+		  string ccbarname = "merged-xsd-newcsmva/ccbar.root")
 {
 	//int signalK1Nevents = 1e7;
 	//float sigmaY4S = 0.5346e-9;
@@ -51,13 +54,13 @@ void datasetMixer(string mixedname = "merged-xsd2/mixed.root",string chargedname
 	std::cout << "charged integrated lumi:\t" << chargedLumi << " ab-1" << std::endl;
 	std::cout << "mixed integrated lumi:  \t" << mixedLumi << " ab-1" << std::endl;
 	float targetLumi = 0.555;
-	bool resize = 0;
+	bool resize = 1;
 	if (resize) 
 	{
-		resizeFile(mixedname, "mixed/lumi555fb.root", targetLumi/mixedLumi);
-		resizeFile(chargedname, "charged/lumi555fb.root", targetLumi/chargedLumi);
-		resizeFile(ccbarname, "ccbar/lumi555fb.root", targetLumi/ccbarLumi);
-		resizeFile(lightname, "light/lumi555fb.root", targetLumi/lightLumi);
+		resizeFile(mixedname, "mixed/lumi555fb-newcsmva.root", targetLumi/mixedLumi);
+		resizeFile(chargedname, "charged/lumi555fb-newcsmva.root", targetLumi/chargedLumi);
+		resizeFile(ccbarname, "ccbar/lumi555fb-newcsmva.root", targetLumi/ccbarLumi);
+		resizeFile(lightname, "light/lumi555fb-newcsmva.root", targetLumi/lightLumi);
 	}
 	
 }

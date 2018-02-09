@@ -63,18 +63,20 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 	// Generate some data
 	if (!data) 
 	{
-		int nevents = 13000;   // 
+		int nevents = 14819;   // 
 		//int nevents = 1315.12/set.fsig;   // PHASE III  2 ab^-1 DATASET
 		//nevents = 32877.9/set.fsig; // FULL      50 ab^-1 DATASET
 		//nevents = 47471; // Total MC DATASET
-		w.setRange(0.,0.5);
-		RooGenericPdf wpdf("wpdf","0.0275595+-0.350588*w+3.81378*pow(w,2)+-17.1999*pow(w,3)+33.2703*pow(w,4)+-22.3068*pow(w,5)",RooArgList(w));
+		//w.setRange(0.,0.5);
+		w.setVal(0.232);
+		w.setConstant();
+		//RooGenericPdf wpdf("wpdf","0.0275595+-0.350588*w+3.81378*pow(w,2)+-17.1999*pow(w,3)+33.2703*pow(w,4)+-22.3068*pow(w,5)",RooArgList(w));
 		std::cout << " _________________________________________ \n" << std::endl;
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
-		wdata = wpdf.generate(RooArgSet(w),nevents);
+		//wdata = wpdf.generate(RooArgSet(w),nevents);
 		///data = combinedQ->generate(RooArgSet(dt,q), nevents);
-		data = combinedQ->generate(RooArgSet(dt,q), ProtoData(*wdata));
+		data = combinedQ->generate(RooArgSet(dt,q),nevents);//, ProtoData(*wdata));
 		//data->merge(wdata);
 		//A.setVal(0);
 		//S.setVal(0);
@@ -120,7 +122,7 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 void convolution3(float fsig = 0.84, bool showSecCanvas = false)
 {
 	fitSettings settings;
-	settings.useDeltaResolution = true;
+	//settings.useDeltaResolution = true;
 	settings.fsig = fsig;
 	settings.dw = -0.005;
 	settings.w = 0.27;

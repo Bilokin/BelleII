@@ -1,6 +1,6 @@
 TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva, string continuumname, vector<string> cuts, float scale, int color, int style, int nbins = 50)
 {
-	float mvaup = 0.6;
+	float mvaup = 1.;
 	int nbinsde = 20;
 	string cut = cuts[0];
 	string mbccut = cuts[1];
@@ -26,10 +26,10 @@ TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva, string
 	return dEqqHist;
 }
 
-void checkVariables(string signalname = "mixed/lumi555fb.root", 
-			   string lightname = "light/lumi555fb.root", 
-			   string ccbarname = "ccbar/lumi555fb.root", 
-			   string chargedname = "charged/lumi555fb.root", 
+void checkVariables(string signalname = "mixed/lumi555fb-newcsmva.root", 
+			   string lightname = "light/lumi555fb-newcsmva.root", 
+			   string ccbarname = "ccbar/lumi555fb-newcsmva.root", 
+			   string chargedname = "charged/lumi555fb-newcsmva.root", 
 			   bool signalEnhanced = 0, string Kres = "Xsd")
 {
 	float signalK1Lumi = 0.7; // ab-1
@@ -76,7 +76,7 @@ void checkVariables(string signalname = "mixed/lumi555fb.root",
 	  /////////////////////////////////////////
 	 //	    SIGNAL+SCF+XsGamma	        //
 	/////////////////////////////////////////	
-	float mvaup = 0.6;
+	float mvaup = 1.;
 	TFile * fileSig = TFile::Open(signalname.c_str());
 	fileSig->cd();
 	TTree* B0Signal = (TTree*)fileSig->Get("B0Signal");
