@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<MethodSetup Method="Fisher::BoostedFisher_B0009">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.2.1 [262657]"/>
+    <Info name="ROOT Release" value="6.08/06 [395270]"/>
+    <Info name="Creator" value="sbilokin"/>
+    <Info name="Date" value="Mon Feb 12 12:50:29 2018"/>
+    <Info name="Host" value="Linux ubuntu1604 4.4.0-66-generic #87-Ubuntu SMP Fri Mar 3 15:29:05 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/home/sbilokin/BelleII/test"/>
+    <Info name="Training events" value="2500"/>
+    <Info name="TrainingTime" value="7.39884377e-03"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="No">None</Option>
+    <Option name="H" modified="Yes">True</Option>
+    <Option name="CreateMVAPdfs" modified="No">False</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
+    <Option name="Method" modified="No">Fisher</Option>
+  </Options>
+  <Variables NVar="10">
+    <Variable VarIndex="0" Expression="B0_CosTBTO" Label="B0_CosTBTO" Title="B0_CosTBTO" Unit="" Internal="B0_CosTBTO" Type="F" Min="3.98379168e-04" Max="9.99982417e-01"/>
+    <Variable VarIndex="1" Expression="B0_cc2" Label="B0_cc2" Title="B0_cc2" Unit="" Internal="B0_cc2" Type="F" Min="0.00000000e+00" Max="8.38051796e+00"/>
+    <Variable VarIndex="2" Expression="B0_hso12" Label="B0_hso12" Title="B0_hso12" Unit="" Internal="B0_hso12" Type="F" Min="-2.64101893e-01" Max="7.99365401e-01"/>
+    <Variable VarIndex="3" Expression="B0_R2" Label="B0_R2" Title="B0_R2" Unit="" Internal="B0_R2" Type="F" Min="5.43055609e-02" Max="8.80864382e-01"/>
+    <Variable VarIndex="4" Expression="B0_hso10" Label="B0_hso10" Title="B0_hso10" Unit="" Internal="B0_hso10" Type="F" Min="0.00000000e+00" Max="9.95408356e-01"/>
+    <Variable VarIndex="5" Expression="B0_hso14" Label="B0_hso14" Title="B0_hso14" Unit="" Internal="B0_hso14" Type="F" Min="-1.81763574e-01" Max="6.88618660e-01"/>
+    <Variable VarIndex="6" Expression="B0_cc9" Label="B0_cc9" Title="B0_cc9" Unit="" Internal="B0_cc9" Type="F" Min="0.00000000e+00" Max="5.94375467e+00"/>
+    <Variable VarIndex="7" Expression="B0_CosTBz" Label="B0_CosTBz" Title="B0_CosTBz" Unit="" Internal="B0_CosTBz" Type="F" Min="9.84498882e-04" Max="9.51700866e-01"/>
+    <Variable VarIndex="8" Expression="B0_ThrustO" Label="B0_ThrustO" Title="B0_ThrustO" Unit="" Internal="B0_ThrustO" Type="F" Min="5.59308529e-01" Max="1.00000000e+00"/>
+    <Variable VarIndex="9" Expression="B0_ThrustB" Label="B0_ThrustB" Title="B0_ThrustB" Unit="" Internal="B0_ThrustB" Type="F" Min="8.37455034e-01" Max="9.96106863e-01"/>
+  </Variables>
+  <Spectators NSpec="0"/>
+  <Classes NClass="2">
+    <Class Name="Signal" Index="0"/>
+    <Class Name="Background" Index="1"/>
+  </Classes>
+  <Transformations NTransformations="0"/>
+  <MVAPdfs/>
+  <Weights NCoeff="11">
+    <Coefficient Index="0" Value="-7.0902501471722290e-01"/>
+    <Coefficient Index="1" Value="-2.5802458268201467e-01"/>
+    <Coefficient Index="2" Value="-2.7503351479336191e-02"/>
+    <Coefficient Index="3" Value="-1.8246027368825968e-01"/>
+    <Coefficient Index="4" Value="-7.6610658882154059e-01"/>
+    <Coefficient Index="5" Value="-2.6434627078925760e-01"/>
+    <Coefficient Index="6" Value="-9.0705343539194638e-01"/>
+    <Coefficient Index="7" Value="-4.6055106885432469e-03"/>
+    <Coefficient Index="8" Value="-1.5421514950523357e-01"/>
+    <Coefficient Index="9" Value="2.2971311989251614e-01"/>
+    <Coefficient Index="10" Value="1.3054342828981769e+00"/>
+  </Weights>
+</MethodSetup>

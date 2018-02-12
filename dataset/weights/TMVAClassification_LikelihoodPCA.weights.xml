@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<MethodSetup Method="Likelihood::LikelihoodPCA">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.2.1 [262657]"/>
+    <Info name="ROOT Release" value="6.08/06 [395270]"/>
+    <Info name="Creator" value="sbilokin"/>
+    <Info name="Date" value="Mon Feb 12 11:00:10 2018"/>
+    <Info name="Host" value="Linux ubuntu1604 4.4.0-66-generic #87-Ubuntu SMP Fri Mar 3 15:29:05 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/home/sbilokin/BelleII/test"/>
+    <Info name="Training events" value="2000"/>
+    <Info name="TrainingTime" value="1.31669044e-02"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="Yes">PCA</Option>
+    <Option name="H" modified="Yes">False</Option>
+    <Option name="CreateMVAPdfs" modified="No">False</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
+    <Option name="TransformOutput" modified="Yes">False</Option>
+  </Options>
+  <Variables NVar="4">
+    <Variable VarIndex="0" Expression="var1+var2" Label="myvar1" Title="myvar1" Unit="" Internal="myvar1" Type="F" Min="-8.14423561e+00" Max="7.26972866e+00"/>
+    <Variable VarIndex="1" Expression="var1-var2" Label="myvar2" Title="Expression 2" Unit="" Internal="myvar2" Type="F" Min="-3.96643972e+00" Max="4.02589369e+00"/>
+    <Variable VarIndex="2" Expression="var3" Label="var3" Title="Variable 3" Unit="units" Internal="var3" Type="F" Min="-5.03730011e+00" Max="4.27845287e+00"/>
+    <Variable VarIndex="3" Expression="var4" Label="var4" Title="Variable 4" Unit="units" Internal="var4" Type="F" Min="-5.95050764e+00" Max="4.64035463e+00"/>
+  </Variables>
+  <Spectators NSpec="2">
+    <Spectator SpecIndex="0" Expression="var1*2" Label="spec1" Title="Spectator 1" Unit="units" Internal="spec1" Type="F" Min="-9.91655540e+00" Max="8.67800140e+00"/>
+    <Spectator SpecIndex="1" Expression="var1*3" Label="spec2" Title="Spectator 2" Unit="units" Internal="spec2" Type="F" Min="-1.48748331e+01" Max="1.30170021e+01"/>
+  </Spectators>
+  <Classes NClass="2">
+    <Class Name="Signal" Index="0"/>
+    <Class Name="Background" Index="1"/>
+  </Classes>
+  <Transformations NTransformations="1">
+    <Transform Name="PCA">
+      <Selection>
+        <Input NInputs="4">
+          <Input Type="Variable" Label="myvar1" Expression="var1+var2"/>
+          <Input Type="Variable" Label="myvar2" Expression="var1-var2"/>
+          <Input Type="Variable" Label="var3" Expression="var3"/>
+          <Input Type="Variable" Label="var4" Expression="var4"/>
+        </Input>
+        <Output NOutputs="4">
+          <Output Type="Variable" Label="myvar1" Expression="var1+var2"/>
+          <Output Type="Variable" Label="myvar2" Expression="var1-var2"/>
+          <Output Type="Variable" Label="var3" Expression="var3"/>
+          <Output Type="Variable" Label="var4" Expression="var4"/>
+        </Output>
+      </Selection>
+      <Statistics Class="Signal" ClassIndex="0" NRows="4">
+        5.01171252e-01 -9.94528753e-02 4.04633918e-01 8.01902736e-01 
+      </Statistics>
+      <Statistics Class="Background" ClassIndex="1" NRows="4">
+        -1.31870616e-01 8.61246706e-02 -1.93617885e-01 -2.45611558e-01 
+      </Statistics>
+      <Statistics Class="Combined" ClassIndex="2" NRows="4">
+        1.84650318e-01 -6.66410237e-03 1.05508017e-01 2.78145589e-01 
+      </Statistics>
+      <Eigenvectors Class="Signal" ClassIndex="0" NRows="4" NCols="4">
+        7.69850496e-01 2.14560882e-02 5.33662163e-01 3.49391680e-01 -2.61975665e-02 9.93735389e-01 -6.10151208e-02 8.98933734e-02 4.06874796e-01 -7.41467570e-02 -8.29585759e-01 3.75156805e-01 4.91016091e-01 8.08199897e-02 -1.52542847e-01 -8.53874702e-01 
+      </Eigenvectors>
+      <Eigenvectors Class="Background" ClassIndex="1" NRows="4" NCols="4">
+        7.47072878e-01 -3.09636701e-02 5.50364978e-01 3.71512794e-01 3.65121540e-02 9.90509186e-01 -6.98472228e-02 1.12604534e-01 4.09718983e-01 -1.16337091e-01 -8.20328627e-01 3.81650337e-01 5.22187066e-01 6.63210776e-02 -1.38854961e-01 -8.38833406e-01 
+      </Eigenvectors>
+      <Eigenvectors Class="Combined" ClassIndex="2" NRows="4" NCols="4">
+        7.44343580e-01 7.38265903e-03 -5.97855936e-01 2.97433035e-01 2.49331242e-02 -9.93034847e-01 6.57955964e-02 9.45043468e-02 4.11076013e-01 1.07578409e-01 7.58746350e-01 4.93707781e-01 5.25687631e-01 -4.74781522e-02 2.50086374e-01 -8.11698925e-01 
+      </Eigenvectors>
+    </Transform>
+  </Transformations>
+  <MVAPdfs/>
+  <Weights NVariables="4" NClasses="2">
+    <PDFDescriptor VarIndex="0" ClassIndex="0">
+      <PDF Name="LikelihoodPCA PDF Sig[0]" MinNSmooth="20" MaxNSmooth="20" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_myvar1_sig_original" NBins="20" XMin="-1.1806955337524414e+01" XMax="9.6245908737182617e+00" HasEquidistantBins="1">
+          0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 6.00000000e+00 1.70000000e+01 4.50000000e+01 9.80000000e+01 1.26000000e+02 1.99000000e+02 1.96000000e+02 1.58000000e+02 8.30000000e+01 5.20000000e+01 1.40000000e+01 4.00000000e+00 1.00000000e+00 1.00000000e+00 0.00000000e+00 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+    <PDFDescriptor VarIndex="0" ClassIndex="1">
+      <PDF Name="LikelihoodPCA PDF Bkg[0]" MinNSmooth="20" MaxNSmooth="20" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_myvar1_bgd_original" NBins="20" XMin="-1.1806955337524414e+01" XMax="9.6245908737182617e+00" HasEquidistantBins="1">
+          0.00000000e+00 3.87524022e-03 6.03417195e-02 2.31579751e-01 1.70236528e+00 7.34542608e+00 3.24955292e+01 6.89955063e+01 1.05110832e+02 1.70187332e+02 1.72762894e+02 2.02796280e+02 1.28738541e+02 6.69732132e+01 2.71834373e+01 1.15677652e+01 3.03040075e+00 7.12261856e-01 9.66769531e-02 5.71489614e-03 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+    <PDFDescriptor VarIndex="1" ClassIndex="0">
+      <PDF Name="LikelihoodPCA PDF Sig[1]" MinNSmooth="5" MaxNSmooth="5" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_myvar2_sig_original" NBins="20" XMin="-4.0516171455383301e+00" XMax="4.0703382492065430e+00" HasEquidistantBins="1">
+          1.00000000e+00 2.00000000e+00 1.00000000e+00 1.00000000e+01 2.00000000e+01 4.30000000e+01 7.10000000e+01 8.60000000e+01 1.29000000e+02 1.36000000e+02 1.36000000e+02 1.26000000e+02 1.01000000e+02 6.90000000e+01 3.40000000e+01 2.20000000e+01 7.00000000e+00 6.00000000e+00 0.00000000e+00 0.00000000e+00 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+    <PDFDescriptor VarIndex="1" ClassIndex="1">
+      <PDF Name="LikelihoodPCA PDF Bkg[1]" MinNSmooth="5" MaxNSmooth="5" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_myvar2_bgd_original" NBins="20" XMin="-4.0516171455383301e+00" XMax="4.0703382492065430e+00" HasEquidistantBins="1">
+          0.00000000e+00 3.39536381e+00 1.31151390e+00 9.76634502e+00 2.45044498e+01 4.53722458e+01 7.53293381e+01 6.15195541e+01 1.29898697e+02 1.55789062e+02 1.22767052e+02 1.58702667e+02 1.03249710e+02 4.50232887e+01 3.82213783e+01 2.00548306e+01 9.66007352e-01 5.64094186e-01 0.00000000e+00 3.56440973e+00 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+    <PDFDescriptor VarIndex="2" ClassIndex="0">
+      <PDF Name="LikelihoodPCA PDF Sig[2]" MinNSmooth="5" MaxNSmooth="5" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_var3_sig_original" NBins="20" XMin="-2.1203904151916504e+00" XMax="2.2373864650726318e+00" HasEquidistantBins="1">
+          0.00000000e+00 2.00000000e+00 1.00000000e+00 1.00000000e+01 1.40000000e+01 3.60000000e+01 9.10000000e+01 1.08000000e+02 1.32000000e+02 1.52000000e+02 1.34000000e+02 1.25000000e+02 9.00000000e+01 4.60000000e+01 3.40000000e+01 1.90000000e+01 3.00000000e+00 2.00000000e+00 1.00000000e+00 0.00000000e+00 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+    <PDFDescriptor VarIndex="2" ClassIndex="1">
+      <PDF Name="LikelihoodPCA PDF Bkg[2]" MinNSmooth="5" MaxNSmooth="5" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_var3_bgd_original" NBins="20" XMin="-2.1203904151916504e+00" XMax="2.2373864650726318e+00" HasEquidistantBins="1">
+          4.39144336e-02 8.05947185e-03 4.60621071e+00 4.29346228e+00 2.10594292e+01 4.30203438e+01 8.37286301e+01 8.82445984e+01 1.24780479e+02 1.70669342e+02 1.26242584e+02 1.43917084e+02 7.08061523e+01 6.64046631e+01 3.03825035e+01 1.12710180e+01 6.47755289e+00 3.33983803e+00 7.04046130e-01 0.00000000e+00 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+    <PDFDescriptor VarIndex="3" ClassIndex="0">
+      <PDF Name="LikelihoodPCA PDF Sig[3]" MinNSmooth="5" MaxNSmooth="5" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_var4_sig_original" NBins="20" XMin="-1.2302144765853882e+00" XMax="1.5422987937927246e+00" HasEquidistantBins="1">
+          0.00000000e+00 0.00000000e+00 0.00000000e+00 5.00000000e+00 1.30000000e+01 3.10000000e+01 9.50000000e+01 1.92000000e+02 2.10000000e+02 1.91000000e+02 1.36000000e+02 7.00000000e+01 4.10000000e+01 1.20000000e+01 4.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+    <PDFDescriptor VarIndex="3" ClassIndex="1">
+      <PDF Name="LikelihoodPCA PDF Bkg[3]" MinNSmooth="5" MaxNSmooth="5" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+        <Histogram Name="dataset_LikelihoodPCA_var4_bgd_original" NBins="20" XMin="-1.2302144765853882e+00" XMax="1.5422987937927246e+00" HasEquidistantBins="1">
+          0.00000000e+00 0.00000000e+00 2.91632557e+00 1.03569756e+01 2.40309563e+01 3.10738201e+01 1.09409248e+02 1.41457489e+02 1.77362259e+02 1.93628937e+02 1.71084534e+02 8.54460678e+01 4.11821518e+01 8.61165428e+00 3.43949676e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 
+        </Histogram>
+      </PDF>
+    </PDFDescriptor>
+  </Weights>
+</MethodSetup>
