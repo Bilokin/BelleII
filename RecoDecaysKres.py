@@ -27,7 +27,7 @@ from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
-from pi0etaveto import writePi0EtaVeto
+from pi0etaveto import writePi0EtaVeto, myVetoVariables
 ratingVar = "chiProb"
 defaultInputFilename = "evtgen.root"
 defaultInputFoldername = "test"
@@ -36,7 +36,7 @@ defaultOutputFilename = "test.root"
 defaultOutputFoldername = "."
 outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
 # Change K resonance name here:
-Kres = 'K_10'
+Kres = 'Xsd'
 for arg in sys.argv:
 	print(arg)
 if len(sys.argv)==2:
@@ -48,30 +48,6 @@ use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
 #use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
-variables.addAlias('pi0veto_M','extraInfo(pi0veto_M)')
-variables.addAlias('pi0veto_mcPDG','extraInfo(pi0veto_mcPDG)')
-variables.addAlias('pi0veto_cosTheta','extraInfo(pi0veto_cosTheta)')
-variables.addAlias('pi0veto_gamma0_E','extraInfo(pi0veto_gamma0_E)')
-variables.addAlias('pi0veto_gamma1_E','extraInfo(pi0veto_gamma1_E)')
-variables.addAlias('pi0veto_gamma1_cosTheta','extraInfo(pi0veto_gamma1_cosTheta)')
-variables.addAlias('pi0veto_gamma1_clusterE1E9','extraInfo(pi0veto_gamma1_clusterE1E9)')
-variables.addAlias('pi0veto_gamma1_clusterE9E21','extraInfo(pi0veto_gamma1_clusterE9E21)')
-variables.addAlias('pi0veto_gamma1_clusterTiming','extraInfo(pi0veto_gamma1_clusterTiming)')
-variables.addAlias('pi0veto_gamma1_clusterAZM40','extraInfo(pi0veto_gamma1_clusterAbsZernikeMoment40)')
-variables.addAlias('pi0veto_gamma1_clusterAZM51','extraInfo(pi0veto_gamma1_clusterAbsZernikeMoment51)')
-variables.addAlias('pi0veto_gamma1_clusterSecondMoment','extraInfo(pi0veto_gamma1_clusterSecondMoment)')
-variables.addAlias('eta0veto_gamma1_cosTheta','extraInfo(eta0veto_gamma1_cosTheta)')
-variables.addAlias('eta0veto_gamma1_clusterE1E9','extraInfo(eta0veto_gamma1_clusterE1E9)')
-variables.addAlias('eta0veto_gamma1_clusterE9E21','extraInfo(eta0veto_gamma1_clusterE9E21)')
-variables.addAlias('eta0veto_gamma1_clusterTiming','extraInfo(eta0veto_gamma1_clusterTiming)')
-variables.addAlias('eta0veto_gamma1_clusterAZM40','extraInfo(eta0veto_gamma1_clusterAbsZernikeMoment40)')
-variables.addAlias('eta0veto_gamma1_clusterAZM51','extraInfo(eta0veto_gamma1_clusterAbsZernikeMoment51)')
-variables.addAlias('eta0veto_gamma1_clusterSecondMoment','extraInfo(eta0veto_gamma1_clusterSecondMoment)')
-variables.addAlias('eta0veto_M','extraInfo(eta0veto_M)')
-variables.addAlias('eta0veto_mcPDG','extraInfo(eta0veto_mcPDG)')
-variables.addAlias('eta0veto_cosTheta','extraInfo(eta0veto_cosTheta)')
-variables.addAlias('eta0veto_gamma0_E','extraInfo(eta0veto_gamma0_E)')
-variables.addAlias('eta0veto_gamma1_E','extraInfo(eta0veto_gamma1_E)')
 variables.addAlias('myRatingCriteria',ratingVar)
 
 add_beamparameters(analysis_main,'Y4S')
@@ -115,59 +91,8 @@ flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 #matchMCTruth('gamma:loose')
 
 
-writePi0EtaVeto('B0:signal', 'B0 -> '+Kres+' ^gamma',)
-#'''
-# ----------------
-# VETO starts here
-
-roe_path = create_path()
-deadEndPath = create_path()
-
-signalSideParticleFilter('B0:signal', '', roe_path, deadEndPath)
-
-fillParticleList('gamma:roe', 'isInRestOfEvent == 1 and E > 0.050 and cosTheta > -0.65', path=roe_path)
-
-fillSignalSideParticleList('gamma:sig', 'B0 -> '+Kres+' ^gamma', roe_path)
-
-reconstructDecay('pi0:veto -> gamma:sig gamma:roe', '0.080 < M < 0.200', path=roe_path)
-reconstructDecay('eta:veto2 -> gamma:sig gamma:roe', '0.45 < M < 0.65', path=roe_path)
-
-rankByLowest('pi0:veto', 'abs(dM)', 1, path=roe_path)
-rankByLowest('eta:veto2', 'abs(dM)', 1, path=roe_path)
-matchMCTruth('pi0:veto', path=roe_path) 
-matchMCTruth('eta:veto2', path=roe_path) 
-
-variableToSignalSideExtraInfo('pi0:veto', {'M': 'pi0veto_M'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(0,E)': 'pi0veto_gamma0_E'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,E)': 'pi0veto_gamma1_E'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,cosTheta)': 'pi0veto_gamma1_cosTheta'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,clusterE1E9)': 'pi0veto_gamma1_clusterE1E9'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,clusterE9E21)': 'pi0veto_gamma1_clusterE9E21'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,clusterTiming)': 'pi0veto_gamma1_clusterTiming'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,clusterAbsZernikeMoment40)': 'pi0veto_gamma1_clusterAbsZernikeMoment40'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,clusterAbsZernikeMoment51)': 'pi0veto_gamma1_clusterAbsZernikeMoment51'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'daughter(1,clusterSecondMoment)': 'pi0veto_gamma1_clusterSecondMoment'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'mcPDG': 'pi0veto_mcPDG'}, path=roe_path)
-variableToSignalSideExtraInfo('pi0:veto', {'cosTheta': 'pi0veto_cosTheta'}, path=roe_path)
-
-variableToSignalSideExtraInfo('eta:veto2', {'M': 'eta0veto_M'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(0,E)': 'eta0veto_gamma0_E'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,E)': 'eta0veto_gamma1_E'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,cosTheta)': 'eta0veto_gamma1_cosTheta'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,clusterE1E9)': 'eta0veto_gamma1_clusterE1E9'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,clusterE9E21)': 'eta0veto_gamma1_clusterE9E21'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,clusterTiming)': 'eta0veto_gamma1_clusterTiming'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,clusterAbsZernikeMoment40)': 'eta0veto_gamma1_clusterAbsZernikeMoment40'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,clusterAbsZernikeMoment51)': 'eta0veto_gamma1_clusterAbsZernikeMoment51'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'daughter(1,clusterSecondMoment)': 'eta0veto_gamma1_clusterSecondMoment'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'mcPDG': 'eta0veto_mcPDG'}, path=roe_path)
-variableToSignalSideExtraInfo('eta:veto2', {'cosTheta': 'eta0veto_cosTheta'}, path=roe_path)
-analysis_main.for_each('RestOfEvent', 'RestOfEvents', roe_path)
-
-# VETO ends here
-# ----------------
-#'''
-
+writePi0EtaVeto('B0:signal', 'B0 -> '+Kres+' ^gamma')
+myVetoVariables(Kres)
 
 toolsB0_meson =  ['Kinematics','^B0 -> [^'+Kres+' -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
