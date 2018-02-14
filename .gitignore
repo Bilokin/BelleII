@@ -1,6 +1,7 @@
 # Prerequisites
 *.pdf
 *.d
+__pycache__/
 FlavorTagging/*
 grid/*
 newgrid/*
