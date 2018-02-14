@@ -36,7 +36,7 @@ defaultOutputFilename = "test.root"
 defaultOutputFoldername = "."
 outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
 # Change K resonance name here:
-Kres = 'Xsd'
+Kres = 'K_10'
 for arg in sys.argv:
 	print(arg)
 if len(sys.argv)==2:
@@ -49,6 +49,19 @@ use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
 variables.addAlias('myRatingCriteria',ratingVar)
+variables.addAlias('B0_CosTBTO','cosTBTO')
+variables.addAlias('B0_cc2','CleoCone(2)')
+variables.addAlias('B0_hso12','KSFWVariables(hso12)')
+variables.addAlias('B0_R2','R2')
+variables.addAlias('B0_hso10','KSFWVariables(hso10)')
+variables.addAlias('B0_hso14','KSFWVariables(hso14)')
+variables.addAlias('B0_cc9','CleoCone(9)')
+variables.addAlias('B0_CosTBz','cosTBz')
+variables.addAlias('B0_ThrustO','thrustOm')
+variables.addAlias('B0_ThrustB','thrustBm')
+variables.addAlias('B0_cc4','CleoCone(4)')
+variables.addAlias('B0_hso02','KSFWVariables(hso02)')
+variables.addAlias('CSMVA','extraInfo(CSMVA)')
 
 add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
@@ -57,7 +70,6 @@ stdPhotons('loose')
 stdPi0s()
 stdPi('all')
 applyCuts('gamma:loose','1.4 < E < 4')
-#vertexRave('K_S0:all',0.01)
 reconstructDecay(Kres+":all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2.5")
 reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
 vertexRave('B0:signal',0.0, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
@@ -89,7 +101,8 @@ flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 #matchMCTruth('pi+:all')
 #matchMCTruth(Kres+':all')
 #matchMCTruth('gamma:loose')
-
+analysis_main.add_module('MVAExpert', listNames=['B0:signal'], extraInfoName='CSMVA',
+		identifier='./mva-addition/MyTMVA.xml')
 
 writePi0EtaVeto('B0:signal', 'B0 -> '+Kres+' ^gamma')
 myVetoVariables(Kres)
@@ -99,6 +112,7 @@ toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRa
 toolsB0_meson += ['CustomFloats[pi0veto_M:pi0veto_gamma0_E:pi0veto_gamma1_E:pi0veto_mcPDG:pi0veto_cosTheta:pi0veto_gamma1_cosTheta:pi0veto_gamma1_clusterE1E9:pi0veto_gamma1_clusterE9E21:pi0veto_gamma1_clusterTiming:pi0veto_gamma1_clusterAZM40:pi0veto_gamma1_clusterAZM51:pi0veto_gamma1_clusterSecondMoment]', '^B0']
 toolsB0_meson += ['CustomFloats[eta0veto_M:eta0veto_gamma0_E:eta0veto_gamma1_E:eta0veto_mcPDG:eta0veto_cosTheta:eta0veto_gamma1_cosTheta:eta0veto_gamma1_clusterE1E9:eta0veto_gamma1_clusterE9E21:eta0veto_gamma1_clusterTiming:eta0veto_gamma1_clusterAZM40:eta0veto_gamma1_clusterAZM51:eta0veto_gamma1_clusterSecondMoment]', '^B0']
 toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness]', '^B0']
+toolsB0_meson += ['CustomFloats[CSMVA]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^'+Kres+' gamma']
 toolsB0_meson += ['MCTruth','^B0 -> [^'+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['MCHierarchy','^B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
