@@ -28,13 +28,14 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 {
 	std::cout << " ____________________________" << std::endl;
 	std::cout << "|                            |" << std::endl;
-	std::cout << "|   FINAL FIT version 0.3    |" << std::endl;
+	std::cout << "|   FINAL FIT version 0.4    |" << std::endl;
 	std::cout << "|____________________________|\n" << std::endl;
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
-	RooRealVar fsig("fsig","#background events",0.062, 0, 1);
+	RooRealVar cs("cs","CSMVA []",0,2) ;
 	RooRealVar dt("dt","#Delta t [ps]",-20,20) ;
-
+	
+	RooRealVar fsig("fsig","#background events",0.05, 0, 1);
 
 	RooCategory q("q","Flavour of the tagged B0") ;
 		q.defineType("B0",1) ;
@@ -47,18 +48,22 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	//fitSettings settings = getStdSettings();
 	bool fixBkgShape = false;
 	
-	RooAbsPdf * debkg = getDeBkg(settings, de, fixBkgShape);
 	RooAbsPdf * mbcbkg = getMbcBkg(settings, mbc, fixBkgShape);
+	RooAbsPdf * debkg = getDeBkg(settings, de, fixBkgShape);
+	RooAbsPdf * csbkg = getCsBkg(settings, cs, fixBkgShape);
 	RooAbsPdf * dtbkg = getDeltaTBkg(settings, dt, fixBkgShape);
 	
 	RooAbsPdf * mbcsignal = getMbcSignal(settings, mbc);
 	RooAbsPdf * designal = getDeSignal(settings, de);
+	RooAbsPdf * cssignal = getCsSignal(settings, cs);
 	RooAbsPdf * dtsignal = getDeltaTSignal(settings, dt,q,w,A,S);
 	
 	//RooAbsPdf * function = getMbcDe(settings, mbc, de, fbkg);
 	// --- Build Product PDF ---
-	RooProdPdf * bkgpdf = new RooProdPdf("bkg","bkg",RooArgList(*mbcbkg, *debkg, *dtbkg));
-	RooProdPdf * sigpdf = new RooProdPdf("signal","signal",RooArgSet(*mbcsignal, *designal, *dtsignal));
+	RooProdPdf * bkgpdf = new RooProdPdf("bkg","bkg",RooArgList(*mbcbkg, *debkg, *csbkg, *dtbkg));
+	RooProdPdf * sigpdf = new RooProdPdf("signal","signal",RooArgSet(*mbcsignal, *designal, *cssignal, *dtsignal));
+	//RooProdPdf * bkgpdf = new RooProdPdf("bkg","bkg",RooArgList(*mbcbkg, *debkg,  *dtbkg));
+	//RooProdPdf * sigpdf = new RooProdPdf("signal","signal",RooArgSet(*mbcsignal, *designal,  *dtsignal));
 	
 	RooAddPdf * combined = new RooAddPdf("combined","combined", RooArgList(*sigpdf, *bkgpdf), fsig);
 	RooDataSet* data = NULL;
@@ -78,7 +83,7 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 		w.setConstant();
 		std::cout << " _________________________________________ " << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
-		data = combined->generate(RooArgSet(mbc,de,dt,q), nevents);
+		data = combined->generate(RooArgSet(mbc,de,cs,dt,q), nevents);
 		std::cout << " _________________________________________ " << std::endl;
 		data->Print();
 		std::cout << " _________________________________________ " << std::endl;
@@ -86,31 +91,38 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	else 
 	{
 		std::cout << "Importing tree: ";// << std::endl;
-		data = new RooDataSet(name.c_str(), name.c_str(), RooArgSet(mbc,de,dt,q,w), Import(*tree));
+		data = new RooDataSet(name.c_str(), name.c_str(), RooArgSet(mbc,de,cs,dt,q,w), Import(*tree));
 		data->Print();
 		std::cout << "Done!" << std::endl;
 	}
 	RooFitResult* resb = combined->fitTo(*data, Save()) ;
 
 	mbc.setBins(50) ;
+	cs.setBins(50) ;
 	de.setBins(25) ;
 	dt.setBins(50) ;
 	
 	RooPlot* frame = mbc.frame(Title("M_{bc}")) ;
 	RooPlot* deframe = de.frame(Title("#Delta E")) ;
+	RooPlot* csframe = cs.frame(Title("CSMVA")) ;
 	RooPlot* dtframe = dt.frame(Title("#Delta t"), Range(-10,10)) ;
 	frame->SetTitle("");
 	deframe->SetTitle("");
 	dtframe->SetTitle("");
+	csframe->SetTitle("");
 	data->plotOn(frame, MarkerStyle(22)) ;
 	data->plotOn(deframe, MarkerStyle(22)) ;
+	data->plotOn(csframe, MarkerStyle(22)) ;
         combined->plotOn(frame) ;
         combined->plotOn(frame, Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
-        combined->plotOn(deframe, ProjWData(*data)) ;
-        combined->plotOn(deframe, ProjWData(*data), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+        combined->plotOn(deframe) ;
+        combined->plotOn(deframe, Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+        combined->plotOn(csframe) ;
+        combined->plotOn(csframe, Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
 	
 	mbc.setRange("Signal",5.27,5.3);
 	de.setRange("Signal",-0.15,0.1);
+	cs.setRange("Signal",0.5,2);
 	dt.setRange(-10,10);
 	TLatex* txt = new TLatex(0.2,0.85,"Signal region") ;
 	txt->SetNDC();
@@ -138,8 +150,11 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	c->cd(3);
 	gPad->SetLeftMargin(0.15) ; dtframe->GetYaxis()->SetTitleOffset(1.6) ; dtframe->Draw() ;
 	c->cd(4);
-	gPad->SetLeftMargin(0.15) ; frameres->GetYaxis()->SetTitleOffset(1.6) ; frameres->Draw() ;
+	gPad->SetLeftMargin(0.15) ; csframe->GetYaxis()->SetTitleOffset(1.6) ; csframe->Draw() ;
+	//gPad->SetLeftMargin(0.15) ; frameres->GetYaxis()->SetTitleOffset(1.6) ; frameres->Draw() ;
 		
+	TCanvas* c2 = new TCanvas("bphysics2","bphysics",400,400) ;
+	gPad->SetLeftMargin(0.15) ; frameres->GetYaxis()->SetTitleOffset(1.6) ; frameres->Draw() ;
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;

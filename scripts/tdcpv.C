@@ -39,11 +39,13 @@ void addBranches(TTree* T, fitSettings set)
 {
 	float dt = 0;
 	float de = 0;
+	float cs = 0;
 	float mbc = 0;
 	float dterr = 0;
 	int q = 1;
 	float w = 0;
 	float fann = 0;
+	TBranch *bcs = T->Branch("cs",&cs,"cs/F");
 	TBranch *bde = T->Branch("de",&de,"de/F");
 	TBranch *bmbc = T->Branch("mbc",&mbc,"mbc/F");
 	TBranch *bdt = T->Branch("dt",&dt,"dt/F");
@@ -54,6 +56,7 @@ void addBranches(TTree* T, fitSettings set)
 	T->SetBranchAddress("B0_DeltaT",&dt);
 	T->SetBranchAddress("B0_DeltaTErr",&dterr);
 	T->SetBranchAddress("B0_deltae",&de);
+	T->SetBranchAddress("B0_CSMVA",&cs);
 	T->SetBranchAddress("B0_mbc",&mbc);
 	Long64_t nentries = T->GetEntries();
 	float A = 0.5;
@@ -69,6 +72,7 @@ void addBranches(TTree* T, fitSettings set)
 		//std::cout << "w: " << w << std::endl;
 		bdt->Fill();
 		bde->Fill();
+		bcs->Fill();
 		bmbc->Fill();
 		bdterr->Fill();
 		bq->Fill();

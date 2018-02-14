@@ -21,6 +21,8 @@ struct fitSettings {
 	float dw = 0.0;
 	vector<float> wparameters;
 	//Mbc De parameters
+	vector<float> csSigPar; // fraction, mean1, mean2, sigma1, sigma2
+	vector<float> csBkgPar; // const 
 	vector<float> deSigPar;
 	vector<float> deBkgPar;
 	vector<float> mbcSigPar; // CB pars: mean, sigma, alpha, n
@@ -76,6 +78,8 @@ fitSettings getStdSettings()
 	//settings.deSigPar = { -0.01, 4.16911e-02, 6.16997e-01, 1.0};
 	settings.deSigPar = { -0.01, 4.111e-02, 5.8e-01, 20.0};
 	settings.deBkgPar = {-2.1744e-01, 1.1122e-01, -6.1220e-03};
+	settings.csSigPar = {4.8763e-01, 9.6932e-01, 4.0885e-01, 3.2282e-01, 4.9590e-01};
+	settings.csBkgPar = {-4.3063e-01, 6.1451e-01}; //-2.2
 	settings.fsig = 0.5;
 	settings.dw = -0.005;
 	settings.w = 0.23;

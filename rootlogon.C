@@ -59,7 +59,7 @@ string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
 	{
 		cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
 		cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
-		cut += " &&( B0_CSMVA > 0.08)";
+		cut += " &&( B0_CSMVA > 0.0)";
 	}
 	//cut += " && B0_"+Kres+"_pi0_nPXDHits + B0_"+Kres+"_pi1_nPXDHits > 0";
 	//cut += " && "+cosflight+" > 0.995";

@@ -135,3 +135,5 @@ dbstore/Belle2_B2JpsiKs_muBGx1EventLevelMaximumPstarFBDT 3 0,0,-1,-1
 dbstore/Belle2_B2JpsiKs_muBGx1EventLevelKaonPionFBDT 3 0,0,-1,-1
 dbstore/Belle2_B2JpsiKs_muBGx1CombinerCatCode00010203040506070809101112FBDT 3 0,0,-1,-1
 dbstore/Belle2_B2JpsiKs_muBGx1CombinerCatCode00010203040506070809101112FANN 3 0,0,-1,-1
+dbstore/Pi0VetoIdentifier 2 0,0,-1,-1
+dbstore/EtaVetoIdentifier 2 0,0,-1,-1

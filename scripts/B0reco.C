@@ -17,7 +17,7 @@ TH1F * drawHists(TTree* B0Signal, string name, string cut, string title = "Err",
 	return xPullHist;
 }
 
-void B0reco(string filename = "test.root", string Kres = "K_10")
+void B0reco(string filename = "test.root", string Kres = "Xsd")
 {
 	TCanvas * c1 = new TCanvas("c1", "Dalitz",0,0, 1980,1000);
 	c1->Divide(4,2);

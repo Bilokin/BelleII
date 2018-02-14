@@ -19,14 +19,15 @@ from stdPhotons import *
 from stdCharged import *
 from stdFSParticles import *
 from ROOT import gROOT, TFile, TTree                                                                                             
-import sysconfig                                                                                                                   
-gROOT.ProcessLine(".include " + sysconfig.get_path("include"))    
+import sysconfig
+gROOT.ProcessLine(".include " + sysconfig.get_path("include"))
 from flavorTagger import *
 
 from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
+from pi0etaveto import writePi0EtaVeto
 ratingVar = "chiProb"
 defaultInputFilename = "evtgen.root"
 defaultInputFoldername = "test"
@@ -34,6 +35,8 @@ inputFilename = defaultInputFoldername + '/' + defaultInputFilename
 defaultOutputFilename = "test.root"
 defaultOutputFoldername = "."
 outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
+# Change K resonance name here:
+Kres = 'K_10'
 for arg in sys.argv:
 	print(arg)
 if len(sys.argv)==2:
@@ -41,8 +44,8 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
-#use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
-use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
+use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
+#use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
 variables.addAlias('pi0veto_M','extraInfo(pi0veto_M)')
@@ -79,10 +82,9 @@ stdPi0s()
 stdPi('all')
 applyCuts('gamma:loose','1.4 < E < 4')
 #vertexRave('K_S0:all',0.01)
-vertexKFit('K_S0:all',0.01)
-reconstructDecay("Xsd:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2.5")
-reconstructDecay("B0:signal -> Xsd:all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
-vertexRave('B0:signal',0.0, 'B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] gamma')
+reconstructDecay(Kres+":all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2.5")
+reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
+vertexRave('B0:signal',0.0, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
 #vertexTree('B0:signal',0.0001)
 
 rankByHighest('B0:signal',ratingVar, 1, outputVariable='myRating')
@@ -108,19 +110,12 @@ matchMCTruth('B0:signal')
 TagV('B0:signal', 'breco')
 
 flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
-matchMCTruth('pi+:all')
-matchMCTruth('Xsd:all')
-matchMCTruth('gamma:loose')
+#matchMCTruth('pi+:all')
+#matchMCTruth(Kres+':all')
+#matchMCTruth('gamma:loose')
 
 
-'''
-fillSignalSideParticleList('gamma:sig', 'B0 -> Xsd ^gamma', path=analysis_main)
-reconstructDecay('pi0:veto -> gamma:loose gamma:loose', '0.080 < M < 0.200')reconstructDecay('eta:veto2 -> gamma:loose gamma:loose', '0.45 < M < 0.65')
-applyCuts('pi0:veto','daughter(0,E) > 1.4')applyCuts('eta:veto2','daughter(0,E) > 1.4')
-rankByLowest('pi0:veto', 'abs(dM)', 1)rankByLowest('eta:veto2', 'abs(dM)', 1)
-matchMCTruth('pi0:veto') matchMCTruth('eta:veto2') 
-'''
-
+writePi0EtaVeto('B0:signal', 'B0 -> '+Kres+' ^gamma',)
 #'''
 # ----------------
 # VETO starts here
@@ -132,7 +127,7 @@ signalSideParticleFilter('B0:signal', '', roe_path, deadEndPath)
 
 fillParticleList('gamma:roe', 'isInRestOfEvent == 1 and E > 0.050 and cosTheta > -0.65', path=roe_path)
 
-fillSignalSideParticleList('gamma:sig', 'B0 -> Xsd ^gamma', roe_path)
+fillSignalSideParticleList('gamma:sig', 'B0 -> '+Kres+' ^gamma', roe_path)
 
 reconstructDecay('pi0:veto -> gamma:sig gamma:roe', '0.080 < M < 0.200', path=roe_path)
 reconstructDecay('eta:veto2 -> gamma:sig gamma:roe', '0.45 < M < 0.65', path=roe_path)
@@ -174,25 +169,26 @@ analysis_main.for_each('RestOfEvent', 'RestOfEvents', roe_path)
 #'''
 
 
-toolsB0_meson =  ['Kinematics','^B0 -> [^Xsd -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
+toolsB0_meson =  ['Kinematics','^B0 -> [^'+Kres+' -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
 toolsB0_meson += ['CustomFloats[pi0veto_M:pi0veto_gamma0_E:pi0veto_gamma1_E:pi0veto_mcPDG:pi0veto_cosTheta:pi0veto_gamma1_cosTheta:pi0veto_gamma1_clusterE1E9:pi0veto_gamma1_clusterE9E21:pi0veto_gamma1_clusterTiming:pi0veto_gamma1_clusterAZM40:pi0veto_gamma1_clusterAZM51:pi0veto_gamma1_clusterSecondMoment]', '^B0']
 toolsB0_meson += ['CustomFloats[eta0veto_M:eta0veto_gamma0_E:eta0veto_gamma1_E:eta0veto_mcPDG:eta0veto_cosTheta:eta0veto_gamma1_cosTheta:eta0veto_gamma1_clusterE1E9:eta0veto_gamma1_clusterE9E21:eta0veto_gamma1_clusterTiming:eta0veto_gamma1_clusterAZM40:eta0veto_gamma1_clusterAZM51:eta0veto_gamma1_clusterSecondMoment]', '^B0']
-#toolsB0_meson += ['MCKinematics','^B0 ->  ^Xsd gamma']
-toolsB0_meson += ['MCTruth','^B0 -> [^Xsd -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['MCHierarchy','^B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['Vertex','^B0 -> [Xsd -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['CustomFloats[significanceOfDistance]', '^B0 -> [Xsd -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['MCVertex','^B0 -> [Xsd -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['InvMass','^B0 -> [^Xsd -> pi+ pi- ^K_S0]  gamma']
+toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness]', '^B0']
+#toolsB0_meson += ['MCKinematics','^B0 ->  ^'+Kres+' gamma']
+toolsB0_meson += ['MCTruth','^B0 -> [^'+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
+toolsB0_meson += ['MCHierarchy','^B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
+toolsB0_meson += ['Vertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
+toolsB0_meson += ['CustomFloats[significanceOfDistance]', '^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
+toolsB0_meson += ['MCVertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
+toolsB0_meson += ['InvMass','^B0 -> [^'+Kres+' -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
-toolsB0_meson += ['PID','B0 -> [Xsd -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
-toolsB0_meson += ['CustomFloats[chiProb]','B0 -> [Xsd -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
-toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['CustomFloats[clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> [Xsd -> pi+ pi- K_S0] ^gamma']
-toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^Xsd -> pi+ pi- K_S0] gamma']
-toolsB0_meson += ['Dalitz', '^B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['TrackHits','B0 -> [Xsd -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
+toolsB0_meson += ['PID','B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
+toolsB0_meson += ['CustomFloats[chiProb]','B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
+toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
+toolsB0_meson += ['CustomFloats[clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> ['+Kres+' -> pi+ pi- K_S0] ^gamma']
+toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^'+Kres+' -> pi+ pi- K_S0] gamma']
+toolsB0_meson += ['Dalitz', '^B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma']
+toolsB0_meson += ['TrackHits','B0 -> ['+Kres+' -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
 toolsB0_meson += ['TagVertex', '^B0']
 toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']
@@ -235,11 +231,11 @@ K0Info += ['CustomFloats[cosTheta]', '^K_S0 -> ^pi+ ^pi-']
 K0Info += ['TrackHits','K_S0 -> ^pi+ ^pi-']
 K0Info += ['CustomFloats[d0:z0:d0Err:z0Err]', 'K_S0 -> ^pi+ ^pi-']
 
-K0starInfo =  ['Kinematics','^Xsd ->  ^pi+ ^pi- ^K_S0']
-K0starInfo += ['MCKinematics','^Xsd']
-K0starInfo += ['MCTruth','^Xsd']
-K0starInfo += ['InvMass','^Xsd']
-K0starInfo += ['Vertex','^Xsd']
+K0starInfo =  ['Kinematics','^'+Kres+' ->  ^pi+ ^pi- ^K_S0']
+K0starInfo += ['MCKinematics','^'+Kres]
+K0starInfo += ['MCTruth','^'+Kres]
+K0starInfo += ['InvMass','^'+Kres]
+K0starInfo += ['Vertex','^'+Kres]
 
 #pi0Info = ['Kinematics','^pi0 -> ^gamma ^gamma']#pi0Info += ['MCTruth','^pi0 -> ^gamma ^gamma']#pi0Info += ['InvMass','^pi0']
 #pi0Info += ['CustomFloats[cosTheta:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51:clusterE1E9:clusterE9E21:clusterSecondMoment:clusterMergedPi0:clusterTiming:clusterBelleQuality:clusterErrorTiming]','pi0 -> ^gamma ^gamma']
@@ -253,7 +249,7 @@ ntupleTree('B0Signal', 'B0:signal', toolsB0_meson)
 #ntupleTree('Pi0Veto', 'pi0:veto', pi0Info)
 #ntupleTree('Eta0Veto', 'eta:veto2', eta0Info)
 #ntupleTree('GammaSignal', 'gamma:loose', gammaInfo)
-#ntupleTree('K1Signal', 'Xsd:all', K0starInfo)
+#ntupleTree('K1Signal', ''+Kres+':all', K0starInfo)
 # Process the events
 process(analysis_main)
 

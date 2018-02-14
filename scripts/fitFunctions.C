@@ -112,6 +112,7 @@ RooAbsPdf * getMbcSignal(fitSettings & set, RooRealVar & mbc)
 	RooCBShape * CBall = new RooCBShape("CBall", "Crystal Ball shape", mbc, *sigmean, *sigsigma, *sigalpha, *sign);
 	return CBall;
 }
+
 RooAbsPdf * getMbcBkg(fitSettings & set, RooRealVar & mbc, bool fixParameters = false)
 {
 	if (set.mbcBkgPar.size() < 1) 
@@ -126,6 +127,47 @@ RooAbsPdf * getMbcBkg(fitSettings & set, RooRealVar & mbc, bool fixParameters = 
 	}
 	RooArgusBG * argus = new RooArgusBG("argus","Argus PDF",mbc,RooConst(set.mbcBkgPar[0]),*argpar) ;
 	return argus;	
+}
+
+RooAbsPdf * getCsSignal(fitSettings & set, RooRealVar & cs)
+{
+	if (set.csSigPar.size() < 5 ) 
+	{
+		std::cout << "Error in getCsSignal: Input parameters not set!" << std::endl;
+		return NULL;
+	}
+	RooRealVar * csmean1 = new RooRealVar("csmean1","CS mean 1", set.csSigPar[1]) ;
+	RooRealVar * cssigma1 = new RooRealVar("cssigma1","CS sigma 1",set.csSigPar[3]) ;
+	RooRealVar * csmean2 = new RooRealVar("csmean2","CS mean 2",set.csSigPar[2]) ;
+	RooRealVar * cssigma2 = new RooRealVar("cssigma2","CS sigma 2",set.csSigPar[4]) ;
+	
+	RooRealVar * fcssig = new RooRealVar("fcssig","Gaussian proportion",set.csSigPar[0]) ;
+        RooGaussian * gaussCs1 = new RooGaussian("gaussCs1","gaussian PDF",cs,*csmean1,*cssigma1) ;
+        RooGaussian * gaussCs2 = new RooGaussian("gaussCs2","gaussian PDF",cs,*csmean2,*cssigma2) ;
+	RooAddPdf * csCBall = new RooAddPdf("csCBall","g+a",RooArgList(*gaussCs1,*gaussCs2),RooArgList(*fcssig)) ;
+	return csCBall;
+}
+RooAbsPdf * getCsBkg(fitSettings & set, RooRealVar & cs, bool fixParameters = false)
+{
+	if (set.csBkgPar.size() < 1) 
+	{
+		std::cout << "Error in getCsBkg: Input parameters not set!" << std::endl;
+		return NULL;
+	}
+	RooRealVar * csbkgmean1 = new RooRealVar("csbkgmean1","CS bkg mean",set.csBkgPar[0], -4., 0.) ;
+	RooRealVar * csbkgsigma1 = new RooRealVar("csbkgsigma1","CS bkg sigma ",set.csBkgPar[1],0.001,10.) ;
+        RooGaussian * gaussCsBkg1 = new RooGaussian("gaussCsBkg1","gaussian PDF",cs,*csbkgmean1,*csbkgsigma1) ;
+	
+	
+	//RooRealVar * csbkgpar = new RooRealVar("csbkgpar","B^{#pm} mass",set.csBkgPar[0] -30, 30) ;
+	if (fixParameters) 
+	{
+		//csbkgpar->setConstant();
+		csbkgmean1->setConstant();
+		csbkgsigma1->setConstant();
+	}
+	//RooExponential* csbkg = new RooExponential("csbkg", "csbkg", cs, *csbkgpar);
+	return gaussCsBkg1;
 }
 
 RooAbsPdf * getMbcCombined(fitSettings & set, RooRealVar & mbc, RooRealVar& fbkg)

@@ -14,10 +14,10 @@ void resizeFile(string inname = "test.root", string outname = "outtest.root", fl
 	infile->Close();
 }
 
-void datasetMixer(string mixedname = "merged-xsd-newcsmva/mixed.root",
-		  string chargedname = "merged-xsd-newcsmva/charged.root", 
-		  string lightname = "merged-xsd-newcsmva/light.root", 
-		  string ccbarname = "merged-xsd-newcsmva/ccbar.root")
+void datasetMixer(string mixedname = "merged-xsd-cstmva/mixed.root",
+		  string chargedname = "merged-xsd-cstmva/charged.root", 
+		  string lightname = "merged-xsd-cstmva/light.root", 
+		  string ccbarname = "merged-xsd-cstmva/ccbar.root")
 {
 	//int signalK1Nevents = 1e7;
 	//float sigmaY4S = 0.5346e-9;
@@ -57,10 +57,10 @@ void datasetMixer(string mixedname = "merged-xsd-newcsmva/mixed.root",
 	bool resize = 1;
 	if (resize) 
 	{
-		resizeFile(mixedname, "mixed/lumi555fb-newcsmva.root", targetLumi/mixedLumi);
-		resizeFile(chargedname, "charged/lumi555fb-newcsmva.root", targetLumi/chargedLumi);
-		resizeFile(ccbarname, "ccbar/lumi555fb-newcsmva.root", targetLumi/ccbarLumi);
-		resizeFile(lightname, "light/lumi555fb-newcsmva.root", targetLumi/lightLumi);
+		resizeFile(mixedname, "mixed/lumi555fb-cstmva.root", targetLumi/mixedLumi);
+		resizeFile(chargedname, "charged/lumi555fb-cstmva.root", targetLumi/chargedLumi);
+		resizeFile(ccbarname, "ccbar/lumi555fb-cstmva.root", targetLumi/ccbarLumi);
+		resizeFile(lightname, "light/lumi555fb-cstmva.root", targetLumi/lightLumi);
 	}
 	
 }
