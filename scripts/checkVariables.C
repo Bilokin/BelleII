@@ -176,7 +176,7 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	stackde->GetYaxis()->SetLabelSize(0.04);
 	stackde->SetMaximum( stackde->GetMaximum()*1.15 );
 	c1->cd(3);
-	gPad->SetLogy();
+	//gPad->SetLogy();
 	stackmva->Draw("he");
 	stackmva->SetTitle(";MVA score");
 	stackmva->GetXaxis()->SetLabelSize(0.04);

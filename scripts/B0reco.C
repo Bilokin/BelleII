@@ -41,11 +41,11 @@ void B0reco(string filename = "test.root", string Kres = "Xsd")
 	cout << "Purity B0: " << trueB/allB*100 << "%\n";
 	drawHists(B0Signal, "deltae", cut, "#DeltaE [GeV]",-0.2,0.2, mccut);
 	c1->cd(2);
-	//drawHists(B0Signal, "M", cut, "M(B_{0}) [GeV]",5,5.5,mccut);
-	//c1->cd(3);
 	drawHists(B0Signal, "mbc", cut, "M_{bc} [GeV]",5.2,5.3,mccut);
 	c1->cd(3);
 	drawHists(B0Signal, "cosTheta", cut, "cos#Theta",0.8,1,mccut);
+	c1->cd(4);
+	drawHists(B0Signal, "CSMVA", cut, "CSMVA [GeV]",-2,2,mccut);
 	
 	c1->cd(5);
 	TH1F * rhoHist = drawHists(B0Signal, Kres+"_M", cut, "M(K_{1}^{0}) [GeV]",0.8,2, mccut);
@@ -72,7 +72,7 @@ void B0reco(string filename = "test.root", string Kres = "Xsd")
 	//drawHists(B0Signal, Kres+"_K_S0_Rho", cut, "#rho [cm]",0,10,mccut);
 	
 	//c1->cd(8);
-	drawHists(B0Signal, "VtxPvalue", cut, "p-value",0,1,mccut);
+	drawHists(B0Signal, "VtxPvalue", cut, "p-value",0.,1,mccut);
 	//----------------------------------------------------------------//
 	//----------------------------------------------------------------//
 	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 1000, 500);

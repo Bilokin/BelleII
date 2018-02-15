@@ -38,7 +38,7 @@
 
     gROOT->SetStyle("MyStyle"); //uncomment to set this style
 }
-string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
+string getBasicCuts(bool enableVeto = true, string Kres = "Xsd")
 {
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
@@ -55,6 +55,8 @@ string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
+	//cut += " && B0_VtxPvalue < 0.00001";
+
 	if (enableVeto) 
 	{
 		cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
@@ -67,7 +69,7 @@ string getBasicCuts(bool enableVeto = true, string Kres = "K_10")
 	return cut;
 }
 
-string getCuts(bool enableVeto = true, string Kres = "K_10")
+string getCuts(bool enableVeto = true, string Kres = "Xsd")
 {
 	string cut = getBasicCuts(enableVeto, Kres);
 	cut += "&& B0_mbc > 5.27 && B0_deltae > -0.15 && B0_deltae < 0.1"; // BEST
