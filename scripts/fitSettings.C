@@ -85,8 +85,8 @@ fitSettings getStdSettings()
 	settings.w = 0.23;
 	settings.fbkg =     {0.49, 0.51};
 	settings.sigmabkg = {4.23,  1.4};
-	settings.fres =     {0.421832, 0.186005, 0.392162};
-	settings.sigmares = { 0.646568, 5, 1.64696};
+	settings.fres =     {0.400615, 0.407007, 0.192379};//{0.421832, 0.186005, 0.392162};
+	settings.sigmares = { 0.632337, 1.60292, 4.9265};//{ 0.646568, 5, 1.64696};
 	settings.wvalues ={ 0.475342, 0.38189, 0.339074, 0.192308, 0.166667, 0.0722101, 0.0193861 };
 	return settings;
 }

@@ -42,7 +42,7 @@ tmva_bdt_options = basf2_mva.TMVAOptionsClassification()
 tmva_bdt_options.m_method = "Fisher"
 tmva_bdt_options.m_type = "Fisher"
 #tmva_bdt_options.m_config = ("H:V:CreateMVAPdfs:NTrees=1000:nCuts=16:MaxDepth=10:VarTransform=D,G,G")
-tmva_bdt_options.m_config = ("H:V:CreateMVAPdfs:VarTransform=G,N,P:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10")
+tmva_bdt_options.m_config = ("H:V:CreateMVAPdfs:VarTransform=G,P:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10")
 tmva_bdt_options.transform2probability = False;
 basf2_mva.teacher(go,tmva_bdt_options)
 #basf2_mva.teacher(go,spnn)

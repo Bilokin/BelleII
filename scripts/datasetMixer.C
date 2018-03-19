@@ -14,10 +14,10 @@ void resizeFile(string inname = "test.root", string outname = "outtest.root", fl
 	infile->Close();
 }
 
-void datasetMixer(string mixedname = "merged-xsd-cstmva/mixed.root",
-		  string chargedname = "merged-xsd-cstmva/charged.root", 
-		  string lightname = "merged-xsd-cstmva/light.root", 
-		  string ccbarname = "merged-xsd-cstmva/ccbar.root")
+void datasetMixer(string mixedname = "merged-xsd-veto3/mixed-veto3.root",
+		  string chargedname = "merged-xsd-veto3/charged-veto3.root", 
+		  string lightname = "merged-xsd-veto3/light-veto3.root", 
+		  string ccbarname = "merged-xsd-veto3/ccbar-veto3.root")
 {
 	//int signalK1Nevents = 1e7;
 	//float sigmaY4S = 0.5346e-9;
@@ -43,24 +43,30 @@ void datasetMixer(string mixedname = "merged-xsd-cstmva/mixed.root",
 	float factor = 1e-18;
 	
 	
-	float chargedLumi = (float)chargedNevents /chargedXs * factor;
+	/*float chargedLumi = (float)chargedNevents /chargedXs * factor;
 	float mixedLumi = (float)mixedNevents / mixedXs * factor;
 	float ccbarLumi = (float)ccbarNevents / ccbarXs * factor;
 	float lightLumi = (float)(ssbarNevents+ddbarNevents+uubarNevents) / (uubarXs +ddbarXs+ssbarXs)* factor;
+	*/
+
+	float chargedLumi = 0.8*0.79;
+	float mixedLumi = 0.8;
+	float ccbarLumi = 0.8*0.96;
+	float lightLumi = 0.8*0.81;
 
 	//std::cout << "K1 integrated lumi:  \t" << signalK1Lumi*1e-18 << " ab-1" << std::endl;
 	std::cout << "ccbar integrated lumi:  \t" << ccbarLumi << " ab-1" << std::endl;
 	std::cout << "light integrated lumi:  \t" << lightLumi << " ab-1" << std::endl;
 	std::cout << "charged integrated lumi:\t" << chargedLumi << " ab-1" << std::endl;
 	std::cout << "mixed integrated lumi:  \t" << mixedLumi << " ab-1" << std::endl;
-	float targetLumi = 0.555;
+	float targetLumi = 0.8*0.79;
 	bool resize = 1;
 	if (resize) 
 	{
-		resizeFile(mixedname, "mixed/lumi555fb-cstmva.root", targetLumi/mixedLumi);
-		resizeFile(chargedname, "charged/lumi555fb-cstmva.root", targetLumi/chargedLumi);
-		resizeFile(ccbarname, "ccbar/lumi555fb-cstmva.root", targetLumi/ccbarLumi);
-		resizeFile(lightname, "light/lumi555fb-cstmva.root", targetLumi/lightLumi);
+		resizeFile(mixedname, "mixed/lumi630fb-veto3.root", targetLumi/mixedLumi);
+		resizeFile(chargedname, "charged/lumi630fb-veto3.root", targetLumi/chargedLumi);
+		resizeFile(ccbarname, "ccbar/lumi630fb-veto3.root", targetLumi/ccbarLumi);
+		resizeFile(lightname, "light/lumi630fb-veto3.root", targetLumi/lightLumi);
 	}
 	
 }

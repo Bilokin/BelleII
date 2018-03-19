@@ -55,7 +55,7 @@ fitSettings deltaT(string filename = "test.root", string Kres = "Xsd", string cu
 	fitSettings fitResult;
 	if (cut == "") 
 	{
-		cut = getCuts(0, Kres);
+		cut = getSignalCuts(0, Kres);
 	}
 	//cut += " && B0_CSMVA > 0.1";
 	string trueB = "&& (B0_isSignal)";

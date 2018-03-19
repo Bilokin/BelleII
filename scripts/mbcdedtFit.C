@@ -4,6 +4,7 @@
 
 #include "fitSettings.C"
 #include "fitFunctions.C"
+#include "plotMCstudy.C"
 #ifndef __MYROOFIT__
 #define __MYROOFIT__
 
@@ -28,20 +29,20 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 {
 	std::cout << " ____________________________" << std::endl;
 	std::cout << "|                            |" << std::endl;
-	std::cout << "|   FINAL FIT version 0.4    |" << std::endl;
+	std::cout << "|   FINAL FIT version 0.5    |" << std::endl;
 	std::cout << "|____________________________|\n" << std::endl;
-	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
+	RooRealVar mbc("mbc","m_{bc} [GeV]",5.2,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
 	RooRealVar cs("cs","CSMVA []",0,2) ;
 	RooRealVar dt("dt","#Delta t [ps]",-20,20) ;
 	
-	RooRealVar fsig("fsig","#background events",0.05, 0, 1);
+	RooRealVar fsig("fsig","#background events",0.055, 0, 1);
 
 	RooCategory q("q","Flavour of the tagged B0") ;
 		q.defineType("B0",1) ;
 		q.defineType("B0bar",-1) ;
 	RooRealVar w("w","flavour mistag rate",0,.5);
-	//RooRealVar w("w","flavour mistag rate",0.25);
+	//RooRealVar w("w","flavour mistag rate",0.23);
 	RooRealVar A("A","A",0.3,-1,1);
 	RooRealVar S("S","S",0.3,-1,1);
 
@@ -58,7 +59,6 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	RooAbsPdf * cssignal = getCsSignal(settings, cs);
 	RooAbsPdf * dtsignal = getDeltaTSignal(settings, dt,q,w,A,S);
 	
-	//RooAbsPdf * function = getMbcDe(settings, mbc, de, fbkg);
 	// --- Build Product PDF ---
 	RooProdPdf * bkgpdf = new RooProdPdf("bkg","bkg",RooArgList(*mbcbkg, *debkg, *csbkg, *dtbkg));
 	RooProdPdf * sigpdf = new RooProdPdf("signal","signal",RooArgSet(*mbcsignal, *designal, *cssignal, *dtsignal));
@@ -73,20 +73,27 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	
 	if (useToyMC) 
 	{
-		int nevents = 2846; //0.555 ab-1
-		nevents *= 9.001; //5 ab-1
-		nevents *= 10;    //50 ab-1
+		int nevents = 3424; //2846; // 0.555 ab-1
+		int nexperiments = 100; // 0.555 ab-1
+		//nevents *= 1.8;     // 1 ab-1
+		//nevents *= 5; // 5 ab-1
+		//nevents *= 10;    // 50 ab-1
 		std::cout << " _________________________________________ \n" << std::endl;
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
-		w.setVal(0.232);
+		w.setVal(0.2);
 		w.setConstant();
+		RooMCStudy* mcstudy = new RooMCStudy(*combined,RooArgSet(mbc,de,cs,dt,q),FitModel(*combined),Silence()) ;
 		std::cout << " _________________________________________ " << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
+		mcstudy->generateAndFit( nexperiments, nevents) ;
 		data = combined->generate(RooArgSet(mbc,de,cs,dt,q), nevents);
 		std::cout << " _________________________________________ " << std::endl;
-		data->Print();
+		//data->Print();
 		std::cout << " _________________________________________ " << std::endl;
+		plotMCstudy(mcstudy, A,S);
+		gDirectory->Add(mcstudy) ;
+		//return;
 	}
 	else 
 	{
@@ -95,7 +102,7 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 		data->Print();
 		std::cout << "Done!" << std::endl;
 	}
-	RooFitResult* resb = combined->fitTo(*data, Save()) ;
+	RooFitResult* resb = combined->fitTo(*data, Save(), Silence()) ;
 
 	mbc.setBins(50) ;
 	cs.setBins(50) ;
@@ -122,7 +129,7 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	
 	mbc.setRange("Signal",5.27,5.3);
 	de.setRange("Signal",-0.15,0.1);
-	cs.setRange("Signal",0.5,2);
+	//cs.setRange("Signal",0.5,2);
 	dt.setRange(-10,10);
 	TLatex* txt = new TLatex(0.2,0.85,"Signal region") ;
 	txt->SetNDC();

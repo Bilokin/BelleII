@@ -24,7 +24,7 @@ void B0reco(string filename = "test.root", string Kres = "Xsd")
 	c1->cd(1);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
-	string cut = getBasicCuts(0, Kres);
+	string cut = getCuts(1, Kres);
 	//string mccut= "(B0_isSignal || B0_mcErrors == 258) &&";
 	//string mccut = "(abs(B0_"+Kres+"_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511) && ";
 	string mccut= "(B0_isSignal) &&";
@@ -72,7 +72,8 @@ void B0reco(string filename = "test.root", string Kres = "Xsd")
 	//drawHists(B0Signal, Kres+"_K_S0_Rho", cut, "#rho [cm]",0,10,mccut);
 	
 	//c1->cd(8);
-	drawHists(B0Signal, "VtxPvalue", cut, "p-value",0.,1,mccut);
+	drawHists(B0Signal, "VtxPvalue", cut, "p-value",0.,0.1,mccut);
+
 	//----------------------------------------------------------------//
 	//----------------------------------------------------------------//
 	TCanvas * c2 = new TCanvas("c2", "Dalitz", 0, 0, 1000, 500);

@@ -51,15 +51,14 @@ Enddecay
 CDecay Myanti-B0
 
 Decay MyK10
-0.500    MyK_S0 rho0 PHSP;
-0.250    MyK*+ pi- PHSP;
-0.250    MyK*- pi+ PHSP;
+1.00    rho0 MyK_S0  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+#0.500    MyK*+ pi-    VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
 Enddecay
 CDecay Myanti_K10
 
 
 Decay MyK*+
-1.000    MyK_S0 pi+ PHSP;
+1.000    MyK_S0 pi+ VSS;
 Enddecay
 CDecay MyK*-
 

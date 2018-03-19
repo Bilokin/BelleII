@@ -69,7 +69,7 @@ void addBranches(TTree* T, fitSettings set)
 		q = TMath::Sign(1,fann);
 		w = (set.wparameters[0]+set.wparameters[1]*abs(fann));
 		w = computeW(fann, set);	
-		//std::cout << "w: " << w << std::endl;
+		std::cout << "w: " << w << std::endl;
 		bdt->Fill();
 		bde->Fill();
 		bcs->Fill();
@@ -82,15 +82,15 @@ void addBranches(TTree* T, fitSettings set)
 	//T->Print();
 }
 
-void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "signal-newcsmva.root")
+void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "signal-tmva.root")
 {
 	string outputfilename = "tmp-branch.root";
-	string cut = getCuts(0, Kres);
+	string cut = getSignalCuts(0, Kres);
 	
 	if (fullFit) 
 	{
-		cut = getBasicCuts(1,Kres);
-		signalname = "signal-newcsmva.root";
+		cut = getCuts(1,Kres);
+		signalname = "signal-tmva.root";
 	}
 	fitSettings settings = deltaT(signalname, Kres, cut);
 	TFile * file = TFile::Open(filename.c_str());

@@ -36,28 +36,22 @@ stdK('95eff')
 stdPhotons('loose')
 stdPi0s()
 stdPi('all')
-applyCuts('gamma:loose','1.4 < E < 4')
-#applyCuts('K_S0:all','daughter(0,piid)>0.1 and daughter(1,piid)>0.1 and daughter(0,eid)<0.9 and daughter(1,eid)<0.9 and daughter(0,prid)<0.9 and daughter(1,prid)<0.9 and daughter(0,muid)<0.9 and daughter(1,muid)<0.9')
-#vertexRave('K_S0:all',0.01)
+#applyCuts('gamma:loose','1.4 < E < 4')
 vertexKFit('K_S0:all',0.0)
-#reconstructDecay("K_10:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2")
-#reconstructDecay("B0:signal -> K_10:all gamma:loose", " 4 < M < 6 and Mbc > 5.27 and deltaE < 0.1 and deltaE > -0.2")
-#vertexRave('B0:signal',0.01, 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma')
 reconstructDecay('rho+:signal -> pi+:all pi0:veryLoose','0.7 < M < 0.9')
 reconstructDecay('D0:signal -> K-:95eff pi+:all',' 1.8< M < 1.9')
 reconstructDecay('D*0:signal -> D0:signal pi0:veryLoose', '1.9 < M < 2.1')
-#buildRestOfEvent('B0:signal')
 
 oldMask = ('oldMask', 'useCMSFrame(p)<=3.2', 'p >= 0.05 and useCMSFrame(p)<=3.2')
 
-# define the "cleaner" mask
-#eclCut = '[E > 0.062 and abs(clusterTiming) < 18 and clusterReg==1] or \
-#[E>0.060 and abs(clusterTiming) < 20 and clusterReg==2] or \
-#[E>0.056 and abs(clusterTiming) < 44 and clusterReg==3]'
-#cleanMask = ('cleanMask', 'abs(d0) < 10.0 and abs(z0) < 20.0', eclCut)
+ define the "cleaner" mask
+eclCut = '[E > 0.062 and abs(clusterTiming) < 18 and clusterReg==1] or \
+[E>0.060 and abs(clusterTiming) < 20 and clusterReg==2] or \
+[E>0.056 and abs(clusterTiming) < 44 and clusterReg==3]'
+cleanMask = ('cleanMask', 'abs(d0) < 10.0 and abs(z0) < 20.0', eclCut)
 
 # append both masks to ROE
-#appendROEMasks('B0:signal', [oldMask,cleanMask])
+appendROEMasks('D*0:signal', [oldMask,cleanMask])
 
 # choose one mask which is applied
 #buildContinuumSuppression('B0:signal', 'cleanMask')
@@ -77,36 +71,6 @@ toolsD0_meson = ['Kinematics','^D*0 -> [D0 -> ^K- ^pi+] ^pi0']
 toolsD0_meson += ['MCTruth','^D*0 -> [D0 -> ^K- ^pi+] ^pi0']
 toolsD0_meson += ['InvMass','^D*0 -> [^D0 -> K- pi+] ^pi0'] 
 toolsD0_meson += ['DeltaEMbc','^D*0']
-
-
-toolsB0_meson =  ['Kinematics','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent]', '^B0']
-#toolsB0_meson += ['MCKinematics','^B0 ->  ^K_10 gamma']
-toolsB0_meson += ['MCTruth','^B0 -> [^K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['MCHierarchy','^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['Vertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['MCVertex','^B0 -> [K_10 -> pi+ pi- ^K_S0] gamma']
-#toolsB0_meson += ['PDGCode','^B0']
-toolsB0_meson += ['InvMass','^B0 -> [^K_10 -> pi+ pi- ^K_S0]  gamma']
-toolsB0_meson += ['DeltaEMbc','^B0']
-#toolsB0_meson += ['PID','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
-#toolsB0_meson += ['MCReconstructible', 'B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
-toolsB0_meson += ['CustomFloats[d0:z0:cosTheta:isSignal]', 'B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^K_10 -> pi+ pi- K_S0] gamma']
-toolsB0_meson += ['Dalitz', '^B0 -> [K_10 -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['TrackHits','B0 -> [K_10 -> ^pi+ ^pi- K_S0] gamma']
-toolsB0_meson += ['TagVertex', '^B0']
-toolsB0_meson += ['MCTagVertex', '^B0']
-toolsB0_meson += ['DeltaT', '^B0']
-toolsB0_meson += ['DeltaTErr', '^B0']
-toolsB0_meson += ['MCDeltaT', '^B0']
-#toolsB0_meson += ['FlavorTagging[TMVA-FBDT, FANN-MLP, qrCategories]', '^B0']
-toolsB0_meson += ['FlavorTagging', '^B0']
-toolsB0_meson += ['ContinuumSuppression', '^B0:phiKs']
-
-toolsB0_meson += ['MassBeforeFit', '^B0']
-toolsB0_meson += ['ROEMultiplicities', '^B0']
-
 
 
 gammaInfo =  ['Kinematics','^gamma']

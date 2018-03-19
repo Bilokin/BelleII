@@ -38,7 +38,7 @@
 
     gROOT->SetStyle("MyStyle"); //uncomment to set this style
 }
-string getBasicCuts(bool enableVeto = true, string Kres = "Xsd")
+string getCuts(bool enableVeto = true, string Kres = "K_10")
 {
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
@@ -46,21 +46,23 @@ string getBasicCuts(bool enableVeto = true, string Kres = "Xsd")
 	cut += " && B0_"+Kres+"_K_S0_Rho > 0.1";
 	cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 5";
 	cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
-	cut += " && B0_"+Kres+"_M < 1.8 ";
+	//cut += " && B0_"+Kres+"_M < 1.8 ";
 	cut += " && B0_"+Kres+"_pi0_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
-	cut += " && abs(B0_FBDT_qrCombined) > 0. ";
+	cut += " && abs(B0_FBDT_qrCombined) > 0. "; //0.1 //0.25
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
-	//cut += " && B0_VtxPvalue < 0.00001";
+	//cut += " && B0_VtxPvalue > 0.002";
 
 	if (enableVeto) 
 	{
-		cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
-		cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
+		//cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
+		//cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
+		//cut += "&& B0_pi0Likeness < 0.8";
+		//cut += "&& B0_etaLikeness < 0.8";
 		cut += " &&( B0_CSMVA > 0.0)";
 	}
 	//cut += " && B0_"+Kres+"_pi0_nPXDHits + B0_"+Kres+"_pi1_nPXDHits > 0";
@@ -69,9 +71,9 @@ string getBasicCuts(bool enableVeto = true, string Kres = "Xsd")
 	return cut;
 }
 
-string getCuts(bool enableVeto = true, string Kres = "Xsd")
+string getSignalCuts(bool enableVeto = true, string Kres = "Xsd")
 {
-	string cut = getBasicCuts(enableVeto, Kres);
+	string cut = getCuts(enableVeto, Kres);
 	cut += "&& B0_mbc > 5.27 && B0_deltae > -0.15 && B0_deltae < 0.1"; // BEST
 	return cut;
 }

@@ -26,10 +26,10 @@ TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva, string
 	return dEqqHist;
 }
 
-void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root", 
-			   string lightname = "light/lumi555fb-cstmva.root", 
-			   string ccbarname = "ccbar/lumi555fb-cstmva.root", 
-			   string chargedname = "charged/lumi555fb-cstmva.root", 
+void checkVariables(string signalname = "mixed/lumi630fb-veto3.root", 
+			   string lightname = "light/lumi630fb-veto3.root", 
+			   string ccbarname = "ccbar/lumi630fb-veto3.root", 
+			   string chargedname = "charged/lumi630fb-veto3.root", 
 			   bool signalEnhanced = 0, string Kres = "Xsd")
 {
 	float signalK1Lumi = 0.7; // ab-1
@@ -52,7 +52,7 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	TH1F * MbcqqHist = NULL;
 	TH1F * MVAqqHist = NULL;
 	
-	string cut = getBasicCuts(1,Kres);
+	string cut = getCuts(1,Kres);
 	//cut += " && B0_gamma_MC_MOTHER_ID != 111 && B0_gamma_MC_MOTHER_ID != 221";
 	//string trueB = "&& (abs(B0_K_10_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511)";
 	string trueB = "&& B0_isSignal";
@@ -164,7 +164,6 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	legendMean2->AddEntry(lightHist,"u#bar{u}+d#bar{d}+s#bar{s}","f");
 	legendMean2->AddEntry(chargeHist,"B^{+}#bar{B}^{-}","f");
 	legendMean2->AddEntry(MbcXsGHist,"B^{0}#bar{B}^{0}","f");
-	legendMean2->Draw();
 	stackmbc->SetTitle(";M_{bc} [GeV]");
 	stackmbc->GetXaxis()->SetLabelSize(0.04);
 	stackmbc->GetYaxis()->SetLabelSize(0.04);
@@ -181,6 +180,7 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	stackmva->SetTitle(";MVA score");
 	stackmva->GetXaxis()->SetLabelSize(0.04);
 	stackmva->GetYaxis()->SetLabelSize(0.04);
+	legendMean2->Draw();
 	//[0]-sqrt((x*x*x+[2]*x+[3]*x+[4]))*[1]
 	//[0]*x*sqrt(1-x*x/[1]/[1])*exp(-[2]*sqrt(1-x*x/[1]/[1]))
 	//TH2F * dEMbcHist = new TH2F("dEMbcHist", "; #Delta E [GeV];M_{bc} [GeV]", nbins,-0.2,0.2, nbins,5.2,5.3);
