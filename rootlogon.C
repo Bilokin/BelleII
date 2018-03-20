@@ -38,7 +38,7 @@
 
     gROOT->SetStyle("MyStyle"); //uncomment to set this style
 }
-string getCuts(bool enableVeto = true, string Kres = "K_10")
+string getCuts(bool enableVeto = true, string Kres = "Xsd")
 {
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
@@ -46,7 +46,7 @@ string getCuts(bool enableVeto = true, string Kres = "K_10")
 	cut += " && B0_"+Kres+"_K_S0_Rho > 0.1";
 	cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 5";
 	cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
-	//cut += " && B0_"+Kres+"_M < 1.8 ";
+	cut += " && B0_"+Kres+"_M < 1.8 ";
 	cut += " && B0_"+Kres+"_pi0_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
@@ -55,7 +55,7 @@ string getCuts(bool enableVeto = true, string Kres = "K_10")
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
-	//cut += " && B0_VtxPvalue > 0.002";
+	cut += " && B0_VtxPvalue > 0.001";
 
 	if (enableVeto) 
 	{
