@@ -1057,6 +1057,28 @@
     <Parents>/home/sbilokin/BelleII/test/mc-v10/evtgen8.root</Parents>
   </File>
   <File>
+    <LFN>/home/sbilokin/BelleII/test/myskim.root.udst.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/myskim.root.udst.root</PFN>
+    <ExperimentLow>0</ExperimentLow>
+    <RunLow>0</RunLow>
+    <EventLow>910620060</EventLow>
+    <ExperimentHigh>0</ExperimentHigh>
+    <RunHigh>0</RunHigh>
+    <EventHigh>960842579</EventHigh>
+    <Parents>/belle/MC/release-00-09-01/DB00000276/MC9/prod00002321/e0000/4S/r00000/ccbar/sub03/mdst_004185_prod00002321_task00004196.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/myskim2.root.udst.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/myskim2.root.udst.root</PFN>
+    <ExperimentLow>0</ExperimentLow>
+    <RunLow>0</RunLow>
+    <EventLow>910620060</EventLow>
+    <ExperimentHigh>0</ExperimentHigh>
+    <RunHigh>0</RunHigh>
+    <EventHigh>960842579</EventHigh>
+    <Parents>/belle/MC/release-00-09-01/DB00000276/MC9/prod00002321/e0000/4S/r00000/ccbar/sub03/mdst_004185_prod00002321_task00004196.root</Parents>
+  </File>
+  <File>
     <LFN>/home/sbilokin/BelleII/test/newmc-v09//evtgen1.root</LFN>
     <PFN>/home/sbilokin/BelleII/test/newmc-v09//evtgen1.root</PFN>
     <ExperimentLow>1</ExperimentLow>
@@ -1143,6 +1165,26 @@
   <File>
     <LFN>/home/sbilokin/BelleII/test/newmc-v09/evttest.root</LFN>
     <PFN>/home/sbilokin/BelleII/test/newmc-v09/evttest.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/newmc-v09/testgen.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/newmc-v09/testgen.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/newmc-v09/xsdgen.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/newmc-v09/xsdgen.root</PFN>
     <ExperimentLow>1</ExperimentLow>
     <RunLow>1</RunLow>
     <EventLow>1</EventLow>
@@ -1285,6 +1327,46 @@
     <RunHigh>1</RunHigh>
     <EventHigh>22</EventHigh>
     <Parents>/home/sbilokin/BelleII/test/test/evtgen1.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen1.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen1.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen2.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen2.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen3.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen3.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen4.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen4.root</PFN>
+    <ExperimentLow>1</ExperimentLow>
+    <RunLow>1</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>1</ExperimentHigh>
+    <RunHigh>1</RunHigh>
+    <EventHigh>5000</EventHigh>
   </File>
   <File>
     <LFN>/home/sviatoslav/BelleII/test/B2A101-Y4SEventGeneration-evtgen.root</LFN>

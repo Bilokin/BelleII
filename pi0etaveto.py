@@ -30,6 +30,10 @@ variables.addAlias('eta0veto_cosTheta','extraInfo(eta0veto_cosTheta)')
 variables.addAlias('eta0veto_gamma0_E','extraInfo(eta0veto_gamma0_E)')
 variables.addAlias('eta0veto_gamma1_E','extraInfo(eta0veto_gamma1_E)')
 
+variables.addAlias('pi0vetoGamma1E','extraInfo(pi0vetoGamma1E)')
+variables.addAlias('pi0vetoGamma1CosTheta','extraInfo(pi0vetoGamma1CosTheta)')
+variables.addAlias('pi0vetoGamma1Timing','extraInfo(pi0vetoGamma1Timing)')
+
 PI0ETAVETO_COUNTER = 0
 
 def myVetoVariables(Kres):
@@ -191,5 +195,8 @@ def writePi0EtaVeto(
 
 	variableToSignalSideExtraInfo('pi0:PI0VETO', {'extraInfo(Pi0Veto)': pi0vetoname}, path=roe_path)
 	variableToSignalSideExtraInfo('eta:ETAVETO', {'extraInfo(EtaVeto)': etavetoname}, path=roe_path)
+	variableToSignalSideExtraInfo('pi0:PI0VETO', {'daughter(1,E)': 'pi0vetoGamma1E'}, path=roe_path)
+	variableToSignalSideExtraInfo('pi0:PI0VETO', {'daughter(1,cosTheta)': 'pi0vetoGamma1CosTheta'}, path=roe_path)
+	variableToSignalSideExtraInfo('pi0:PI0VETO', {'daughter(1,clusterTiming)': 'pi0vetoGamma1Timing'}, path=roe_path)
 
 	path.for_each('RestOfEvent', 'RestOfEvents', roe_path)

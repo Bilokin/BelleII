@@ -26,10 +26,10 @@ TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva, string
 	return dEqqHist;
 }
 
-void checkVariables(string signalname = "mixed/lumi630fb-veto3.root", 
-			   string lightname = "light/lumi630fb-veto3.root", 
-			   string ccbarname = "ccbar/lumi630fb-veto3.root", 
-			   string chargedname = "charged/lumi630fb-veto3.root", 
+void checkVariables(string signalname = "precut-veto3/mixed-gen2.root", 
+			   string lightname = "precut-veto3/light-lumi630fb-veto3.root", 
+			   string ccbarname = "precut-veto3/ccbar-lumi630fb-veto3.root", 
+			   string chargedname = "precut-veto3/charged-lumi630fb-veto3.root", 
 			   bool signalEnhanced = 0, string Kres = "Xsd")
 {
 	float signalK1Lumi = 0.7; // ab-1

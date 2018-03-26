@@ -49,9 +49,9 @@ kaons = ('K_S0:gen', '')
 kaonsS = ('K_10:gen', '')
 protons = ('anti-p-:gen', '')
 b0s = ('B0:gen', '')
-
+Kres = 'Xsd'
 kshortcut = "abs(daughter(0,mcPDG)) == 211 "
-b0cut = "countDaughters( ) == 2  and abs(daughter(1,mcPDG)) == 22"
+b0cut = "abs(daughter(0,mcPDG)) == 30343 and abs(daughter(1,mcPDG)) == 22"
 ks0cut = "countDaughters( ) == 2 and abs(daughter(1,mcPDG)) == 22 and abs(daughter(0,mcPDG)) == 310"
 gammacut = "E > 1.5  and abs(genMotherPDG) == 511"
 
@@ -96,12 +96,12 @@ toolsGamma = ['Kinematics', '^gamma -> e+ e-']
 toolsGamma += ['CustomFloats[cosTheta]', '^gamma']
 toolsGamma += ['CustomFloats[genMotherPDG]', '^gamma']
 
-toolsB0 = ['Kinematics', '^B0 -> [ ^K_10 -> [ ^rho0 -> ^pi+ ^pi- ] [ ^K_S0 -> ^pi+ ^pi- ] ] ^gamma']
+toolsB0 = ['Kinematics', '^B0 -> [ ^'+Kres+' -> [ ^rho0 -> ^pi+ ^pi- ] [ ^K_S0 -> ^pi+ ^pi- ] ] ^gamma']
 toolsB0 += ['EventMetaData', '^B0']
 toolsB0 += ['CMSKinematics', '^B0']
-toolsB0 += ['InvMass', '^B0 -> [ ^K_10 -> [ ^rho0 -> pi+ pi- ] ^K_S0 ] ^gamma']
-toolsB0 += ['MCVertex', '^B0 -> [ K_10 -> [ rho0 -> pi+ pi- ] ^K_S0 ] gamma']
-toolsB0 += ['CustomFloats[cosTheta:E]', '^B0 -> [ ^K_10 -> [ ^rho0 -> ^pi+ ^pi- ] [ ^K_S0 -> ^pi+ ^pi- ]  ]  ^gamma']
+toolsB0 += ['InvMass', '^B0 -> [ ^'+Kres+' -> [ ^rho0 -> pi+ pi- ] ^K_S0 ] ^gamma']
+toolsB0 += ['MCVertex', '^B0 -> [ '+Kres+' -> [ rho0 -> pi+ pi- ] ^K_S0 ] gamma']
+toolsB0 += ['CustomFloats[cosTheta:E]', '^B0 -> [ ^'+Kres+' -> [ ^rho0 -> ^pi+ ^pi- ] [ ^K_S0 -> ^pi+ ^pi- ]  ]  ^gamma']
 
 toolsB0SIG = ['Kinematics', '^B0 -> ^K_S0 ^pi+ ^pi- ^gamma']
 toolsB0SIG += ['InvMass', '^B0']

@@ -18,7 +18,7 @@ go = basf2_mva.GeneralOptions()
 go.m_datafiles = basf2_mva.vector(*trainData)  # training sample
 go.m_treename = "B0Signal" # ntuple tree name
 xmlname = 'MyContinuumANN'
-xmlname = 'MyTMVA'
+xmlname = 'MyTMVAnew'
 go.m_identifier = "/home/sbilokin/BelleII/test/mva-addition/"+xmlname+".xml" # name of the file with the trianing info
 
 #go.m_identifier = "MVADatabaseIdentifier"

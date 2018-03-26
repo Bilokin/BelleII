@@ -52,6 +52,7 @@ void fillWhist(TH1F* wHist, TTree* B0Signal, fitSettings & settings, string cut)
 fitSettings deltaT(string filename = "test.root", string Kres = "Xsd", string cut = "")
 {
 	bool gen =false;
+	std::cout << filename << std::endl;
 	fitSettings fitResult;
 	if (cut == "") 
 	{

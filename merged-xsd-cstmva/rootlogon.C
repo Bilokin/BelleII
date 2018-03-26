@@ -43,9 +43,9 @@ string getCuts(bool enableVeto = true, string Kres = "Xsd")
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
 	cut += " abs(B0_"+Kres+"_K_S0_M - 0.4976) < 0.011";
-	//cut += " && B0_"+Kres+"_K_S0_Rho > 0.1";
+	cut += " && B0_"+Kres+"_K_S0_Rho > 0.1";
 	cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 5";
-	//cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
+	cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
 	cut += " && B0_"+Kres+"_M < 1.8 ";
 	cut += " && B0_"+Kres+"_pi0_PIDpi > 0.005 ";
 	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
@@ -62,9 +62,8 @@ string getCuts(bool enableVeto = true, string Kres = "Xsd")
 	{
 		//cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
 		//cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
-		cut += "&& B0_pi0Likeness < 0.6";
-		cut += "&& B0_etaLikeness < 0.9";
-		cut += " &&( B0_CSMVA2 > 0.0)";
+		//cut += "&& B0_pi0Likeness < 0.7";
+		//cut += "&& B0_etaLikeness < 0.8";
 		cut += " &&( B0_CSMVA > 0.0)";
 	}
 	//cut += " && B0_"+Kres+"_pi0_nPXDHits + B0_"+Kres+"_pi0_nSVDHits > 0";

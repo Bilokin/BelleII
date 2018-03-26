@@ -65,22 +65,22 @@ variables.addAlias('CSMVA','extraInfo(CSMVA)')
 
 add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
-stdKshorts()
-stdPhotons('loose')
-stdPi0s()
-stdPi('99eff')
-applyCuts('gamma:loose','1.4 < E < 4')
-krescuts = "0.5 < M < 2.5 \
-and daughter(2,significanceOfDistance) > 3 \
-and daughter(2,dM) < 0.011 and daughter(2,dM) > -0.011 \
-and daughter(2,dr) > 0.05 \
-and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
-"
-reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
-reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
-vertexRave('B0:signal',0.001, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
+#stdKshorts()
+#stdPhotons('loose')
+#stdPi0s()
+#stdPi('99eff')
+#applyCuts('gamma:loose','1.4 < E < 4')
+#krescuts = "0.5 < M < 2.5 \
+#and daughter(2,significanceOfDistance) > 3 \
+#and daughter(2,dM) < 0.011 and daughter(2,dM) > -0.011 \
+#and daughter(2,dr) > 0.05 \
+#and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
+#"
+#reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
+#reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
+#vertexRave('B0:signal',0.001, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
 #vertexTree('B0:signal',0.0001)
-
+#fillParticleList('B0:signal', '', True)
 rankByHighest('B0:signal',ratingVar, 1, outputVariable='myRating')
 
 buildRestOfEvent('B0:signal')
