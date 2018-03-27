@@ -36,7 +36,7 @@ defaultOutputFilename = "test.root"
 defaultOutputFoldername = "."
 outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
 # Change K resonance name here:
-Kres = 'K_10'
+Kres = 'Xsd'
 for arg in sys.argv:
 	print(arg)
 if len(sys.argv)==2:
