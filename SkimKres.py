@@ -70,7 +70,7 @@ vertexRave('B0:signalSkim',0.001, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
 #rankByHighest('B0:signalSkim',ratingVar, 100)
 
 
-kstcuts =  "0.5 < M < 2 \
+kstcuts =  "0.5 < M < 4 \
 and daughter(1,dM) < 0.015 and daughter(1,dM) > -0.015 and daughter(0,dM) > -0.02 and daughter(0,dM) < 0.02 \
 and daughter(0,E) > 0.5 and daughter(0,daughter(1,E)) > 0.05 and daughter(0,daughter(0,E)) > 0.05 \
 and daughter(1,significanceOfDistance) > 3 \

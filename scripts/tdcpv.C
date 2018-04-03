@@ -82,9 +82,9 @@ void addBranches(TTree* T, fitSettings set)
 	//T->Print();
 }
 
-void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "signal-tmva.root")
+void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "root/signal-tmva.root")
 {
-	string outputfilename = "tmp-branch.root";
+	string outputfilename = "root/tmp-branch.root";
 	string cut = getSignalCuts(0, Kres);
 	
 	if (fullFit) 
