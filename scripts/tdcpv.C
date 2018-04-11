@@ -90,7 +90,7 @@ void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit =
 	if (fullFit) 
 	{
 		cut = getCuts(1,Kres);
-		//signalname = "signalx-veto3-precut3.root";
+		signalname = "root/signalx-veto3-precut3.root";
 	}
 	fitSettings settings = deltaT(signalname, Kres, cut);
 	TFile * file = TFile::Open(filename.c_str());
