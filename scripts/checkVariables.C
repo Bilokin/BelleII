@@ -36,10 +36,10 @@ TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva,  THSta
 //			   string lightname = "precut-veto3/light-lumi630fb-veto3.root", 
 //			   string ccbarname = "precut-veto3/ccbar-lumi630fb-veto3.root", 
 //			   string chargedname = "precut-veto3/charged-lumi630fb-veto3.root", 
-void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root", 
-			   string lightname = "light/lumi555fb-cstmva.root", 
-			   string ccbarname = "ccbar/lumi555fb-cstmva.root", 
-			   string chargedname = "charged/lumi555fb-cstmva.root", 
+void checkVariables(string signalname = "root/tmp-full-bkg-run4.root", 
+			   string lightname = "root/tmp-full-bkg-run3.root", 
+			   string ccbarname = "root/tmp-full-bkg-run1.root", 
+			   string chargedname = "root/tmp-full-bkg-run2.root", 
 			   bool signalEnhanced = 0, string Kres = "Xsd")
 {
 	float signalK1Lumi = 0.7; // ab-1
@@ -185,7 +185,7 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	legendMean2->SetBorderSize(0);
 	legendMean2->AddEntry(MbcHist,"Signal","f");
 	//legendMean2->AddEntry(MbcscfHist,"SCF","f");
-	legendMean2->SetHeader("L = 550 fb^{-1}", "C");
+	legendMean2->SetHeader("L = 630 fb^{-1}", "C");
 	legendMean2->AddEntry(ccbarHist,"c#bar{c}","f");
 	legendMean2->AddEntry(lightHist,"u#bar{u}+d#bar{d}+s#bar{s}","f");
 	legendMean2->AddEntry(chargeHist,"B^{+}#bar{B}^{-}","f");
@@ -194,6 +194,11 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	stackmbc->GetXaxis()->SetLabelSize(0.04);
 	stackmbc->GetYaxis()->SetLabelSize(0.04);
         stackmbc->GetYaxis()->SetTitleOffset(1.3);
+	TLatex* txtWatermark = new TLatex(0.2,0.87,"BELLE II SIMULATION") ;
+	txtWatermark->SetNDC();
+	txtWatermark->SetTextSize(0.05) ;
+	txtWatermark->SetTextColor(kRed+3) ;
+	txtWatermark->Draw();
 
 	c1->cd(2);
 
@@ -203,6 +208,7 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	stackde->GetYaxis()->SetLabelSize(0.04);
 	stackde->SetMaximum( stackde->GetMaximum()*1.15 );
         stackde->GetYaxis()->SetTitleOffset(1.3);
+	txtWatermark->Draw();
 
 	c1->cd(3);
 	//gPad->SetLogy();
@@ -212,11 +218,12 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	stackdt->GetXaxis()->SetLabelSize(0.04);
 	stackdt->GetYaxis()->SetLabelSize(0.04);
 	stackdt->GetYaxis()->SetTitleOffset(1.3);
-	TLatex* txt = new TLatex(0.2,0.85,"Signal region") ;
+	TLatex* txt = new TLatex(0.2,0.8,"Signal region") ;
 	txt->SetNDC();
 	txt->SetTextSize(0.05) ;
 	txt->SetTextColor(kGray) ;
 	txt->Draw();
+	txtWatermark->Draw();
 	c1->cd(4);
 	//gPad->SetLogy();
 	stackmva->Draw("he");
@@ -226,6 +233,7 @@ void checkVariables(string signalname = "mixed/lumi555fb-cstmva.root",
 	stackmva->GetYaxis()->SetLabelSize(0.04);
 	stackmva->GetYaxis()->SetTitleOffset(1.3);
 	legendMean2->Draw();
+	txtWatermark->Draw();
 	//[0]-sqrt((x*x*x+[2]*x+[3]*x+[4]))*[1]
 	//[0]*x*sqrt(1-x*x/[1]/[1])*exp(-[2]*sqrt(1-x*x/[1]/[1]))
 	//TH2F * dEMbcHist = new TH2F("dEMbcHist", "; #Delta E [GeV];M_{bc} [GeV]", nbins,-0.2,0.2, nbins,5.2,5.3);

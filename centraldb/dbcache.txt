@@ -198,3 +198,4 @@ dbstore/software_trigger_cut&calib&accept_dqm_Dplus 3 0,0,9,99
 dbstore/software_trigger_cut&calib&accept_dqm_Dstar 3 0,0,9,99
 dbstore/software_trigger_cut&calib&accept_dqm_Jpsiee 3 0,0,9,99
 dbstore/software_trigger_cut&calib&accept_dqm_Jpsimumu 3 0,0,9,99
+dbstore/Belle2_B2JpsiKs_muBGx1EventLevelFastHadronFBDT 4 0,0,-1,-1

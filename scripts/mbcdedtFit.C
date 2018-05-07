@@ -36,7 +36,7 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	RooRealVar cs("cs","CSMVA []",0,2) ;
 	RooRealVar dt("dt","#Delta t [ps]",-20,20) ;
 	
-	RooRealVar fsig("fsig","#background events",0.055, 0, 1);
+	RooRealVar fsig("fsig","#background events",0.036, 0, 1);
 
 	RooCategory q("q","Flavour of the tagged B0") ;
 		q.defineType("B0",1) ;
@@ -73,26 +73,30 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	
 	if (useToyMC) 
 	{
-		int nevents = 3424; //2846; // 0.555 ab-1
-		int nexperiments = 100; // 0.555 ab-1
-		//nevents *= 1.8;     // 1 ab-1
-		//nevents *= 5; // 5 ab-1
-		//nevents *= 10;    // 50 ab-1
+		int nevents = 4680; //2846; // 0.555 ab-1
+		int nexperiments = 0; // 0.555 ab-1
+		nevents *= 1.8;     // 1 ab-1
+		nevents *= 5; // 5 ab-1
+		nevents *= 5; // 25 ab-1
+		//nevents *= 2;    // 50 ab-1
 		std::cout << " _________________________________________ \n" << std::endl;
 		std::cout << "       Generating " << nevents << " Toy MC events" << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
 		w.setVal(0.2);
 		w.setConstant();
-		RooMCStudy* mcstudy = new RooMCStudy(*combined,RooArgSet(mbc,de,cs,dt,q),FitModel(*combined),Silence()) ;
 		std::cout << " _________________________________________ " << std::endl;
 		std::cout << " _________________________________________ " << std::endl;
-		mcstudy->generateAndFit( nexperiments, nevents) ;
 		data = combined->generate(RooArgSet(mbc,de,cs,dt,q), nevents);
 		std::cout << " _________________________________________ " << std::endl;
 		//data->Print();
 		std::cout << " _________________________________________ " << std::endl;
-		plotMCstudy(mcstudy, A,S);
-		gDirectory->Add(mcstudy) ;
+		if (nexperiments) 
+		{
+			RooMCStudy* mcstudy = new RooMCStudy(*combined,RooArgSet(mbc,de,cs,dt,q),FitModel(*combined),Silence()) ;
+			mcstudy->generateAndFit( nexperiments, nevents) ;
+			plotMCstudy(mcstudy, A,S);
+			gDirectory->Add(mcstudy) ;
+		}
 		//return;
 	}
 	else 
@@ -108,6 +112,14 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	cs.setBins(50) ;
 	de.setBins(25) ;
 	dt.setBins(50) ;
+	RooBinning abins(-10,10) ;
+	// Add boundaries at 0, (-1,1), (-2,2), (-3,3), (-4,4) and (-6,6)
+	abins.addBoundary(0) ;
+	abins.addBoundaryPair(1) ;
+	abins.addBoundaryPair(2) ;
+	abins.addBoundaryPair(3) ;
+	abins.addBoundaryPair(4) ;
+	abins.addBoundaryPair(6) ;
 	
 	RooPlot* frame = mbc.frame(Title("M_{bc}")) ;
 	RooPlot* deframe = de.frame(Title("#Delta E")) ;
@@ -131,11 +143,21 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	de.setRange("Signal",-0.15,0.1);
 	//cs.setRange("Signal",0.5,2);
 	dt.setRange(-10,10);
-	TLatex* txt = new TLatex(0.2,0.85,"Signal region") ;
+	TLatex* txtWatermark = new TLatex(0.2,0.87,"BELLE II SIMULATION") ;
+	txtWatermark->SetNDC();
+	txtWatermark->SetTextSize(0.05) ;
+	txtWatermark->SetTextColor(kRed+3) ;
+	TLatex* txt = new TLatex(0.2,0.8,"Signal region") ;
 	txt->SetNDC();
 	txt->SetTextSize(0.05) ;
 	txt->SetTextColor(kGray) ;
 	dtframe->addObject(txt) ;
+	//dtframe->SetMaximum(75) ;
+	//frame->SetMaximum(160) ;
+	//frame->addObject(txtWatermark) ;
+	//deframe->addObject(txtWatermark) ;
+	//csframe->addObject(txtWatermark) ;
+	dtframe->addObject(txtWatermark) ;
 	data->plotOn(dtframe, MarkerStyle(22), CutRange("Signal")) ;
         combined->plotOn(dtframe,  ProjectionRange("Signal")) ;
         combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*bkgpdf), LineStyle(kDashed), LineColor(kGray)) ;
@@ -147,6 +169,9 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	RooPlot* frameres = new RooPlot(A,S,Arange[0], Arange[1],Srange[0],Srange[1]) ;
 	frameres->SetTitle("");
 	resb->plotOn(frameres,A,S,"MEHV") ;
+	RooPlot* aframe = dt.frame(Title("mixState asymmetry distribution with custom binning")) ;
+	data->plotOn(aframe,Asymmetry(q),Binning(abins), CutRange("Signal")) ;
+	combined->plotOn(aframe,Asymmetry(q), ProjectionRange("Signal"), Components(*sigpdf)) ;
 
 	TCanvas* c = new TCanvas("bphysics","bphysics",1000,1000) ;
 	c->Divide(2,2);
@@ -160,8 +185,12 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	gPad->SetLeftMargin(0.15) ; csframe->GetYaxis()->SetTitleOffset(1.6) ; csframe->Draw() ;
 	//gPad->SetLeftMargin(0.15) ; frameres->GetYaxis()->SetTitleOffset(1.6) ; frameres->Draw() ;
 		
-	TCanvas* c2 = new TCanvas("bphysics2","bphysics",400,400) ;
+	TCanvas* c2 = new TCanvas("bphysics2","bphysics",800,400) ;
+	c2->Divide(2,1);
+	c2->cd(1);
 	gPad->SetLeftMargin(0.15) ; frameres->GetYaxis()->SetTitleOffset(1.6) ; frameres->Draw() ;
+	c2->cd(2);
+	gPad->SetLeftMargin(0.15) ; frameres->GetYaxis()->SetTitleOffset(1.6) ; aframe->Draw() ;
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;
 	std::cout << "-----------------------------" << std::endl;

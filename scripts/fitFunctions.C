@@ -55,8 +55,10 @@ RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters 
 	}
 	RooRealVar* mgBkg = new RooRealVar("mgBkg","mg2",0);
 	RooRealVar* fbkg1 = new RooRealVar("fbkg1","fbkg parameter",set.fbkg[0],0,1);
+	RooRealVar* fbkg2 = new RooRealVar("fbkg2","fbkg parameter",set.fbkg[0],0,1);
 	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0],0,15);
 	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1],0.,15);
+	RooRealVar* sgBkg3 = new RooRealVar("sgBkg3","sg3",set.sigmabkg[1],0.,15);
 	if (fixParameters) 
 	{
 		fbkg1->setConstant();
@@ -65,8 +67,10 @@ RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters 
 	}
 	RooGaussian* gaussBkg1 = new RooGaussian("gaussBkg1","gauss",dt,*mgBkg,*sgBkg1);
 	RooGaussian* gaussBkg2 = new RooGaussian("gaussBkg2","gauss",dt,*mgBkg,*sgBkg2);
+	RooGaussian* gaussBkg3 = new RooGaussian("gaussBkg3","gauss",dt,*mgBkg,*sgBkg3);
 	
-	RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg2,*gaussBkg1)), *(new RooArgList(*fbkg1)));
+	//RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg2,*gaussBkg1)), *(new RooArgList(*fbkg1)));
+	RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg1,*gaussBkg2, *gaussBkg3)), *(new RooArgList(*fbkg1, *fbkg2)));
 
 	return combinedBkg;
 }
@@ -154,7 +158,7 @@ RooAbsPdf * getCsBkg(fitSettings & set, RooRealVar & cs, bool fixParameters = fa
 		std::cout << "Error in getCsBkg: Input parameters not set!" << std::endl;
 		return NULL;
 	}
-	RooRealVar * csbkgmean1 = new RooRealVar("csbkgmean1","CS bkg mean",set.csBkgPar[0], -4., 0.) ;
+	RooRealVar * csbkgmean1 = new RooRealVar("csbkgmean1","CS bkg mean",set.csBkgPar[0], -10., 0.) ;
 	RooRealVar * csbkgsigma1 = new RooRealVar("csbkgsigma1","CS bkg sigma ",set.csBkgPar[1],0.001,10.) ;
         RooGaussian * gaussCsBkg1 = new RooGaussian("gaussCsBkg1","gaussian PDF",cs,*csbkgmean1,*csbkgsigma1) ;
 	

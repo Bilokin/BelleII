@@ -7,7 +7,7 @@ void crosssection()
 	float BRK1gamma = 0.0000135; // as in DECAY BELLE II DEC
 	float BRK2gamma = 0.0000166; // as in DECAY BELLE II DEC
 	//float BRKpipigamma = 1e-5; // as in PDG 
-	float BRKpipigamma = 10.25e-6; // as in G. Eigen 1510.04446 
+	float BRKpipigamma = 20.5e-6 /2 * 0.7; // as in G. Eigen 1510.04446 
 
 	float phase3L = 0.8e18; // barn^-1
 	phase3L = 0.55e18; // barn^-1 as in BABAR
@@ -15,7 +15,7 @@ void crosssection()
 	//Reconstruction efficiency times BR Kpipi gamma 
 	float effK1gamma = 0.01;  
 	float effK2gamma = 0.001;  
-	float effKpipigamma = 0.03;  
+	float effKpipigamma = 0.04;  
 	
 	float Nevents = sigmaY4S*phase3L;
 	float NK1gamma = 2*sigmaY4S*phase3L*BRK1gamma;

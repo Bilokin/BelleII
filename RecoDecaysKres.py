@@ -44,8 +44,9 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
-use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
+#use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
 #use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
+use_central_database("GT_gen_prod_004.10_release-01-00-00")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
 variables.addAlias('myRatingCriteria',ratingVar)
@@ -70,13 +71,13 @@ stdPhotons('loose')
 stdPi0s()
 stdPi('99eff')
 applyCuts('gamma:loose','1.4 < E < 4')
-krescuts = "0.5 < M < 2. \
+krescuts = "0.5 < M < 2.0 \
 and daughter(2,significanceOfDistance) > 3 \
 and daughter(2,dM) < 0.011 and daughter(2,dM) > -0.011 \
 and daughter(2,dr) > 0.05 \
 and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 "
-vertexKFit('K_S0:all',0.01)
+#vertexKFit('K_S0:all',0.0)
 reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
 reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
 vertexRave('B0:signal',0.01, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
@@ -104,7 +105,7 @@ matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
+#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 #matchMCTruth('pi+:all')
 #matchMCTruth(Kres+':all')
 #matchMCTruth('gamma:loose')
@@ -123,9 +124,9 @@ toolsB0_meson += ['CustomFloats[CSMVA]', '^B0']
 toolsB0_meson += ['CustomFloats[pi0vetoGamma1E:pi0vetoGamma1Timing:pi0vetoGamma1CosTheta]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^'+Kres+' gamma']
 toolsB0_meson += ['MCTruth','^B0 -> [^'+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['MCHierarchy','^B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
+toolsB0_meson += ['MCHierarchy','B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['Vertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['CustomFloats[significanceOfDistance]', '^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
+toolsB0_meson += ['CustomFloats[significanceOfDistance:dM]', '^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['MCVertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['InvMass','^B0 -> [^'+Kres+' -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
@@ -133,7 +134,7 @@ toolsB0_meson += ['PID','B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] g
 toolsB0_meson += ['CustomFloats[chiProb]','B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', 'B0 -> [^'+Kres+' -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
 toolsB0_meson += ['CustomFloats[d0:z0]', 'B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
-toolsB0_meson += ['CustomFloats[clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> ['+Kres+' -> pi+ pi- K_S0] ^gamma']
+toolsB0_meson += ['CustomFloats[minC2HDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> ['+Kres+' -> pi+ pi- K_S0] ^gamma']
 toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^'+Kres+' -> pi+ pi- K_S0] gamma']
 toolsB0_meson += ['Dalitz', '^B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma']
 toolsB0_meson += ['TrackHits','B0 -> ['+Kres+' -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ] ] gamma']

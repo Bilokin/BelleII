@@ -62,7 +62,7 @@ string getCuts(bool enableVeto = true, string Kres = "Xsd")
 	{
 		//cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
 		//cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
-		cut += "&& B0_hso02 < 0.6";
+		//cut += "&& B0_hso02 < 0.6";
 		cut += "&& B0_pi0Likeness < 0.85";
 		cut += "&& B0_etaLikeness < 0.95";
 		//cut += " &&( B0_CSMVA2 > 0.0)";
