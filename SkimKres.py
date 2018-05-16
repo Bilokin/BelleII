@@ -64,13 +64,13 @@ and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 "
 reconstructDecay(Kres+":allSkim -> pi+:99eff pi-:99eff K_S0:all", krescuts)
 reconstructDecay("B0:signalSkim -> "+Kres+":allSkim gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
-vertexRave('B0:signalSkim',0.001, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
+vertexRave('B0:signalSkim',0.0001, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
 #vertexTree('B0:signalSkim',0.0001)
 
 #rankByHighest('B0:signalSkim',ratingVar, 100)
 
 
-kstcuts =  "0.8 < M < 4 \
+kstcuts =  "0.7 < M < 4 \
 and daughter(1,dM) < 0.015 and daughter(1,dM) > -0.015 and daughter(0,dM) > -0.02 and daughter(0,dM) < 0.02 \
 and daughter(0,E) > 0.5 and daughter(0,daughter(1,E)) > 0.05 and daughter(0,daughter(0,E)) > 0.05 \
 and daughter(1,significanceOfDistance) > 3 \
@@ -78,7 +78,7 @@ and daughter(1,dr) > 0.005"
 #and daughter(0,daughter(1,E)) > 0.1 and daughter(0,daughter(0,E)) > 0.1 \
 reconstructDecay(Kres2+":second -> pi0:loose K_S0:all", kstcuts)
 reconstructDecay("B0:second -> "+Kres2+":second gamma:loose", "Mbc > 5.2 and deltaE < 0.3 and deltaE > -0.3")
-vertexRave('B0:second',0.001, 'B0 -> [ '+Kres2+' -> pi0 ^K_S0] gamma', 'iptube')
+vertexRave('B0:second',0.0001, 'B0 -> [ '+Kres2+' -> pi0 ^K_S0] gamma', 'iptube')
 #vertexKFit(Kres+':all',0.001)
 #rankByHighest('B0:second',ratingVar, 100)
 
