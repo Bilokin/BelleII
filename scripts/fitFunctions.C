@@ -69,8 +69,13 @@ RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters 
 	RooGaussian* gaussBkg2 = new RooGaussian("gaussBkg2","gauss",dt,*mgBkg,*sgBkg2);
 	RooGaussian* gaussBkg3 = new RooGaussian("gaussBkg3","gauss",dt,*mgBkg,*sgBkg3);
 	
-	//RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg2,*gaussBkg1)), *(new RooArgList(*fbkg1)));
-	RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg1,*gaussBkg2, *gaussBkg3)), *(new RooArgList(*fbkg1, *fbkg2)));
+	RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg2,*gaussBkg1)), *(new RooArgList(*fbkg1)));
+	//RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg1,*gaussBkg2, *gaussBkg3)), *(new RooArgList(*fbkg1, *fbkg2)));
+	//RooGenericPdf * combinedBkg = new RooGenericPdf("f",
+		//"fbkg1*TMath::Gaus(dt,mgBkg, sgBkg1,kTRUE) + fbkg2 * TMath::Gaus(dt,mgBkg, sgBkg2,kTRUE) + (1-fbkg1-fbkg2)* TMath::Gaus(dt,mgBkg, sgBkg3, kTRUE)", 
+	//	"fbkg1 * (1./sgBkg1/sqrt(2*pi)*exp(-dt*dt/2/sgBkg1/sgBkg1/sgBkgPar/sgBkgPar)) + fbkg2 * (1./sgBkg2/sqrt(2*pi)*exp(-dt*dt/2/sgBkg2/sgBkg2/sgBkgPar/sgBkgPar)) +  (1.- fbkg1- fbkg2) * (1./sgBkg3/sqrt(2*pi)*exp(-dt*dt/2/sgBkg3/sgBkg3/sgBkgPar/sgBkgPar))", 
+	//	 *(new RooArgSet(dt, *fbkg1, *sgBkg1, *fbkg2, *sgBkg2, *sgBkg3, *sgBkgPar, *pi)));
+		 //*(new RooArgSet(dt, *gaussBkg1,*gaussBkg2, *gaussBkg3, *fbkg1, *fbkg2)));
 
 	return combinedBkg;
 }

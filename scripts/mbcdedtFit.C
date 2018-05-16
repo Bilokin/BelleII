@@ -31,6 +31,9 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	std::cout << "|                            |" << std::endl;
 	std::cout << "|   FINAL FIT version 0.5    |" << std::endl;
 	std::cout << "|____________________________|\n" << std::endl;
+	std::cout << "|                            |\n" << std::endl;
+	std::cout << "|   BILOKIN S. IPHC FRANCE   |\n" << std::endl;
+	std::cout << "|____________________________|\n" << std::endl;
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.2,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
 	RooRealVar cs("cs","CSMVA []",0,2) ;

@@ -42,19 +42,20 @@ string getCuts(bool enableVeto = true, string Kres = "Xsd")
 {
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
-	cut += " abs(B0_"+Kres+"_K_S0_M - 0.4976) < 0.011";
-	cut += " && B0_"+Kres+"_K_S0_Rho > 0.05"; //0.1
-	cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 3";
-	cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
-	cut += " && B0_"+Kres+"_M < 1.8 ";
-	cut += " && B0_"+Kres+"_pi0_PIDpi > 0.005 ";
-	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
-	cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
-	cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
+	cut += " abs(B0_"+Kres+"_K_S0_M - 0.4976) < 10.011";
+	//cut += " && B0_"+Kres+"_K_S0_Rho > 0.05"; //0.1
+	//cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 3";
+	//cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
+	//cut += " && B0_"+Kres+"_M < 1.8 ";
+	//cut += " && B0_"+Kres+"_pi0_PIDpi > 0.005 ";
+	//cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
+	//cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
+	//cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
 	cut += " && abs(B0_FBDT_qrCombined) > 0. "; //0.1 //0.25
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
+	//cut += " && B0_gamma_cosTheta > -0.56 && B0_gamma_cosTheta < 0.98";
 	//cut += " && B0_VtxPvalue > 0.001";
 	//cut += " && B0_cc2 < 2.5";
 
@@ -63,8 +64,8 @@ string getCuts(bool enableVeto = true, string Kres = "Xsd")
 		//cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
 		//cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
 		//cut += "&& B0_hso02 < 0.6";
-		cut += "&& B0_pi0Likeness < 0.85";
-		cut += "&& B0_etaLikeness < 0.95";
+		cut += "&& B0_pi0Likeness < 0.82"; //0.85 my
+		cut += "&& B0_etaLikeness < 0.954"; //0.95 my
 		//cut += " &&( B0_CSMVA2 > 0.0)";
 		cut += " &&( B0_CSMVA > 0.0)";
 	}
