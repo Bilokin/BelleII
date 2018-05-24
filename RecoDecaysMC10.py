@@ -36,7 +36,6 @@ defaultOutputFilename = "test.root"
 defaultOutputFoldername = "."
 outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
 # Change K resonance name here:
-Kres = 'Xsd'
 for arg in sys.argv:
 	print(arg)
 if len(sys.argv)==2:
@@ -63,6 +62,7 @@ variables.addAlias('B0_ThrustB','thrustBm')
 variables.addAlias('B0_cc4','CleoCone(4)')
 variables.addAlias('B0_hso02','KSFWVariables(hso02)')
 variables.addAlias('CSMVA','extraInfo(CSMVA)')
+variables.addAlias('XsdM','daughterInvM(0,1,2)')
 
 add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
@@ -71,16 +71,15 @@ stdPhotons('loose')
 stdPi0s()
 stdPi('99eff')
 applyCuts('gamma:loose','1.4 < E < 4')
-krescuts = "0.5 < M < 2.07 \
-and daughter(2,significanceOfDistance) > 5 \
+krescuts = " and daughterInvM(0,1,2) < 2 and daughter(2,significanceOfDistance) > 5 \
 and daughter(2,dM) < 0.011 and daughter(2,dM) > -0.011 \
 and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 "
 #and daughter(0,piid) > 0.1 \
 #vertexKFit('K_S0:all',0.0)
-reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
-reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85")
-vertexRave('B0:signal',0.0001, 'B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma')
+#reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
+reconstructDecay("B0:signal -> pi+:99eff pi-:99eff K_S0:all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85"+krescuts)
+vertexRave('B0:signal',0.0001, 'B0 -> ^pi+ ^pi- ^K_S0 gamma')
 #vertexTree('B0:signal',0.0001)
 
 rankByHighest('B0:signal',ratingVar, 1, outputVariable='myRating')
@@ -112,39 +111,38 @@ flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 analysis_main.add_module('MVAExpert', listNames=['B0:signal'], extraInfoName='CSMVA',
 		identifier='./mva-addition/MyTMVA.xml')
 
-writePi0EtaVeto('B0:signal', 'B0 -> '+Kres+' ^gamma')
-myVetoVariables(Kres)
+writePi0EtaVeto('B0:signal', 'B0 -> pi+:99eff pi-:99eff K_S0:all ^gamma')
+#myVetoVariables()
 
-toolsB0_meson =  ['Kinematics','^B0 -> [^'+Kres+' -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
+toolsB0_meson =  ['Kinematics','^B0 ->  ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ]  ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
-toolsB0_meson += ['CustomFloats[pi0veto_M:pi0veto_gamma0_E:pi0veto_gamma1_E:pi0veto_mcPDG:pi0veto_cosTheta:pi0veto_gamma1_cosTheta:pi0veto_gamma1_clusterE1E9:pi0veto_gamma1_clusterE9E21:pi0veto_gamma1_clusterTiming:pi0veto_gamma1_clusterAZM40:pi0veto_gamma1_clusterAZM51:pi0veto_gamma1_clusterSecondMoment]', '^B0']
-toolsB0_meson += ['CustomFloats[eta0veto_M:eta0veto_gamma0_E:eta0veto_gamma1_E:eta0veto_mcPDG:eta0veto_cosTheta:eta0veto_gamma1_cosTheta:eta0veto_gamma1_clusterE1E9:eta0veto_gamma1_clusterE9E21:eta0veto_gamma1_clusterTiming:eta0veto_gamma1_clusterAZM40:eta0veto_gamma1_clusterAZM51:eta0veto_gamma1_clusterSecondMoment]', '^B0']
-toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness]', '^B0']
-toolsB0_meson += ['CustomFloats[CSMVA]', '^B0']
+#toolsB0_meson += ['CustomFloats[pi0veto_M:pi0veto_gamma0_E:pi0veto_gamma1_E:pi0veto_mcPDG:pi0veto_cosTheta:pi0veto_gamma1_cosTheta:pi0veto_gamma1_clusterE1E9:pi0veto_gamma1_clusterE9E21:pi0veto_gamma1_clusterTiming:pi0veto_gamma1_clusterAZM40:pi0veto_gamma1_clusterAZM51:pi0veto_gamma1_clusterSecondMoment]', '^B0']
+#toolsB0_meson += ['CustomFloats[eta0veto_M:eta0veto_gamma0_E:eta0veto_gamma1_E:eta0veto_mcPDG:eta0veto_cosTheta:eta0veto_gamma1_cosTheta:eta0veto_gamma1_clusterE1E9:eta0veto_gamma1_clusterE9E21:eta0veto_gamma1_clusterTiming:eta0veto_gamma1_clusterAZM40:eta0veto_gamma1_clusterAZM51:eta0veto_gamma1_clusterSecondMoment]', '^B0']
+toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness:CSMVA:XsdM]', '^B0']
 toolsB0_meson += ['CustomFloats[pi0vetoGamma1E:pi0vetoGamma1Timing:pi0vetoGamma1CosTheta]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^'+Kres+' gamma']
-toolsB0_meson += ['MCTruth','^B0 -> [^'+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['MCHierarchy','B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['Vertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['CustomFloats[significanceOfDistance:dM]', '^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['MCVertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['InvMass','^B0 -> [^'+Kres+' -> pi+ pi- ^K_S0]  gamma']
+toolsB0_meson += ['MCTruth','^B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
+toolsB0_meson += ['MCHierarchy','B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
+toolsB0_meson += ['Vertex','^B0 -> pi+ pi- ^K_S0 gamma']
+toolsB0_meson += ['CustomFloats[significanceOfDistance:dM]', '^B0 -> pi+ pi- ^K_S0 gamma']
+toolsB0_meson += ['MCVertex','^B0 -> pi+ pi- ^K_S0 gamma']
+toolsB0_meson += ['InvMass','^B0 -> pi+ pi- ^K_S0  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
-toolsB0_meson += ['PID','B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
-toolsB0_meson += ['CustomFloats[chiProb]','B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
-toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', 'B0 -> [^'+Kres+' -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
-toolsB0_meson += ['CustomFloats[d0:z0:firstPXDLayer:firstSVDLayer]', 'B0 -> ['+Kres+' -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
-toolsB0_meson += ['CustomFloats[minC2HDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> ['+Kres+' -> pi+ pi- K_S0] ^gamma']
-toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> [^'+Kres+' -> pi+ pi- K_S0] gamma']
-toolsB0_meson += ['Dalitz', '^B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] gamma']
-toolsB0_meson += ['TrackHits','B0 -> ['+Kres+' -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ] ] gamma']
+toolsB0_meson += ['PID','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
+toolsB0_meson += ['CustomFloats[chiProb]','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
+toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', 'B0 -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi-  ] ^gamma']
+toolsB0_meson += ['CustomFloats[d0:z0:firstPXDLayer:firstSVDLayer]', 'B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
+toolsB0_meson += ['CustomFloats[minC2HDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> pi+ pi- K_S0 ^gamma']
+toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> pi+ pi- K_S0 gamma']
+toolsB0_meson += ['Dalitz', '^B0 -> ^pi+ ^pi- ^K_S0 gamma']
+toolsB0_meson += ['TrackHits','B0 -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ]  gamma']
 toolsB0_meson += ['TagVertex', '^B0']
 toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']
 #toolsB0_meson += ['DeltaTErr', '^B0']
 toolsB0_meson += ['MCDeltaT', '^B0']
 toolsB0_meson += ['FlavorTagging', '^B0']
-toolsB0_meson += ['ContinuumSuppression', '^B0:phiKs']
+toolsB0_meson += ['ContinuumSuppression', '^B0']
 toolsB0_meson += ['MassBeforeFit', '^B0']
 toolsB0_meson += ['ROEMultiplicities', '^B0']
 toolsB0_meson += ['EventMetaData', '^B0']
@@ -179,12 +177,6 @@ K0Info += ['MCVertex', '^K_S0']
 K0Info += ['CustomFloats[cosTheta]', '^K_S0 -> ^pi+ ^pi-']
 K0Info += ['TrackHits','K_S0 -> ^pi+ ^pi-']
 K0Info += ['CustomFloats[d0:z0:d0Err:z0Err]', 'K_S0 -> ^pi+ ^pi-']
-
-K0starInfo =  ['Kinematics','^'+Kres+' ->  ^pi+ ^pi- ^K_S0']
-K0starInfo += ['MCKinematics','^'+Kres]
-K0starInfo += ['MCTruth','^'+Kres]
-K0starInfo += ['InvMass','^'+Kres]
-K0starInfo += ['Vertex','^'+Kres]
 
 #pi0Info = ['Kinematics','^pi0 -> ^gamma ^gamma']#pi0Info += ['MCTruth','^pi0 -> ^gamma ^gamma']#pi0Info += ['InvMass','^pi0']
 #pi0Info += ['CustomFloats[cosTheta:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51:clusterE1E9:clusterE9E21:clusterSecondMoment:clusterMergedPi0:clusterTiming:clusterBelleQuality:clusterErrorTiming]','pi0 -> ^gamma ^gamma']

@@ -1,5 +1,20 @@
+
+//
+//      	  
+//      II 
+//                                
+//      II  PPPP   HH  HH    CCCC   
+//      II  PP  P  HH  HH  CC 
+//      II  PPPP   HH  HH  CC
+//      II  PP     HHHHHH  CC
+//      II  PP     HH  HH    CCCC    STRASBOURG 2017
+//      
+//        
+//                        Author: Bilokin S.    
+//
+
 #include "fitFunctions.C"
-#include "convolution3.C"
+//#include "convolution3.C"
 #include "mbcdedtFit.C"
 #include "deltaT.C"
 
@@ -69,7 +84,7 @@ void addBranches(TTree* T, fitSettings set)
 		q = TMath::Sign(1,fann);
 		w = (set.wparameters[0]+set.wparameters[1]*abs(fann));
 		w = computeW(fann, set);	
-		std::cout << "w: " << w << std::endl;
+		//std::cout << "w: " << w << std::endl;
 		bdt->Fill();
 		bde->Fill();
 		bcs->Fill();
@@ -82,16 +97,10 @@ void addBranches(TTree* T, fitSettings set)
 	//T->Print();
 }
 
-void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit = false, string Kres = "Xsd", string signalname = "root/signal-tmva.root")
+void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", string signalname = "root/signalx-veto3-precut3.root", bool fullFit = true, string Kres = "Xsd")
 {
 	string outputfilename = "root/tmp-branch.root";
-	string cut = getSignalCuts(0, Kres);
-	
-	if (fullFit) 
-	{
-		cut = getCuts(1,Kres);
-		signalname = "root/signalx-veto3-precut3.root";
-	}
+	cut = getCuts(1,Kres);
 	fitSettings settings = deltaT(signalname, Kres, cut);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
@@ -111,11 +120,12 @@ void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", bool fullFit =
 		fitSettings fullsettings = getStdSettings();
 		fullsettings.sigmares = settings.sigmares;
 		fullsettings.fres = settings.fres;
+		fullsettings.wvalues = settings.wvalues;
 		mbcdedtFit(B0Signal3, fullsettings);
 	}
 	else 
 	{
-		convolution(settings, B0Signal3);
+		//convolution(settings, B0Signal3);
 	}
 	//convolution(createRooHist(deltaTBHist), createRooHist(deltaTBbarHist));
 }

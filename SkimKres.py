@@ -27,7 +27,6 @@ from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
-from pi0etaveto import writePi0EtaVeto, myVetoVariables
 ratingVar = "chiProb"
 defaultInputFilename = "evtgen.root"
 defaultInputFoldername = "test"

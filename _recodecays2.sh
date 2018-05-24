@@ -1,5 +1,5 @@
 #!/bin/bash
-parallelProcesses=4
+parallelProcesses=6
 root=".root"
 query=$1
 outFileName=$2

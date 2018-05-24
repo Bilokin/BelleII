@@ -1,4 +1,18 @@
 
+//
+//      	  
+//      II 
+//                                
+//      II  PPPP   HH  HH    CCCC   
+//      II  PP  P  HH  HH  CC 
+//      II  PPPP   HH  HH  CC
+//      II  PP     HHHHHH  CC
+//      II  PP     HH  HH    CCCC    STRASBOURG 2017
+//      
+//        
+//                        Author: Bilokin S.    
+//
+
 #ifndef __fitFunctions_C_
 #define __fitFunctions_C_
 #include "fitSettings.C"
@@ -55,10 +69,12 @@ RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters 
 	}
 	RooRealVar* mgBkg = new RooRealVar("mgBkg","mg2",0);
 	RooRealVar* fbkg1 = new RooRealVar("fbkg1","fbkg parameter",set.fbkg[0],0,1);
-	RooRealVar* fbkg2 = new RooRealVar("fbkg2","fbkg parameter",set.fbkg[0],0,1);
-	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0],0,15);
-	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1],0.,15);
-	RooRealVar* sgBkg3 = new RooRealVar("sgBkg3","sg3",set.sigmabkg[1],0.,15);
+	RooRealVar* fbkg2 = new RooRealVar("fbkg2","fbkg parameter",set.fbkg[1],0,1);
+	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0]);
+	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1]);
+	RooRealVar* sgBkg3 = new RooRealVar("sgBkg3","sg3",set.sigmabkg[2]);
+	RooRealVar* sgBkgPar = new RooRealVar("sgBkgPar","sgpar",1.,0.,2);
+	RooRealVar* pi = new RooRealVar("pi","pi",TMath::Pi());
 	if (fixParameters) 
 	{
 		fbkg1->setConstant();
@@ -69,12 +85,11 @@ RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters 
 	RooGaussian* gaussBkg2 = new RooGaussian("gaussBkg2","gauss",dt,*mgBkg,*sgBkg2);
 	RooGaussian* gaussBkg3 = new RooGaussian("gaussBkg3","gauss",dt,*mgBkg,*sgBkg3);
 	
-	RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg2,*gaussBkg1)), *(new RooArgList(*fbkg1)));
+	//RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg2,*gaussBkg1)), *(new RooArgList(*fbkg1)));
 	//RooAddPdf * combinedBkg = new RooAddPdf("combinedBkg","combinedBkg", *(new RooArgList(*gaussBkg1,*gaussBkg2, *gaussBkg3)), *(new RooArgList(*fbkg1, *fbkg2)));
-	//RooGenericPdf * combinedBkg = new RooGenericPdf("f",
-		//"fbkg1*TMath::Gaus(dt,mgBkg, sgBkg1,kTRUE) + fbkg2 * TMath::Gaus(dt,mgBkg, sgBkg2,kTRUE) + (1-fbkg1-fbkg2)* TMath::Gaus(dt,mgBkg, sgBkg3, kTRUE)", 
-	//	"fbkg1 * (1./sgBkg1/sqrt(2*pi)*exp(-dt*dt/2/sgBkg1/sgBkg1/sgBkgPar/sgBkgPar)) + fbkg2 * (1./sgBkg2/sqrt(2*pi)*exp(-dt*dt/2/sgBkg2/sgBkg2/sgBkgPar/sgBkgPar)) +  (1.- fbkg1- fbkg2) * (1./sgBkg3/sqrt(2*pi)*exp(-dt*dt/2/sgBkg3/sgBkg3/sgBkgPar/sgBkgPar))", 
-	//	 *(new RooArgSet(dt, *fbkg1, *sgBkg1, *fbkg2, *sgBkg2, *sgBkg3, *sgBkgPar, *pi)));
+	RooGenericPdf * combinedBkg = new RooGenericPdf("f",
+		"fbkg1 * (1./sgBkg1/sqrt(2*pi)*exp(-dt*dt/2/sgBkg1/sgBkg1/sgBkgPar/sgBkgPar)) + fbkg2 * (1./sgBkg2/sqrt(2*pi)*exp(-dt*dt/2/sgBkg2/sgBkg2/sgBkgPar/sgBkgPar)) +  (1.- fbkg1- fbkg2) * (1./sgBkg3/sqrt(2*pi)*exp(-dt*dt/2/sgBkg3/sgBkg3/sgBkgPar/sgBkgPar))", 
+		 *(new RooArgSet(dt, *fbkg1, *sgBkg1, *fbkg2, *sgBkg2, *sgBkg3, *sgBkgPar, *pi)));
 		 //*(new RooArgSet(dt, *gaussBkg1,*gaussBkg2, *gaussBkg3, *fbkg1, *fbkg2)));
 
 	return combinedBkg;
@@ -163,7 +178,7 @@ RooAbsPdf * getCsBkg(fitSettings & set, RooRealVar & cs, bool fixParameters = fa
 		std::cout << "Error in getCsBkg: Input parameters not set!" << std::endl;
 		return NULL;
 	}
-	RooRealVar * csbkgmean1 = new RooRealVar("csbkgmean1","CS bkg mean",set.csBkgPar[0], -10., 0.) ;
+	RooRealVar * csbkgmean1 = new RooRealVar("csbkgmean1","CS bkg mean",set.csBkgPar[0]) ;
 	RooRealVar * csbkgsigma1 = new RooRealVar("csbkgsigma1","CS bkg sigma ",set.csBkgPar[1],0.001,10.) ;
         RooGaussian * gaussCsBkg1 = new RooGaussian("gaussCsBkg1","gaussian PDF",cs,*csbkgmean1,*csbkgsigma1) ;
 	

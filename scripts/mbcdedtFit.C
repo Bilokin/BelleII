@@ -1,4 +1,18 @@
 
+//
+//      	  
+//      II 
+//                                
+//      II  PPPP   HH  HH    CCCC   
+//      II  PP  P  HH  HH  CC 
+//      II  PPPP   HH  HH  CC
+//      II  PP     HHHHHH  CC
+//      II  PP     HH  HH    CCCC    STRASBOURG 2017
+//      
+//        
+//                        Author: Bilokin S.    
+//
+
 #ifndef	__mbcdeFit__
 #define __mbcdeFit__
 
@@ -36,7 +50,7 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	std::cout << "|____________________________|\n" << std::endl;
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.2,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
-	RooRealVar cs("cs","CSMVA []",0,2) ;
+	RooRealVar cs("cs","CSMVA []",0,2.5) ;
 	RooRealVar dt("dt","#Delta t [ps]",-20,20) ;
 	
 	RooRealVar fsig("fsig","#background events",0.036, 0, 1);

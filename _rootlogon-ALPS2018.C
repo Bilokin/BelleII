@@ -38,55 +38,40 @@
 
     gROOT->SetStyle("MyStyle"); //uncomment to set this style
 }
-string getCuts( string Kres = "", bool enableVeto = true)
+string getCuts(bool enableVeto = true, string Kres = "Xsd")
 {
 	string cosflight = "(B0_K_10_K_S0_X*B0_K_10_K_S0_P4[0]+B0_K_10_K_S0_Y*B0_K_10_K_S0_P4[1]+B0_K_10_K_S0_Z*B0_K_10_K_S0_P4[2])/B0_K_10_K_S0_P/sqrt(B0_K_10_K_S0_X*B0_K_10_K_S0_X+B0_K_10_K_S0_Y*B0_K_10_K_S0_Y+B0_K_10_K_S0_Z*B0_K_10_K_S0_Z)";
 	string cut = "";
-	cut += " abs(B0_FBDT_qrCombined) > 0. "; //0.1 //0.25
+	cut += " abs(B0_"+Kres+"_K_S0_M - 0.4976) < 0.011";
+	cut += " && B0_"+Kres+"_K_S0_Rho > 0.05"; //0.1
+	cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 3"; // 9
+	cut += " && B0_"+Kres+"_M < 1.8 ";
+	cut += " && B0_"+Kres+"_pi0_PIDpi > 0.005 "; // 0.3
+	cut += " && B0_"+Kres+"_pi1_PIDpi > 0.005 ";
+	//cut += " && B0_"+Kres+"_pi0_PIDe < 0.9 ";
+	//cut += " && B0_"+Kres+"_pi1_PIDe < 0.9 ";
+	//cut += " && B0_"+Kres+"_pi0_PIDmu < 0.98 ";
+	//cut += " && B0_"+Kres+"_pi1_PIDmu < 0.98 ";
+	cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
+	cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
+	cut += " && abs(B0_FBDT_qrCombined) > 0. "; //0.1 //0.25
 	cut += " && B0_m12 > 0.6 && B0_m12 < 0.9";
 	cut += " && B0_DeltaTErr < 2.5 && B0_DeltaTErr > 0";
 	cut += " && abs(B0_DeltaT) < 20";
 	//cut += " && B0_gamma_cosTheta > -0.65 && B0_gamma_cosTheta < 0.85";
-	cut += " && B0_gamma_P > 1.85 && B0_gamma_P < 3.1";
-	cut += " && B0_gamma_clusterE9E21 > 0.95";
+	//cut += " && B0_gamma_P > 1.8 && B0_gamma_P < 3.1";
+	//cut += " && B0_gamma_clusterE9E21 > 0.9";
+	//cut += " && B0_VtxPvalue > 0.0001";
+	cut += " && B0_"+Kres+"_K_S0_VtxPvalue > 0.01";
 
-	if (Kres == "")
-	{	
-		cut += "&& abs(B0_K_S0_M - 0.4976) < 10.011";
-		//cut += " && B0_K_S0_Rho > 0.05"; //0.1
-		cut += " && B0_K_S0_significanceOfDistance > 9"; // 9
-		cut += " && B0_XsdM < 2 ";
-		cut += " && B0_pi0_PIDpi > 0.2 "; // 0.3
-		cut += " && B0_pi1_PIDpi > 0.2 ";
-		cut += " && B0_pi0_PIDe < 0.5 ";
-		cut += " && B0_pi1_PIDe < 0.5 ";
-		//cut += " && B0_pi0_PIDmu < 0.98 ";
-		//cut += " && B0_pi1_PIDmu < 0.98 ";
-		cut += " && B0_K_S0_pi0_PIDpi > 0.005 ";
-		cut += " && B0_K_S0_pi1_PIDpi > 0.005 ";
-		
-	}
-	if (Kres == "Xsd" || Kres == "K_10")
-	{	
-		cut += "&& abs(B0_"+Kres+"_K_S0_M - 0.4976) < 10.011";
-		//cut += " && B0_"+Kres+"_K_S0_Rho > 0.05"; //0.1
-		cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 9"; // 9
-		cut += " && B0_"+Kres+"_M < 2 ";
-		cut += " && B0_"+Kres+"_pi0_PIDpi > 0.2 "; // 0.3
-		cut += " && B0_"+Kres+"_pi1_PIDpi > 0.2 ";
-		cut += " && B0_"+Kres+"_pi0_PIDe < 0.5 ";
-		cut += " && B0_"+Kres+"_pi1_PIDe < 0.5 ";
-		//cut += " && B0_"+Kres+"_pi0_PIDmu < 0.98 ";
-		//cut += " && B0_"+Kres+"_pi1_PIDmu < 0.98 ";
-		cut += " && B0_"+Kres+"_K_S0_pi0_PIDpi > 0.005 ";
-		cut += " && B0_"+Kres+"_K_S0_pi1_PIDpi > 0.005 ";
-	}
+	//cut += " && B0_cc2 < 2.5";
+
 	if (enableVeto) 
 	{
 		//cut += " && (abs(B0_pi0veto_MVA) < 0.5 || B0_pi0veto_w == 0)";
 		//cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
 		cut += "&& B0_pi0Likeness < 0.85"; //0.82 my
-		cut += "&& B0_etaLikeness < 0.945"; //0.954 my
+		cut += "&& B0_etaLikeness < 0.95"; //0.954 my
 		cut += " &&( B0_CSMVA > 0.0)";
 	}
 	//cut += " && "+cosflight+" > 0.995";
@@ -96,7 +81,7 @@ string getCuts( string Kres = "", bool enableVeto = true)
 
 string getSignalCuts(bool enableVeto = true, string Kres = "Xsd")
 {
-	string cut = getCuts(Kres, enableVeto);
+	string cut = getCuts(enableVeto, Kres);
 	cut += "&& B0_mbc > 5.27 && B0_deltae > -0.15 && B0_deltae < 0.1"; // BEST
 	return cut;
 }

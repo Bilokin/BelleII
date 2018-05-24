@@ -1,5 +1,6 @@
 
 #include "fitSettings.C"
+#include "fitFunctions.C"
 #include "RooGlobalFunc.h"
 #include "RooRealVar.h"
 #include "RooDataSet.h"
@@ -16,44 +17,61 @@
 #include "TAxis.h"
 #include "RooPlot.h"
 using namespace RooFit ;
-void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "signal-xsd.root")
+void mbcdetest(string filename = "root/mysignal-csmva-merged.root", string filenameBkg = "root/tmp-fullrun-csmva1.root")
 {
+	fitSettings settings = getStdSettings();
+	settings.useConstMistag = true;
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
 	RooRealVar cs("cs","CSMVA []",0,2) ;
-
+	RooRealVar dt("dt","dt [ps]",-10,10) ;
+	RooCategory q("q","Flavour of the tagged B0") ;
+		q.defineType("B0",1) ;
+		q.defineType("B0bar",-1) ;
+	RooRealVar A("A","A",0);
+	RooRealVar S("S","S",0);
+	RooRealVar w("w","flavour mistag rate",0.2);
+	RooRealVar wbkg("w","flavour mistag rate",0.1);
+	
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string mccut= "(B0_isSignal) &&";
 	string bkgcut= "(!B0_isSignal) &&";
 	string cut = getCuts();
+	string dtcut = "";//" && B0_mbc > 5.27 && B0_deltae > -0.25 && B0_deltae < 0.25"; 
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);
 	TH1F * deHist = new TH1F("deHist", ";M [GeV]", 50,-0.2,0.2);
-	TH1F * csHist = new TH1F("csHist", ";cs [GeV]", 100,0,2);
+	TH1F * csHist = new TH1F("csHist", ";cs [GeV]", 50,0,2);
+	TH1F * dtHist = new TH1F("dtHist", ";dt [ps]", 50,-10,10);
 	B0Signal->Project("mbcHist","B0_mbc",(mccut+cut).c_str());
 	B0Signal->Project("deHist","B0_deltae",(mccut+cut).c_str());
 	B0Signal->Project("csHist","B0_CSMVA",(mccut+cut).c_str());
+	B0Signal->Project("dtHist","B0_DeltaT",(mccut+cut+dtcut).c_str());
 
 	RooDataHist deRooHist("deRooHist","deRooHist",de,Import(*deHist)) ;
 	RooDataHist mbcRooHist("mbcRooHist","mbcRooHist",mbc,Import(*mbcHist)) ;
 	RooDataHist csRooHist("csRooHist","csRooHist",cs,Import(*csHist)) ;
+	RooDataHist dtRooHist("dtRooHist","dtRooHist",dt,Import(*dtHist)) ;
 
 	TFile * filebkg = TFile::Open(filenameBkg.c_str());
 	TTree* B0SignalBkg = (TTree*)filebkg->Get("B0Signal");
-	TH1F * mbcBkgHist = new TH1F("mbcBkgHist", ";M [GeV]", 100,5.2,5.3);
-	TH1F * deBkgHist = new TH1F("deBkgHist", ";de [GeV]", 100,-0.2,0.2);
-	TH1F * csBkgHist = new TH1F("csBkgHist", ";cs [GeV]", 100,0,2);
+	TH1F * mbcBkgHist = new TH1F("mbcBkgHist", ";M [GeV]", 50,5.2,5.3);
+	TH1F * deBkgHist = new TH1F("deBkgHist", ";de [GeV]", 25,-0.2,0.2);
+	TH1F * csBkgHist = new TH1F("csBkgHist", ";cs [GeV]", 50,0,2);
+	TH1F * dtBkgHist = new TH1F("dtBkgHist", ";dt [ps]", 50,-10,10);
 	B0SignalBkg->Project("mbcBkgHist","B0_mbc",(bkgcut+cut).c_str());
 	B0SignalBkg->Project("deBkgHist","B0_deltae",(bkgcut+cut).c_str());
 	B0SignalBkg->Project("csBkgHist","B0_CSMVA",(bkgcut+cut).c_str());
+	B0SignalBkg->Project("dtBkgHist","B0_DeltaT",(bkgcut+cut+dtcut).c_str());
 
 	RooDataHist mbcBkgRooHist("mbcBkgRooHist","mbcBkgRooHist",mbc,Import(*mbcBkgHist)) ;
 	RooDataHist deBkgRooHist("deBkgRooHist","deBkgRooHist",de,Import(*deBkgHist)) ;
 	RooDataHist csBkgRooHist("csBkgRooHist","csBkgRooHist",cs,Import(*csBkgHist)) ;
+	RooDataHist dtBkgRooHist("dtBkgRooHist","dtBkgRooHist",dt,Import(*dtBkgHist)) ;
 	
 	RooRealVar fsig1("fsig1","fsig parameter", 0.5);
 // --- Build Gaussian signal PDF ---
-	RooRealVar demean("demean","B^{#pm} mass",-0.01) ;
+	RooRealVar demean("demean","B^{#pm} mass",-0.01,-0.2,0.2) ;
 	RooRealVar desigma("desigma","B^{#pm} width",0.04,0.001,1.) ;
 	RooRealVar dealpha("dealpha","B^{#pm} width",0,2.) ;
 	RooRealVar den("den","B^{#pm} width",0.5,20.) ;
@@ -73,7 +91,7 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "si
 	RooRealVar c0("c0","coefficient #0", 1.0,-1.,1.) ;
 	RooRealVar c1("c1","coefficient #1", 0.1,-1.,1.) ;
 	RooRealVar c2("c2","coefficient #2",-0.1,-1.,1.) ;
-	RooChebychev chebychev("chebychev","background p.d.f.",de,RooArgList(c0,c1,c2)) ; 
+	RooChebychev chebychev("chebychev","background p.d.f.",de,RooArgList(c0,c1)) ; 
 // --- Construct signal+background PDF ---
 	RooRealVar nsig("nsig","#signal events",200,0.,10000) ;
 	RooRealVar nbkg("nbkg","#background events",800,0.,10000) ;
@@ -91,12 +109,18 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "si
         RooGaussian gaussCs2("gaussCs2","gaussian PDF",cs,csmean2,cssigma2) ;
 	RooAddPdf csCBall("csCBall","g+a",RooArgList(gaussCs1,gaussCs2),RooArgList(fcssig)) ;
 // --- Build Gaussian signal PDF ---
-	RooRealVar csbkgmean1("csbkgmean1","B^{#pm} mass",0.2795, -3, 3) ;
+	RooRealVar csbkgmean1("csbkgmean1","B^{#pm} mass",-0.7,-1.,-0.5) ;
 	RooRealVar csbkgsigma1("csbkgsigma1","B^{#pm} width",0.27,0.001,10.) ;
         RooGaussian gaussCsBkg1("gaussCsBkg1","gaussian PDF",cs,csbkgmean1,csbkgsigma1) ;
 	
 	RooRealVar csbkgpar("csbkgpar","B^{#pm} mass",0.2795, -300, 300) ;
 	RooExponential csbkg("csbkg", "csbkg", cs, csbkgpar);
+	
+// --- Generate a toyMC sample from composite PDF ---
+	
+	RooAbsPdf * dtsignal = getDeltaTSignal(settings, dt,q,w,A,S);
+	RooAbsPdf * dtbkg = getDeltaTBkg(settings, dt, false);
+	//RooAbsPdf * dtbkg = getDeltaTSignal(settings, dt,q,wbkg,A,S,false);
 // --- Generate a toyMC sample from composite PDF ---
 	RooDataSet *data = sum.generate(mbc,2000) ;
 // --- Perform extended ML fit of composite PDF to toy data ---
@@ -107,9 +131,11 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "si
 	RooFitResult* resDeBkg = chebychev.fitTo(deBkgRooHist,Save());
 	RooFitResult* resCsSig = csCBall.fitTo(csRooHist,Save());
 	RooFitResult* resCsBkg = gaussCsBkg1.fitTo(csBkgRooHist,Save());
+	RooFitResult* resDtBkg = dtbkg->fitTo(dtBkgRooHist,Save());
+	RooFitResult* resDtSig = dtsignal->fitTo(dtRooHist,Save());
 // --- Plot toy data and composite PDF overlaid ---
-	TCanvas* c = new TCanvas("bphysics","bphysics",1000,1000) ;
-	c->Divide(2,3);
+	TCanvas* c = new TCanvas("bphysics","bphysics",1500,1000) ;
+	c->Divide(4,2);
 	c->cd(1);
 	RooPlot* mbcframe = mbc.frame() ;
 	//data->plotOn(mbcframe) ;
@@ -145,6 +171,16 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "si
 	csBkgRooHist.plotOn(csframe2) ;
 	gaussCsBkg1.plotOn(csframe2) ;
 	gPad->SetLeftMargin(0.15) ; csframe2->GetYaxis()->SetTitleOffset(1.6) ; csframe2->Draw() ;
+	c->cd(7);
+	RooPlot* dtframe = dt.frame() ;
+	dtRooHist.plotOn(dtframe) ;
+	dtsignal->plotOn(dtframe) ;
+	gPad->SetLeftMargin(0.15) ; dtframe->GetYaxis()->SetTitleOffset(1.6) ; dtframe->Draw() ;
+	c->cd(8);
+	RooPlot* dtframe2 = dt.frame() ;
+	dtBkgRooHist.plotOn(dtframe2) ;
+	dtbkg->plotOn(dtframe2) ;
+	gPad->SetLeftMargin(0.15) ; dtframe2->GetYaxis()->SetTitleOffset(1.6) ; dtframe2->Draw() ;
 	std::cout << "-----------------------------------" << std::endl;
 	resMbcSig->Print();
 	std::cout << "-----------------------------------" << std::endl;
@@ -157,6 +193,11 @@ void mbcdeFit_test(string filename = "signal-xsd.root", string filenameBkg = "si
 	resCsSig->Print();
 	std::cout << "-----------------------------------" << std::endl;
 	resCsBkg->Print();
+	std::cout << "-----------------------------------" << std::endl;
+	resDtBkg->Print();
+	std::cout << "-----------------------------------" << std::endl;
+	std::cout << "Nevents: " << csHist->GetEntries() << std::endl;
+	std::cout << "Width: " << dtBkgHist->GetRMS() << std::endl;
 }
 /*
 fitSettings getStdSettings()

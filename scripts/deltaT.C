@@ -1,3 +1,19 @@
+
+//
+//      	  
+//      II 
+//                                
+//      II  PPPP   HH  HH    CCCC   
+//      II  PP  P  HH  HH  CC 
+//      II  PPPP   HH  HH  CC
+//      II  PP     HHHHHH  CC
+//      II  PP     HH  HH    CCCC    STRASBOURG 2017
+//      
+//        
+//                        Author: Bilokin S.    
+//
+
+
 #include "fitSettings.C"
 void makePretty(TF1* htemp, int color = kBlue)
 {
