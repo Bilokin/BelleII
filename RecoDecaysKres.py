@@ -71,9 +71,9 @@ stdPhotons('loose')
 stdPi0s()
 stdPi('99eff')
 applyCuts('gamma:loose','1.4 < E < 4')
-krescuts = "0.5 < M < 2.07 \
-and daughter(2,significanceOfDistance) > 5 \
-and daughter(2,dM) < 0.011 and daughter(2,dM) > -0.011 \
+krescuts = "0.5 < M < 2.0 \
+and daughter(2,significanceOfDistance) > 3 \
+and daughter(2,dM) < 0.015 and daughter(2,dM) > -0.015 \
 and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 "
 #and daughter(0,piid) > 0.1 \

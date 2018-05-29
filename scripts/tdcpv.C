@@ -100,7 +100,7 @@ void addBranches(TTree* T, fitSettings set)
 void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", string signalname = "root/signalx-veto3-precut3.root", bool fullFit = true, string Kres = "Xsd")
 {
 	string outputfilename = "root/tmp-branch.root";
-	cut = getCuts(1,Kres);
+	string cut = getCuts(Kres);
 	fitSettings settings = deltaT(signalname, Kres, cut);
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");

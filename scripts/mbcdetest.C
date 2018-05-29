@@ -17,7 +17,8 @@
 #include "TAxis.h"
 #include "RooPlot.h"
 using namespace RooFit ;
-void mbcdetest(string filename = "root/mysignal-csmva-merged.root", string filenameBkg = "root/tmp-fullrun-csmva1.root")
+//void mbcdetest(string filename = "root/mysignal-csmva-merged.root", string filenameBkg = "root/tmp-fullrun-csmva1.root")
+void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root", string filenameBkg = "root/after-optimization-csmva-veto3-merged.root")
 {
 	fitSettings settings = getStdSettings();
 	settings.useConstMistag = true;
@@ -37,7 +38,7 @@ void mbcdetest(string filename = "root/mysignal-csmva-merged.root", string filen
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string mccut= "(B0_isSignal) &&";
 	string bkgcut= "(!B0_isSignal) &&";
-	string cut = getCuts();
+	string cut = getCuts("Xsd");
 	string dtcut = "";//" && B0_mbc > 5.27 && B0_deltae > -0.25 && B0_deltae < 0.25"; 
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);
 	TH1F * deHist = new TH1F("deHist", ";M [GeV]", 50,-0.2,0.2);

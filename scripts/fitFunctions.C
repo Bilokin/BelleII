@@ -70,16 +70,18 @@ RooAbsPdf * getDeltaTBkg(fitSettings & set, RooRealVar & dt, bool fixParameters 
 	RooRealVar* mgBkg = new RooRealVar("mgBkg","mg2",0);
 	RooRealVar* fbkg1 = new RooRealVar("fbkg1","fbkg parameter",set.fbkg[0],0,1);
 	RooRealVar* fbkg2 = new RooRealVar("fbkg2","fbkg parameter",set.fbkg[1],0,1);
-	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0]);
-	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1]);
-	RooRealVar* sgBkg3 = new RooRealVar("sgBkg3","sg3",set.sigmabkg[2]);
-	RooRealVar* sgBkgPar = new RooRealVar("sgBkgPar","sgpar",1.,0.,2);
+	RooRealVar* sgBkg1 = new RooRealVar("sgBkg1","sg2",set.sigmabkg[0],0.,10);
+	RooRealVar* sgBkg2 = new RooRealVar("sgBkg2","sg2",set.sigmabkg[1],0.,10);
+	RooRealVar* sgBkg3 = new RooRealVar("sgBkg3","sg3",set.sigmabkg[2],0.,10);
+	RooRealVar* sgBkgPar = new RooRealVar("sgBkgPar","sgpar",1.,0.,2.);
 	RooRealVar* pi = new RooRealVar("pi","pi",TMath::Pi());
+		sgBkg1->setConstant();
+		sgBkg2->setConstant();
+		sgBkg3->setConstant();
 	if (fixParameters) 
 	{
 		fbkg1->setConstant();
-		sgBkg1->setConstant();
-		sgBkg2->setConstant();
+		fbkg2->setConstant();
 	}
 	RooGaussian* gaussBkg1 = new RooGaussian("gaussBkg1","gauss",dt,*mgBkg,*sgBkg1);
 	RooGaussian* gaussBkg2 = new RooGaussian("gaussBkg2","gauss",dt,*mgBkg,*sgBkg2);
@@ -220,7 +222,8 @@ RooAbsPdf * getDeBkg(fitSettings & set,  RooRealVar & de, bool fixParameters = f
 		c1->setConstant();
 		c2->setConstant();
 	}
-	RooChebychev * chebychev = new RooChebychev("chebychev","background p.d.f.",de,RooArgList(*c0,*c1,*c2)) ; 
+	//RooChebychev * chebychev = new RooChebychev("chebychev","background p.d.f.",de,RooArgList(*c0,*c1,*c2)) ; 
+	RooChebychev * chebychev = new RooChebychev("chebychev","background p.d.f.",de,RooArgList(*c0,*c1)) ; 
 	return chebychev;	
 }
 RooAbsPdf * getDeSignal(fitSettings & set,  RooRealVar & de)

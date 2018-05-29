@@ -10,7 +10,7 @@ void crosssection()
 	float BRKpipigamma = 20.5e-6 /2 * 0.7; // as in G. Eigen 1510.04446 
 
 	float phase3L = 0.8e18; // barn^-1
-	phase3L = 0.55e18; // barn^-1 as in BABAR
+	//phase3L = 0.55e18; // barn^-1 as in BABAR
 	float fullL = 50e18; // barn^-1
 	//Reconstruction efficiency times BR Kpipi gamma 
 	float effK1gamma = 0.01;  
