@@ -1362,6 +1362,16 @@
     <EventHigh>5000</EventHigh>
   </File>
   <File>
+    <LFN>/home/sbilokin/BelleII/test/test/evtmc10.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/test/evtmc10.root</PFN>
+    <ExperimentLow>0</ExperimentLow>
+    <RunLow>0</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>0</ExperimentHigh>
+    <RunHigh>0</RunHigh>
+    <EventHigh>5000</EventHigh>
+  </File>
+  <File>
     <LFN>/home/sbilokin/BelleII/test/test/reco-tf2signal1.root</LFN>
     <PFN>/home/sbilokin/BelleII/test/test/reco-tf2signal1.root</PFN>
     <ExperimentLow>1</ExperimentLow>

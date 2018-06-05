@@ -9,6 +9,30 @@ Alias MyXsd Xsd
 Alias Myanti_Xsd anti-Xsd
 ChargeConj MyXsd Myanti_Xsd 
 
+Alias MyK*+ K*+
+Alias MyK*- K*-
+ChargeConj MyK*+ MyK*- 
+
+Alias MyK*0 K*0
+Alias Myanti_K*0 anti-K*0
+ChargeConj MyK*0 Myanti_K*0 
+
+Alias MyK'10 K'_10
+Alias Myanti_K'10 anti-K'_10
+ChargeConj MyK'10 Myanti_K'10
+
+Alias MyK'*0 K'*0
+Alias Myanti_K'*0 anti-K'*0
+ChargeConj MyK'*0 Myanti_K'*0
+
+Alias MyK2*0 K_2*0
+Alias Myanti_K2*0 anti-K_2*0
+ChargeConj MyK2*0 Myanti_K2*0
+
+Alias MyK''*0 K''*0
+Alias Myanti_K''*0 anti-K''*0
+ChargeConj MyK''*0 Myanti_K''*0
+
 Alias MyB0 B0
 Alias Myanti-B0 anti-B0
 ChargeConj MyB0 Myanti-B0
@@ -18,18 +42,59 @@ Decay Upsilon(4S)
 Enddecay
 
 Decay MyB0
-1.000    MyXsd  gamma  BTOXSGAMMA 2;
+0.40  MyK10   gamma                   SVP_HELAMP 1.0 0.0 1.0 0.0; #[Reconstructed PDG2016] #Changed model from HELAMP to SVP_HELAMP 
+0.10  MyK'10  gamma                 SVP_HELAMP 1.0 0.0 1.0 0.0; #Upper limit is 1.5e-6
+0.10  MyK'*0   gamma                 SVP_HELAMP 1.0 0.0 1.0 0.0; #Upper limit is 1.5e-6
+0.20  MyK2*0  gamma               HELAMP 1.0 0.0 1.0 0.0;  #[New mode added] #[Reconstructed PDG2011] #Changed model from PHSP to HELAMP
+0.10  MyK''*0  gamma                   SVP_HELAMP 1.0 0.0 1.0 0.0; #Upper limit is 2e-3
+0.10  MyXsd    gamma     BTOXSGAMMA 2 ; #[Reconstructed PDG2016] BF = 3.49e-4 - Sum of exclusive b - s gamma  states 
 Enddecay
 CDecay Myanti-B0
 
 Decay MyXsd
-1.00    rho0 MyK_S0  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+0.50    rho0 MyK_S0  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+0.50    MyK*+ pi-  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
 Enddecay
 CDecay Myanti_Xsd
+
+Decay MyK10
+0.50    rho0 MyK_S0  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+0.50    MyK*+ pi-  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+Enddecay
+CDecay Myanti_K10
+
+Decay MyK2*0
+0.50    rho0 MyK_S0  TVS_PWAVE 0.0 0.0 1.0 0.0 0.0 0.0;
+0.50    MyK*+ pi- TVS_PWAVE 0.0 0.0 1.0 0.0 0.0 0.0;
+Enddecay
+CDecay Myanti_K2*0
+
+Decay  MyK''*0
+0.50    rho0 MyK_S0  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+0.50    MyK*+ pi-  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+Enddecay
+CDecay Myanti_K''*0
+
+Decay  MyK'*0
+0.50    rho0 MyK_S0  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+0.50    MyK*+ pi-  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+Enddecay
+CDecay Myanti_K'*0
+
+
+Decay MyK'10
+0.50    rho0 MyK_S0  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+0.50    MyK*+ pi-  VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+Enddecay
+CDecay Myanti_K'10
 
 Decay MyK_S0
 1.000    pi- pi+ PHSP;
 Enddecay
 
+Decay MyK*+
+1.000   MyK_S0 pi+ PHSP;
+Enddecay
+CDecay MyK*-
 
 End

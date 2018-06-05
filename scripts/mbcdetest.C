@@ -24,7 +24,7 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	settings.useConstMistag = true;
 	RooRealVar mbc("mbc","m_{bc} [GeV]",5.20,5.30) ;
 	RooRealVar de("de","#Delta E [GeV]",-0.2,0.2) ;
-	RooRealVar cs("cs","CSMVA []",0,2) ;
+	RooRealVar cs("cs","CSMVA []",-2,2.5) ;
 	RooRealVar dt("dt","dt [ps]",-10,10) ;
 	RooCategory q("q","Flavour of the tagged B0") ;
 		q.defineType("B0",1) ;
@@ -42,7 +42,7 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	string dtcut = "";//" && B0_mbc > 5.27 && B0_deltae > -0.25 && B0_deltae < 0.25"; 
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);
 	TH1F * deHist = new TH1F("deHist", ";M [GeV]", 50,-0.2,0.2);
-	TH1F * csHist = new TH1F("csHist", ";cs [GeV]", 50,0,2);
+	TH1F * csHist = new TH1F("csHist", ";cs [GeV]", 50,-2,2.5);
 	TH1F * dtHist = new TH1F("dtHist", ";dt [ps]", 50,-10,10);
 	B0Signal->Project("mbcHist","B0_mbc",(mccut+cut).c_str());
 	B0Signal->Project("deHist","B0_deltae",(mccut+cut).c_str());
@@ -58,7 +58,7 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	TTree* B0SignalBkg = (TTree*)filebkg->Get("B0Signal");
 	TH1F * mbcBkgHist = new TH1F("mbcBkgHist", ";M [GeV]", 50,5.2,5.3);
 	TH1F * deBkgHist = new TH1F("deBkgHist", ";de [GeV]", 25,-0.2,0.2);
-	TH1F * csBkgHist = new TH1F("csBkgHist", ";cs [GeV]", 50,0,2);
+	TH1F * csBkgHist = new TH1F("csBkgHist", ";cs [GeV]", 50,-2,2.5);
 	TH1F * dtBkgHist = new TH1F("dtBkgHist", ";dt [ps]", 50,-10,10);
 	B0SignalBkg->Project("mbcBkgHist","B0_mbc",(bkgcut+cut).c_str());
 	B0SignalBkg->Project("deBkgHist","B0_deltae",(bkgcut+cut).c_str());
@@ -97,7 +97,7 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	RooRealVar nsig("nsig","#signal events",200,0.,10000) ;
 	RooRealVar nbkg("nbkg","#background events",800,0.,10000) ;
 	RooAddPdf sum("sum","g+a",RooArgList(gauss,argus),RooArgList(nsig,nbkg)) ;
-// --- Build Gaussian signal PDF ---
+// --- Build CS signal PDF ---
 	RooRealVar csmean1("csmean1","B^{#pm} mass",0.2795, -3, 3) ;
 	RooRealVar cssigma1("cssigma1","B^{#pm} width",0.27,0.001,10.) ;
 	RooRealVar csmean2("csmean2","B^{#pm} mass",0.2795, -3, 3) ;
@@ -109,8 +109,13 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
         RooGaussian gaussCs1("gaussCs1","gaussian PDF",cs,csmean1,cssigma1) ;
         RooGaussian gaussCs2("gaussCs2","gaussian PDF",cs,csmean2,cssigma2) ;
 	RooAddPdf csCBall("csCBall","g+a",RooArgList(gaussCs1,gaussCs2),RooArgList(fcssig)) ;
-// --- Build Gaussian signal PDF ---
-	RooRealVar csbkgmean1("csbkgmean1","B^{#pm} mass",-0.7,-1.,-0.5) ;
+// --- Build CS Bkg PDF ---
+	RooRealVar bbcsmean("bbcsmean","B^{#pm} mass",0.2795, 0, 2) ;
+	RooRealVar bbcssigma("bbcssigma","B^{#pm} width",0.27,0.000001,10.) ;
+	RooRealVar bbcsalpha("bbcsalpha","B^{#pm} width",1,10.) ;
+	RooRealVar bbcsn("bbcsn","B^{#pm} width",1,40.) ;
+	RooCBShape bbcsCBall("bbcsCBall", "Crystal Ball shape", cs, bbcsmean, bbcssigma, bbcsalpha, bbcsn);
+	RooRealVar csbkgmean1("csbkgmean1","B^{#pm} mass",-0.7,-1.,1) ;
 	RooRealVar csbkgsigma1("csbkgsigma1","B^{#pm} width",0.27,0.001,10.) ;
         RooGaussian gaussCsBkg1("gaussCsBkg1","gaussian PDF",cs,csbkgmean1,csbkgsigma1) ;
 	
@@ -131,7 +136,8 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	RooFitResult* resMbcBkg = argus.fitTo(mbcBkgRooHist,Save());
 	RooFitResult* resDeBkg = chebychev.fitTo(deBkgRooHist,Save());
 	RooFitResult* resCsSig = csCBall.fitTo(csRooHist,Save());
-	RooFitResult* resCsBkg = gaussCsBkg1.fitTo(csBkgRooHist,Save());
+	//RooFitResult* resCsBkg = gaussCsBkg1.fitTo(csBkgRooHist,Save());
+	RooFitResult* resCsBkg = bbcsCBall.fitTo(csBkgRooHist,Save());
 	RooFitResult* resDtBkg = dtbkg->fitTo(dtBkgRooHist,Save());
 	RooFitResult* resDtSig = dtsignal->fitTo(dtRooHist,Save());
 // --- Plot toy data and composite PDF overlaid ---
@@ -170,7 +176,7 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	c->cd(6);
 	RooPlot* csframe2 = cs.frame() ;
 	csBkgRooHist.plotOn(csframe2) ;
-	gaussCsBkg1.plotOn(csframe2) ;
+	bbcsCBall.plotOn(csframe2) ;
 	gPad->SetLeftMargin(0.15) ; csframe2->GetYaxis()->SetTitleOffset(1.6) ; csframe2->Draw() ;
 	c->cd(7);
 	RooPlot* dtframe = dt.frame() ;

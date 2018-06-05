@@ -36,10 +36,10 @@ TH1F *  addBkg(THStack * stackmbc, THStack * stackde, THStack * stackmva,  THSta
 //			   string lightname = "precut-veto3/light-lumi630fb-veto3.root", 
 //			   string ccbarname = "precut-veto3/ccbar-lumi630fb-veto3.root", 
 //			   string chargedname = "precut-veto3/charged-lumi630fb-veto3.root", 
-void checkVariables(string signalname = "root/tmp-full-bkg-run4.root", 
-			   string lightname = "root/tmp-full-bkg-run3.root", 
-			   string ccbarname = "root/tmp-full-bkg-run1.root", 
-			   string chargedname = "root/tmp-full-bkg-run2.root", 
+void checkVariables(string signalname = "root/tmp-after-optimization-csmva-veto34.root", 
+			   string lightname = "root/tmp-after-optimization-csmva-veto33.root", 
+			   string ccbarname = "root/tmp-after-optimization-csmva-veto31.root", 
+			   string chargedname = "root/tmp-after-optimization-csmva-veto32.root", 
 			   bool signalEnhanced = 0, string Kres = "Xsd")
 {
 	float signalK1Lumi = 0.7; // ab-1
@@ -62,7 +62,7 @@ void checkVariables(string signalname = "root/tmp-full-bkg-run4.root",
 	TH1F * MbcqqHist = NULL;
 	TH1F * MVAqqHist = NULL;
 	
-	string cut = getCuts(1,Kres);
+	string cut = getCuts(Kres);
 	//cut += " && B0_gamma_MC_MOTHER_ID != 111 && B0_gamma_MC_MOTHER_ID != 221";
 	//string trueB = "&& (abs(B0_K_10_mcPDG) == 30343 && abs(B0_gamma_MC_MOTHER_ID) == 511)";
 	string trueB = "&& B0_isSignal";

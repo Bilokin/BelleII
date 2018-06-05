@@ -20,6 +20,7 @@
 #include "fitFunctions.C"
 #include "plotMCstudy.C"
 #include "plotFitResult.C"
+#include "sigbkgFitResult.C"
 #ifndef __MYROOFIT__
 #define __MYROOFIT__
 
@@ -127,6 +128,7 @@ void mbcdedtFit(TTree* tree, fitSettings settings, bool showSecCanvas = true)
 	RooFitResult* resb = combined->fitTo(*data, Save(), Silence()) ;
 
 	plotFitResult(combined, bkgpdf, sigpdf, data, mbc, de, dt, cs, q);
+	sigbkgFitResult(combined, bkgpdf, sigpdf, data, mbc, de, dt, cs, q);
 	plotAsymmetryResult(combined, bkgpdf, sigpdf, data, resb, A, S, dt, q);
 		
 	std::cout << "-----------------------------" << std::endl;

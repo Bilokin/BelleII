@@ -24,6 +24,8 @@ inputFilename = defaultInputFoldername + '/' + defaultInputFilename
 defaultOutputFilename = "reco-tf2signal.root"
 defaultOutputFoldername = "test"
 outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
+from variables import variables
+variables.addAlias('KresM','daughterInvariantMass(0,1,2)')
 for arg in sys.argv:
 	print(arg)
 if len(sys.argv)==2:
@@ -109,7 +111,7 @@ toolsB0SIG += ['MCTruth', '^B0']
 toolsB0SIG += ['MCVertex', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
 toolsB0SIG += ['Dalitz', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
 toolsB0SIG += ['MCHierarchy', 'B0 -> ^K_S0 pi+ pi- gamma']
-toolsB0SIG += ['CustomFloats[daughterInvariantMass(0, 1, 2)]', '^B0 -> K_S0 pi+ pi- gamma']
+toolsB0SIG += ['CustomFloats[KresM]', '^B0 -> K_S0 pi+ pi- gamma']
 toolsB0SIG += ['CustomFloats[cosTheta:phi]', '^B0']
 toolsB0SIG += ['CustomFloats[nDaughters]', '^B0']
 toolsB0SIG += ['CustomFloats[daughter(0,E)]', '^B0']
@@ -117,15 +119,6 @@ toolsB0SIG += ['CustomFloats[daughter(1,E)]', '^B0']
 toolsB0SIG += ['CustomFloats[daughter(2,E)]', '^B0']
 toolsB0SIG += ['CustomFloats[cosTheta:phi:E]', 'B0 -> ^K_S0 ^pi+ ^pi- ^gamma']
 
-toolsB0SIG += ['CustomFloats[daughter(0,px)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(1,px)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(2,px)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(0,py)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(1,py)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(2,py)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(0,pz)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(1,pz)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(2,pz)]', '^B0']
 
 toolsY4S  = ['Kinematics', '^Upsilon(4S) -> ^B0 ^anti-B0']
 toolsY4S += ['CMSKinematics', '^Upsilon(4S) ->  ^B0 ^anti-B0']

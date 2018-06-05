@@ -48,7 +48,7 @@ add_beamparameters(analysis_main, 'Y4S')
 #
 # generateY4S function is defined in analysis/scripts/modularAnalysis.py
 #generateY4S(1000, 'Y4SEventGeneration.dec')
-generateY4S(5000, 'mydec.dec')
+generateY4S(5000, 'mydec-mc10.dec')
 
 # If the simulation and reconstruction is not performed in the sam job,
 # then the Gearbox needs to be loaded with the loadGearbox() function.
