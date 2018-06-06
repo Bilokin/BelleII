@@ -11,14 +11,14 @@ void rrange(RooRealVar & mbc, int m, RooRealVar & de, int d, RooRealVar & cs, in
 	if(d==1){de.setRange("Signal",-0.15,0.1);}	//SIG
 	if(d==2){de.setRange("Signal",-0.2,0.2);} 	//FULL
 	
-	if(c==0){cs.setRange("Signal",0.,0.3);} 		//BKG
-	if(c==1){cs.setRange("Signal",0.3,1.8);} 		//SIG
-	if(c==2){cs.setRange("Signal",0.,2.5);} 		//FULL
+	//if(c==0){cs.setRange("Signal",0.,0.3);} 		//BKG
+	//if(c==1){cs.setRange("Signal",0.3,1.8);} 		//SIG
+	//if(c==2){cs.setRange("Signal",0.,2.5);} 		//FULL
 	
 }
 
 
-void sigbkgFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * sigpdf, RooDataSet * data, RooRealVar & mbc, RooRealVar & de, RooRealVar & dt, RooRealVar & cs, RooCategory & q)
+void sigbkgFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * bbbkgpdf, RooAbsPdf * sigpdf, RooDataSet * data, RooRealVar & mbc, RooRealVar & de, RooRealVar & dt, RooRealVar & cs, RooCategory & q)
 //(combined,bkgpdf,sigpdf,data,mbc,de,dt,cs,q)
 {
 	mbc.setBins(50) ;
@@ -56,27 +56,31 @@ void sigbkgFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * sigpd
 	rrange(mbc,2,de,1,cs,1);
 	data->plotOn(frame, MarkerStyle(22), CutRange("Signal")) ;
 	combined->plotOn(frame,ProjectionRange("Signal")) ;
-  combined->plotOn(frame,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(frame,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(frame,ProjectionRange("Signal"), Components(*bbbkgpdf),LineStyle(kDashed), LineColor(kGreen)) ;
   
 	rrange(mbc,1,de,2,cs,1);
 	data->plotOn(deframe, MarkerStyle(22), CutRange("Signal")) ;
 	combined->plotOn(deframe,ProjectionRange("Signal")) ;
-  combined->plotOn(deframe,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(deframe,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(deframe,ProjectionRange("Signal"), Components(*bbbkgpdf),LineStyle(kDashed), LineColor(kGreen)) ;
   
 	rrange(mbc,1,de,1,cs,2);
 	data->plotOn(csframe, MarkerStyle(22), CutRange("Signal")) ;
-  combined->plotOn(csframe,ProjectionRange("Signal")) ;
-  combined->plotOn(csframe,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(csframe,ProjectionRange("Signal")) ;
+	combined->plotOn(csframe,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(csframe,ProjectionRange("Signal"), Components(*bbbkgpdf),LineStyle(kDashed), LineColor(kGreen)) ;
   
 	rrange(mbc,1,de,1,cs,1);
 	data->plotOn(dtframe, MarkerStyle(22), CutRange("Signal")) ;
-  combined->plotOn(dtframe,  ProjectionRange("Signal")) ;
-  combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*bkgpdf), LineStyle(kDashed), LineColor(kGray)) ;
-  combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
-  combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
+	combined->plotOn(dtframe,  ProjectionRange("Signal")) ;
+	combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*bkgpdf), LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*bbbkgpdf), LineStyle(kDashed), LineColor(kGreen)) ;
+	combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
+	combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
         
 	
-	TCanvas* c = new TCanvas("bphysics","bphysics sig",900,900) ;
+	TCanvas* c = new TCanvas("sigcanvas","Signal region",900,900) ;
 	c->Divide(2,2);
 	c->cd(1);
 	gPad->SetLeftMargin(0.15) ; frame->GetYaxis()->SetTitleOffset(1.6) ; frame->Draw() ;
@@ -116,27 +120,31 @@ void sigbkgFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * sigpd
 	rrange(mbc,2,de,0,cs,0);
 	data->plotOn(frame2, MarkerStyle(22), CutRange("Signal")) ;
 	combined->plotOn(frame2,ProjectionRange("Signal")) ;
-  combined->plotOn(frame2,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(frame2,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(frame2,ProjectionRange("Signal"), Components(*bbbkgpdf),LineStyle(kDashed), LineColor(kGreen)) ;
   
 	rrange(mbc,0,de,2,cs,0);
 	data->plotOn(deframe2, MarkerStyle(22), CutRange("Signal")) ;
 	combined->plotOn(deframe2,ProjectionRange("Signal")) ;
-  combined->plotOn(deframe2,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(deframe2,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(deframe2,ProjectionRange("Signal"), Components(*bbbkgpdf),LineStyle(kDashed), LineColor(kGreen)) ;
   
 	rrange(mbc,0,de,0,cs,2);
 	data->plotOn(csframe2, MarkerStyle(22), CutRange("Signal")) ;
-  combined->plotOn(csframe2,ProjectionRange("Signal")) ;
-  combined->plotOn(csframe2,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(csframe2,ProjectionRange("Signal")) ;
+	combined->plotOn(csframe2,ProjectionRange("Signal"), Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(csframe2,ProjectionRange("Signal"), Components(*bbbkgpdf),LineStyle(kDashed), LineColor(kGreen)) ;
   
 	rrange(mbc,0,de,0,cs,0);
 	data->plotOn(dtframe2, MarkerStyle(22), CutRange("Signal")) ;
-  combined->plotOn(dtframe2,  ProjectionRange("Signal")) ;
-  combined->plotOn(dtframe2, ProjectionRange("Signal"), Components(*bkgpdf), LineStyle(kDashed), LineColor(kGray)) ;
-  combined->plotOn(dtframe2, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
-  combined->plotOn(dtframe2, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
+	combined->plotOn(dtframe2,  ProjectionRange("Signal")) ;
+	combined->plotOn(dtframe2, ProjectionRange("Signal"), Components(*bkgpdf), LineStyle(kDashed), LineColor(kGray)) ;
+	combined->plotOn(dtframe2, ProjectionRange("Signal"), Components(*bbbkgpdf), LineStyle(kDashed), LineColor(kGreen)) ;
+	combined->plotOn(dtframe2, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
+	combined->plotOn(dtframe2, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
         
 	
-	TCanvas* c2 = new TCanvas("bphysic","bphysics bkg",900,900) ;
+	TCanvas* c2 = new TCanvas("bkgcanvas","Background region",900,900) ;
 	c2->Divide(2,2);
 	c2->cd(1);
 	gPad->SetLeftMargin(0.15) ; frame2->GetYaxis()->SetTitleOffset(1.6) ; frame2->Draw() ;

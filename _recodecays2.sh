@@ -1,5 +1,5 @@
 #!/bin/bash
-parallelProcesses=6
+parallelProcesses=4
 root=".root"
 query=$1
 outFileName=$2
@@ -10,7 +10,7 @@ fi
 fileNames=""
 for file in `ls $query`
 do
-	echo "basf2 _RecoDecays.py $file tmp-$outFileName$number$root > /dev/null &"
+	echo "basf2 _RecoDecaysKres.py $file tmp-$outFileName$number$root > /dev/null &"
 	basf2 RecoDecaysKres.py $file root/tmp-$outFileName$number$root > /dev/null &
 	fileNames+=root/tmp-$outFileName$number$root" "
 	if [[ $number%$parallelProcesses -eq 0 ]]; then

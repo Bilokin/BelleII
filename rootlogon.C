@@ -97,8 +97,8 @@ string getCuts( string Kres = "", bool enableVeto = true)
 		//cut += " && (abs(B0_eta0veto_MVA) < 0.5 || B0_eta0veto_w == 0)";
 		cut += "&& B0_pi0Likeness < 0.82"; //0.82 my
 		cut += "&& B0_etaLikeness < 0.945"; //0.954 my
-		cut += " &&( B0_CSMVA > 0.0)";
-		cut += " && B0_Xsd_dMgen > -0.06";
+		cut += " && B0_CSMVA > 0.0";
+		//cut += " && !B0_isContinuumEvent && !B0_isSignal ";
 	}
 	//cut += " && "+cosflight+" > 0.995";
 	cut += " && iCand == 0 ";

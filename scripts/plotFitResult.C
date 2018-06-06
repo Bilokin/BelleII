@@ -1,4 +1,4 @@
-void plotFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * sigpdf, RooDataSet * data, RooRealVar & mbc, RooRealVar & de, RooRealVar & dt, RooRealVar & cs, RooCategory & q)
+void plotFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * bkgbbpdf, RooAbsPdf * sigpdf, RooDataSet * data, RooRealVar & mbc, RooRealVar & de, RooRealVar & dt, RooRealVar & cs, RooCategory & q)
 {
 	mbc.setBins(50) ;
 	cs.setBins(50) ;
@@ -19,10 +19,13 @@ void plotFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * sigpdf,
 	data->plotOn(csframe, MarkerStyle(22)) ;
         combined->plotOn(frame) ;
         combined->plotOn(frame, Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+        combined->plotOn(frame, Components(*bkgbbpdf),LineStyle(kDashed), LineColor(kGreen)) ;
         combined->plotOn(deframe) ;
         combined->plotOn(deframe, Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+        combined->plotOn(deframe, Components(*bkgbbpdf),LineStyle(kDashed), LineColor(kGreen)) ;
         combined->plotOn(csframe) ;
         combined->plotOn(csframe, Components(*bkgpdf),LineStyle(kDashed), LineColor(kGray)) ;
+        combined->plotOn(csframe, Components(*bkgbbpdf),LineStyle(kDashed), LineColor(kGreen)) ;
 	
 	mbc.setRange("Signal",5.27,5.3);
 	de.setRange("Signal",-0.15,0.1);
@@ -48,6 +51,7 @@ void plotFitResult(RooAbsPdf * combined, RooAbsPdf * bkgpdf, RooAbsPdf * sigpdf,
 	data->plotOn(dtframe, MarkerStyle(22), CutRange("Signal")) ;
         combined->plotOn(dtframe,  ProjectionRange("Signal")) ;
         combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*bkgpdf), LineStyle(kDashed), LineColor(kGray)) ;
+        combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*bkgbbpdf), LineStyle(kDashed), LineColor(kGreen)) ;
         combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
         combined->plotOn(dtframe, ProjectionRange("Signal"), Components(*sigpdf), Slice(q,"B0bar"),LineStyle(kDashed), LineColor(kRed)) ;
 

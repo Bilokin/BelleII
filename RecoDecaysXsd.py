@@ -107,7 +107,7 @@ matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
+#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 matchMCTruth('pi+:all')
 matchMCTruth('Xsd:all')
 matchMCTruth('gamma:loose')

@@ -105,7 +105,7 @@ matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
+#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 #matchMCTruth('pi+:all')
 #matchMCTruth(Kres+':all')
 #matchMCTruth('gamma:loose')
@@ -127,7 +127,7 @@ toolsB0_meson += ['MCTruth','^B0 -> [^'+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['MCHierarchy','B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['Vertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['CustomFloats[significanceOfDistance:dM]', '^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
-toolsB0_meson += ['CustomFloats[dMgen]', 'B0 -> [^'+Kres+' -> pi+ pi- K_S0] gamma']
+#toolsB0_meson += ['CustomFloats[dMgen]', 'B0 -> [^'+Kres+' -> pi+ pi- K_S0] gamma']
 toolsB0_meson += ['MCVertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['InvMass','^B0 -> [^'+Kres+' -> pi+ pi- ^K_S0]  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
