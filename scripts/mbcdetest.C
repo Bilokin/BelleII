@@ -1,6 +1,6 @@
 
-#include "fitSettings.C"
-#include "fitFunctions.C"
+#include "../../roofit/fitFunctions.C"
+#include "fitStdSettings.C"
 #include "RooGlobalFunc.h"
 #include "RooRealVar.h"
 #include "RooDataSet.h"
@@ -37,7 +37,7 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string mccut= "(B0_isSignal) &&";
-	string bkgcut= "(!B0_isSignal) &&";
+	string bkgcut= "(!B0_isSignal) && !B0_isContinuumEvent && ";
 	string cut = getCuts("Xsd");
 	string dtcut = "";//" && B0_mbc > 5.27 && B0_deltae > -0.25 && B0_deltae < 0.25"; 
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);

@@ -13,10 +13,11 @@
 //                        Author: Bilokin S.    
 //
 
-#include "fitFunctions.C"
+#include "../../roofit/fitFunctions.C"
+#include "fitStdSettings.C"
 //#include "convolution3.C"
-#include "mbcdedtFit.C"
-#include "deltaT.C"
+#include "../../roofit/mbcdedtFit.C"
+#include "../../roofit/deltaT.C"
 
 #ifndef	__MYROOFIT__
 #define __MYROOFIT__

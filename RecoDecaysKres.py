@@ -17,7 +17,6 @@ from vertex import *
 from stdV0s import stdKshorts
 from stdPhotons import *
 from stdCharged import *
-from stdFSParticles import *
 from ROOT import gROOT, TFile, TTree                                                                                             
 import sysconfig
 gROOT.ProcessLine(".include " + sysconfig.get_path("include"))
@@ -44,8 +43,8 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
-use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
-#use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
+#use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
+use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
 #use_central_database("GT_gen_prod_004.10_release-01-00-00")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
@@ -68,15 +67,14 @@ add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
 stdKshorts()
 stdPhotons('loose')
-stdPi0s()
 stdPi('99eff')
 applyCuts('gamma:loose','1.4 < E < 4')
 krescuts = "0.5 < M < 2.0 \
-and daughter(2,significanceOfDistance) > 3 \
+and daughter(2,significanceOfDistance) > 5 \
 and daughter(2,dM) < 0.015 and daughter(2,dM) > -0.015 \
+and daughter(0,piid) > 0.2 and daughter(1,piid) > 0.2 \
 and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 "
-#and daughter(0,piid) > 0.1 \
 #vertexKFit('K_S0:all',0.0)
 reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
 reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85")

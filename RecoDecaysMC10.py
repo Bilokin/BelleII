@@ -17,7 +17,6 @@ from vertex import *
 from stdV0s import stdKshorts
 from stdPhotons import *
 from stdCharged import *
-from stdFSParticles import *
 from ROOT import gROOT, TFile, TTree                                                                                             
 import sysconfig
 gROOT.ProcessLine(".include " + sysconfig.get_path("include"))
@@ -27,7 +26,6 @@ from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
-from pi0etaveto import writePi0EtaVeto, myVetoVariables
 ratingVar = "chiProb"
 defaultInputFilename = "evtgen.root"
 defaultInputFoldername = "test"
@@ -43,8 +41,8 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
-use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
-#use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
+#use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
+use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
 #use_central_database("GT_gen_prod_004.10_release-01-00-00")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
@@ -63,13 +61,14 @@ variables.addAlias('B0_cc4','CleoCone(4)')
 variables.addAlias('B0_hso02','KSFWVariables(hso02)')
 variables.addAlias('CSMVA','extraInfo(CSMVA)')
 variables.addAlias('XsdM','daughterInvM(0,1,2)')
+variables.addAlias('pi0Likeness','extraInfo(Pi0_Prob)')
+variables.addAlias('etaLikeness','extraInfo(Eta_Prob)')
 
 add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
 stdKshorts()
 stdPhotons('loose')
-stdPi0s()
-stdPi('99eff')
+stdPi('good')
 applyCuts('gamma:loose','1.4 < E < 4')
 krescuts = " and daughterInvM(0,1,2) < 2 and daughter(2,significanceOfDistance) > 5 \
 and daughter(2,dM) < 0.011 and daughter(2,dM) > -0.011 \
@@ -77,8 +76,8 @@ and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 "
 #and daughter(0,piid) > 0.1 \
 #vertexKFit('K_S0:all',0.0)
-#reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
-reconstructDecay("B0:signal -> pi+:99eff pi-:99eff K_S0:all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85"+krescuts)
+#reconstructDecay(Kres+":all -> pi+:good pi-:good K_S0:all", krescuts)
+reconstructDecay("B0:signal -> pi+:good pi-:good K_S0:all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85"+krescuts)
 vertexRave('B0:signal',0.0001, 'B0 -> ^pi+ ^pi- ^K_S0 gamma')
 #vertexTree('B0:signal',0.0001)
 
@@ -104,14 +103,14 @@ matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
+#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 #matchMCTruth('pi+:all')
 #matchMCTruth(Kres+':all')
 #matchMCTruth('gamma:loose')
 analysis_main.add_module('MVAExpert', listNames=['B0:signal'], extraInfoName='CSMVA',
 		identifier='./mva-addition/MyTMVA.xml')
 
-writePi0EtaVeto('B0:signal', 'B0 -> pi+:99eff pi-:99eff K_S0:all ^gamma')
+writePi0EtaVeto('B0:signal', 'B0 -> pi+:good pi-:good K_S0:all ^gamma')
 #myVetoVariables()
 
 toolsB0_meson =  ['Kinematics','^B0 ->  ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ]  ^gamma']
@@ -119,7 +118,6 @@ toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRa
 #toolsB0_meson += ['CustomFloats[pi0veto_M:pi0veto_gamma0_E:pi0veto_gamma1_E:pi0veto_mcPDG:pi0veto_cosTheta:pi0veto_gamma1_cosTheta:pi0veto_gamma1_clusterE1E9:pi0veto_gamma1_clusterE9E21:pi0veto_gamma1_clusterTiming:pi0veto_gamma1_clusterAZM40:pi0veto_gamma1_clusterAZM51:pi0veto_gamma1_clusterSecondMoment]', '^B0']
 #toolsB0_meson += ['CustomFloats[eta0veto_M:eta0veto_gamma0_E:eta0veto_gamma1_E:eta0veto_mcPDG:eta0veto_cosTheta:eta0veto_gamma1_cosTheta:eta0veto_gamma1_clusterE1E9:eta0veto_gamma1_clusterE9E21:eta0veto_gamma1_clusterTiming:eta0veto_gamma1_clusterAZM40:eta0veto_gamma1_clusterAZM51:eta0veto_gamma1_clusterSecondMoment]', '^B0']
 toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness:CSMVA:XsdM]', '^B0']
-toolsB0_meson += ['CustomFloats[pi0vetoGamma1E:pi0vetoGamma1Timing:pi0vetoGamma1CosTheta]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^'+Kres+' gamma']
 toolsB0_meson += ['MCTruth','^B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
 toolsB0_meson += ['MCHierarchy','B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
@@ -132,7 +130,7 @@ toolsB0_meson += ['PID','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
 toolsB0_meson += ['CustomFloats[chiProb]','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', 'B0 -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi-  ] ^gamma']
 toolsB0_meson += ['CustomFloats[d0:z0:firstPXDLayer:firstSVDLayer]', 'B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
-toolsB0_meson += ['CustomFloats[minC2HDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> pi+ pi- K_S0 ^gamma']
+toolsB0_meson += ['CustomFloats[minC2TDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> pi+ pi- K_S0 ^gamma']
 toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> pi+ pi- K_S0 gamma']
 toolsB0_meson += ['Dalitz', '^B0 -> ^pi+ ^pi- ^K_S0 gamma']
 toolsB0_meson += ['TrackHits','B0 -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ]  gamma']

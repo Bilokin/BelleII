@@ -82,8 +82,8 @@ applyCuts('gamma:loose','1.4 < E < 4')
 vertexKFit('K_S0:all',0.01)
 reconstructDecay("Xsd:all -> pi+:all pi-:all K_S0:all", "0.5 < M < 2.5")
 reconstructDecay("B0:signal -> Xsd:all gamma:loose", " 4 < M < 6 and Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2")
-vertexRave('B0:signal',0.0, 'B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] gamma')
-#vertexTree('B0:signal',0.0001)
+#vertexRave('B0:signal',0.0, 'B0 -> [Xsd -> ^pi+ ^pi- ^K_S0] gamma')
+vertexTree('B0:signal',0.0001)
 
 rankByHighest('B0:signal',ratingVar, 1, outputVariable='myRating')
 
@@ -112,6 +112,10 @@ matchMCTruth('pi+:all')
 matchMCTruth('Xsd:all')
 matchMCTruth('gamma:loose')
 
+analysis_main.add_module('MVAExpert', listNames=['B0:signal'], extraInfoName='CSMVA',
+                identifier='./mva-addition/MyTMVA.xml')
+
+writePi0EtaVeto('B0:signal', 'B0 -> pi+:99eff pi-:99eff K_S0:all ^gamma')
 
 '''
 fillSignalSideParticleList('gamma:sig', 'B0 -> Xsd ^gamma', path=analysis_main)
