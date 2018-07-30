@@ -26,7 +26,8 @@ from beamparameters import *
 # check if the required input file exists (from B2A101 example)
 import os.path
 import sys
-from pi0etaveto import writePi0EtaVeto, myVetoVariables
+#from pi0etaveto import writePi0EtaVeto, myVetoVariables
+
 ratingVar = "chiProb"
 defaultInputFilename = "evtgen.root"
 defaultInputFoldername = "test"
@@ -34,6 +35,8 @@ inputFilename = defaultInputFoldername + '/' + defaultInputFilename
 defaultOutputFilename = "test.root"
 defaultOutputFoldername = "."
 outputFilename = defaultOutputFoldername + '/' + defaultOutputFilename
+
+enableMCTruth = False
 # Change K resonance name here:
 Kres = 'Xsd'
 for arg in sys.argv:
@@ -47,6 +50,8 @@ if len(sys.argv)==3:
 use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
 #use_central_database("GT_gen_prod_004.10_release-01-00-00")
 from variables import variables
+variables.addAlias('pi0Likeness','extraInfo(Pi0_Prob)')
+variables.addAlias('etaLikeness','extraInfo(Eta_Prob)')
 variables.addAlias('myRating','extraInfo(myRating)')
 variables.addAlias('myRatingCriteria',ratingVar)
 variables.addAlias('B0_CosTBTO','cosTBTO')
@@ -72,9 +77,10 @@ applyCuts('gamma:loose','1.4 < E < 4')
 krescuts = "0.5 < M < 2.0 \
 and daughter(2,significanceOfDistance) > 5 \
 and daughter(2,dM) < 0.015 and daughter(2,dM) > -0.015 \
-and daughter(0,piid) > 0.2 and daughter(1,piid) > 0.2 \
+and daughter(0,pionID) > 0.2 and daughter(1,pionID) > 0.2 \
 and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 "
+#and daughter(0,piid) > 0.2 and daughter(1,piid) > 0.2 \ MC9
 #vertexKFit('K_S0:all',0.0)
 reconstructDecay(Kres+":all -> pi+:99eff pi-:99eff K_S0:all", krescuts)
 reconstructDecay("B0:signal -> "+Kres+":all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85")
@@ -98,8 +104,8 @@ appendROEMasks('B0:signal', [oldMask,cleanMask])
 
 # choose one mask which is applied
 buildContinuumSuppression('B0:signal', 'cleanMask')
-
-matchMCTruth('B0:signal')
+if enableMCTruth:
+	matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
@@ -111,7 +117,7 @@ analysis_main.add_module('MVAExpert', listNames=['B0:signal'], extraInfoName='CS
 		identifier='./mva-addition/MyTMVA.xml')
 
 writePi0EtaVeto('B0:signal', 'B0 -> '+Kres+' ^gamma')
-myVetoVariables(Kres)
+#myVetoVariables(Kres)
 
 toolsB0_meson =  ['Kinematics','^B0 -> [^'+Kres+' -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ] ] ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
@@ -121,8 +127,8 @@ toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness]', '^B0']
 toolsB0_meson += ['CustomFloats[CSMVA]', '^B0']
 #toolsB0_meson += ['CustomFloats[pi0vetoGamma1E:pi0vetoGamma1Timing:pi0vetoGamma1CosTheta]', '^B0']
 #toolsB0_meson += ['MCKinematics','^B0 ->  ^'+Kres+' gamma']
-toolsB0_meson += ['MCTruth','^B0 -> [^'+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
-toolsB0_meson += ['MCHierarchy','B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
+#toolsB0_meson += ['MCTruth','^B0 -> [^'+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
+#toolsB0_meson += ['MCHierarchy','B0 -> ['+Kres+' -> ^pi+ ^pi- ^K_S0] ^gamma']
 toolsB0_meson += ['Vertex','^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
 toolsB0_meson += ['CustomFloats[significanceOfDistance:dM]', '^B0 -> ['+Kres+' -> pi+ pi- ^K_S0] gamma']
 #toolsB0_meson += ['CustomFloats[dMgen]', 'B0 -> [^'+Kres+' -> pi+ pi- K_S0] gamma']
