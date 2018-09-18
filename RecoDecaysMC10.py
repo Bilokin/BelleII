@@ -62,6 +62,7 @@ variables.addAlias('CSMVA','extraInfo(CSMVA)')
 variables.addAlias('XsdM','daughterInvM(0,1,2)')
 variables.addAlias('pi0Likeness','extraInfo(Pi0_Prob)')
 variables.addAlias('etaLikeness','extraInfo(Eta_Prob)')
+variables.addAlias('pCMS','useCMSFrame(p)')
 
 add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
@@ -136,6 +137,7 @@ toolsB0_meson += ['MCDeltaT', '^B0']
 toolsB0_meson += ['FlavorTagging', '^B0']
 toolsB0_meson += ['ContinuumSuppression', '^B0']
 toolsB0_meson += ['ROEMultiplicities', '^B0']
+toolsB0_meson += ['CustomFloats[pCMS]','^B0 -> pi+ pi- [ K_S0 ->  pi+ pi- ] ^gamma']
 toolsB0_meson += ['EventMetaData', '^B0']
 
 ntupleFile(outputFilename)
