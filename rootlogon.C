@@ -78,7 +78,7 @@ string getCuts( string Kres = "", bool enableVeto = true)
 	}
 	if (Kres == "Xsd" || Kres == "K_10")
 	{	
-		cut += "&& abs(B0_"+Kres+"_K_S0_M - 0.4976) < 10.011";
+		cut += "&& abs(B0_"+Kres+"_K_S0_M - 0.4976) < 10.015";
 		//cut += " && B0_"+Kres+"_K_S0_Rho > 0.05"; //0.1
 		cut += " && B0_"+Kres+"_K_S0_significanceOfDistance > 9"; // 9
 		cut += " && B0_"+Kres+"_M < 2.07 ";

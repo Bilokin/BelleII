@@ -42,8 +42,7 @@ if len(sys.argv)==3:
 	inputFilename = sys.argv[1]
 	outputFilename = sys.argv[2]
 #use_central_database("GT_gen_prod_003.11_release-00-09-01-FEI-a")
-use_central_database("GT_gen_prod_004.11_Master-20171213-230000")
-#use_central_database("GT_gen_prod_004.10_release-01-00-00")
+use_central_database("analysis_AAT-parameters_release-01-02-03")
 from variables import variables
 variables.addAlias('myRating','extraInfo(myRating)')
 variables.addAlias('myRatingCriteria',ratingVar)
@@ -103,7 +102,7 @@ matchMCTruth('B0:signal')
 
 TagV('B0:signal', 'breco')
 
-#flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
+flavorTagger(particleLists = 'B0:signal', weightFiles='B2JpsiKs_muBGx1')
 #matchMCTruth('pi+:all')
 #matchMCTruth(Kres+':all')
 #matchMCTruth('gamma:loose')
@@ -115,10 +114,7 @@ writePi0EtaVeto('B0:signal', 'B0 -> pi+:good pi-:good K_S0:all ^gamma')
 
 toolsB0_meson =  ['Kinematics','^B0 ->  ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ]  ^gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
-#toolsB0_meson += ['CustomFloats[pi0veto_M:pi0veto_gamma0_E:pi0veto_gamma1_E:pi0veto_mcPDG:pi0veto_cosTheta:pi0veto_gamma1_cosTheta:pi0veto_gamma1_clusterE1E9:pi0veto_gamma1_clusterE9E21:pi0veto_gamma1_clusterTiming:pi0veto_gamma1_clusterAZM40:pi0veto_gamma1_clusterAZM51:pi0veto_gamma1_clusterSecondMoment]', '^B0']
-#toolsB0_meson += ['CustomFloats[eta0veto_M:eta0veto_gamma0_E:eta0veto_gamma1_E:eta0veto_mcPDG:eta0veto_cosTheta:eta0veto_gamma1_cosTheta:eta0veto_gamma1_clusterE1E9:eta0veto_gamma1_clusterE9E21:eta0veto_gamma1_clusterTiming:eta0veto_gamma1_clusterAZM40:eta0veto_gamma1_clusterAZM51:eta0veto_gamma1_clusterSecondMoment]', '^B0']
 toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness:CSMVA:XsdM]', '^B0']
-#toolsB0_meson += ['MCKinematics','^B0 ->  ^'+Kres+' gamma']
 toolsB0_meson += ['MCTruth','^B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
 toolsB0_meson += ['MCHierarchy','B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
 toolsB0_meson += ['Vertex','^B0 -> pi+ pi- ^K_S0 gamma']
@@ -131,64 +127,19 @@ toolsB0_meson += ['CustomFloats[chiProb]','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- 
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', 'B0 -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi-  ] ^gamma']
 toolsB0_meson += ['CustomFloats[d0:z0:firstPXDLayer:firstSVDLayer]', 'B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
 toolsB0_meson += ['CustomFloats[minC2TDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> pi+ pi- K_S0 ^gamma']
-toolsB0_meson += ['CustomFloats[useCMSFrame(daughterAngleInBetween(0,1)):cosHelicityAngle]', 'B0 -> pi+ pi- K_S0 gamma']
 toolsB0_meson += ['Dalitz', '^B0 -> ^pi+ ^pi- ^K_S0 gamma']
 toolsB0_meson += ['TrackHits','B0 -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ]  gamma']
 toolsB0_meson += ['TagVertex', '^B0']
 toolsB0_meson += ['MCTagVertex', '^B0']
 toolsB0_meson += ['DeltaT', '^B0']
-#toolsB0_meson += ['DeltaTErr', '^B0']
 toolsB0_meson += ['MCDeltaT', '^B0']
 toolsB0_meson += ['FlavorTagging', '^B0']
 toolsB0_meson += ['ContinuumSuppression', '^B0']
-toolsB0_meson += ['MassBeforeFit', '^B0']
 toolsB0_meson += ['ROEMultiplicities', '^B0']
 toolsB0_meson += ['EventMetaData', '^B0']
 
-gammaInfo =  ['Kinematics','^gamma']
-gammaInfo += ['MCKinematics','^gamma']
-gammaInfo += ['MCTruth','^gamma']
-gammaInfo += ['MCHierarchy','^gamma']
-gammaInfo += ['PDGCode','^gamma']
-gammaInfo += ['InvMass','^gamma']
-gammaInfo += ['DeltaEMbc','^gamma']
-gammaInfo += ['CustomFloats[cosTheta:phi]', '^gamma']
-
-PiInfo  = ['Kinematics','^pi+']
-PiInfo += ['MCKinematics','^pi+']
-PiInfo += ['MCKinematics','^pi+']
-PiInfo += ['MCTruth','^pi+']
-PiInfo += ['CustomFloats[genMotherPDG:d0:z0:d0Err:z0Err:cosTheta:phi]', '^pi+']
-PiInfo += ['Reconstructible', '^pi+']
-PiInfo += ['MCHierarchy','^pi+']
-#PiInfo += ['MCVertex','^pi+']
-PiInfo += ['Track','^pi+']
-PiInfo += ['TrackHits','^pi+']
-#PiInfo += ['PID','^pi+']
-
-K0Info =  ['Kinematics','^K_S0 -> ^pi+ ^pi-']
-K0Info += ['MCKinematics','^K_S0 -> ^pi+ ^pi-']
-K0Info += ['MCTruth','^K_S0 -> ^pi+ ^pi-']
-K0Info += ['InvMass','^K_S0']
-K0Info += ['Vertex', '^K_S0']
-K0Info += ['MCVertex', '^K_S0']
-K0Info += ['CustomFloats[cosTheta]', '^K_S0 -> ^pi+ ^pi-']
-K0Info += ['TrackHits','K_S0 -> ^pi+ ^pi-']
-K0Info += ['CustomFloats[d0:z0:d0Err:z0Err]', 'K_S0 -> ^pi+ ^pi-']
-
-#pi0Info = ['Kinematics','^pi0 -> ^gamma ^gamma']#pi0Info += ['MCTruth','^pi0 -> ^gamma ^gamma']#pi0Info += ['InvMass','^pi0']
-#pi0Info += ['CustomFloats[cosTheta:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51:clusterE1E9:clusterE9E21:clusterSecondMoment:clusterMergedPi0:clusterTiming:clusterBelleQuality:clusterErrorTiming]','pi0 -> ^gamma ^gamma']
-#eta0Info = ['Kinematics','^eta -> ^gamma ^gamma']#eta0Info += ['MCTruth','^eta -> ^gamma ^gamma']#eta0Info += ['InvMass','^eta']
-#eta0Info += ['CustomFloats[cosTheta:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51:clusterE1E9:clusterE9E21:clusterSecondMoment:clusterMergedPi0:clusterTiming:clusterBelleQuality:clusterErrorTiming]','eta -> ^gamma ^gamma']
-
 ntupleFile(outputFilename)
 ntupleTree('B0Signal', 'B0:signal', toolsB0_meson)
-#ntupleTree('pions', 'pi+:all', PiInfo)
-#ntupleTree('K0Signal', 'K_S0:all', K0Info)
-#ntupleTree('Pi0Veto', 'pi0:veto', pi0Info)
-#ntupleTree('Eta0Veto', 'eta:veto2', eta0Info)
-#ntupleTree('GammaSignal', 'gamma:loose', gammaInfo)
-#ntupleTree('K1Signal', ''+Kres+':all', K0starInfo)
 # Process the events
 process(analysis_main)
 

@@ -214,3 +214,5 @@ dbstore/Belle2_B2JpsiKs_muBGx1EventLevelMaximumPstarFBDT 13 0,0,-1,-1
 dbstore/Belle2_B2JpsiKs_muBGx1EventLevelKaonPionFBDT 13 0,0,-1,-1
 dbstore/Belle2_B2JpsiKs_muBGx1CombinerCatCode00010203040506070809101112FBDT 13 0,0,-1,-1
 dbstore/Belle2_B2JpsiKs_muBGx1CombinerCatCode00010203040506070809101112FANN 13 0,0,-1,-1
+dbstore/BeamParameters 59449 0,0,0,-1
+dbstore/CDCAlignment 4 0,0,0,-1

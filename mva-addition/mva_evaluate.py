@@ -58,7 +58,7 @@ def unique(input):
 def create_abbreviations(names, length=5):
     count = dict()
     for name in names:
-        abbreviation = name[3:3+length]
+        abbreviation = name#[3:3+length]
         if abbreviation not in count:
             count[abbreviation] = 0
         count[abbreviation] += 1
@@ -66,7 +66,7 @@ def create_abbreviations(names, length=5):
 
     count2 = dict()
     for name in names:
-        abbreviation = name[3:3+length]
+        abbreviation = name#[3:3+length]
         abbreviations[name] = abbreviation
         if count[abbreviation] > 1:
             if abbreviation not in count2:
