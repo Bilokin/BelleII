@@ -35,8 +35,8 @@ fitSettings getStdSettings()
 	settings.csSigPar = {4.8763e-01, 9.6932e-01, 4.0885e-01, 3.2282e-01, 4.9590e-01};
 	settings.csBkgPar = {-0.5, 7.5e-01}; //-2.2
 	settings.fsig = 0.044;//mbc plot
-	settings.fContinuum = 0.763;
-	settings.dw = -0.005;
+	settings.fContinuum = 0.6712;//0.763;
+	settings.dw = -0.013;//-0.005;
 	settings.w = 0.2;
 	settings.fbkg =     {3.9203e-01, 3.2794e-01};
 	settings.sigmabkg = {1.5836,  6.2997e-01, 4.9696};

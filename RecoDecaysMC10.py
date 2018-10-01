@@ -68,7 +68,7 @@ add_beamparameters(analysis_main,'Y4S')
 inputMdst('default', inputFilename)
 stdKshorts()
 stdPhotons('loose')
-stdPi('good')
+stdPi('95eff')
 applyCuts('gamma:loose','1.4 < E < 4')
 krescuts = " and daughterInvM(0,1,2) < 2 and daughter(2,significanceOfDistance) > 5 \
 and daughter(2,dM) < 0.011 and daughter(2,dM) > -0.011 \
@@ -77,7 +77,7 @@ and daughterInvM(0,1) > 0.6 and daughterInvM(0,1) < 0.9 \
 #and daughter(0,piid) > 0.1 \
 #vertexKFit('K_S0:all',0.0)
 #reconstructDecay(Kres+":all -> pi+:good pi-:good K_S0:all", krescuts)
-reconstructDecay("B0:signal -> pi+:good pi-:good K_S0:all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85"+krescuts)
+reconstructDecay("B0:signal -> pi+:95eff pi-:95eff K_S0:all gamma:loose", "Mbc > 5.2 and deltaE < 0.2 and deltaE > -0.2 and  -0.65 < daughter(1, cosTheta) < 0.85"+krescuts)
 vertexRave('B0:signal',0.0001, 'B0 -> ^pi+ ^pi- ^K_S0 gamma')
 #vertexTree('B0:signal',0.0001)
 
@@ -124,10 +124,10 @@ toolsB0_meson += ['MCVertex','^B0 -> pi+ pi- ^K_S0 gamma']
 toolsB0_meson += ['InvMass','^B0 -> pi+ pi- ^K_S0  gamma']
 toolsB0_meson += ['DeltaEMbc','^B0']
 toolsB0_meson += ['PID','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
-toolsB0_meson += ['CustomFloats[chiProb]','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
+toolsB0_meson += ['CustomFloats[chiProb:charge]','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
 toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', 'B0 -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi-  ] ^gamma']
 toolsB0_meson += ['CustomFloats[d0:z0:firstPXDLayer:firstSVDLayer]', 'B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
-toolsB0_meson += ['CustomFloats[minC2TDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> pi+ pi- K_S0 ^gamma']
+toolsB0_meson += ['CustomFloats[minC2HDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> pi+ pi- K_S0 ^gamma']
 toolsB0_meson += ['Dalitz', '^B0 -> ^pi+ ^pi- ^K_S0 gamma']
 toolsB0_meson += ['TrackHits','B0 -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ]  gamma']
 toolsB0_meson += ['TagVertex', '^B0']

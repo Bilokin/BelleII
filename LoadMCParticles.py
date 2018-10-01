@@ -38,7 +38,7 @@ if len(sys.argv)==3:
 inputMdst('None', inputFilename)
 
 # print contents of the DataStore before loading MCParticles
-printDataStore()
+#printDataStore()
 
 # create and fill gamma/e/mu/pi/K/p ParticleLists
 # second argument are the selection criteria: '' means no cut, take all
@@ -51,9 +51,9 @@ kaons = ('K_S0:gen', '')
 kaonsS = ('K_10:gen', '')
 protons = ('anti-p-:gen', '')
 b0s = ('B0:gen', '')
-Kres = 'Xsd'
+Kres = 'K_10'
 kshortcut = "abs(daughter(0,mcPDG)) == 211 "
-b0cut = "abs(daughter(0,mcPDG)) == 30343 and abs(daughter(1,mcPDG)) == 22"
+b0cut = "abs(daughter(0,mcPDG)) == 10313 and abs(daughter(1,mcPDG)) == 22"
 ks0cut = "countDaughters( ) == 2 and abs(daughter(1,mcPDG)) == 22 and abs(daughter(0,mcPDG)) == 310"
 gammacut = "E > 1.5  and abs(genMotherPDG) == 511"
 
@@ -101,6 +101,9 @@ toolsGamma += ['CustomFloats[genMotherPDG]', '^gamma']
 toolsB0 = ['Kinematics', '^B0 -> [ ^'+Kres+' -> [ ^rho0 -> ^pi+ ^pi- ] [ ^K_S0 -> ^pi+ ^pi- ] ] ^gamma']
 toolsB0 += ['EventMetaData', '^B0']
 toolsB0 += ['CMSKinematics', '^B0']
+toolsB0 += ['DeltaT', '^B0']
+toolsB0 += ['MCDeltaT', '^B0']
+toolsB0 += ['FlavorTagging', '^B0']
 toolsB0 += ['InvMass', '^B0 -> [ ^'+Kres+' -> [ ^rho0 -> pi+ pi- ] ^K_S0 ] ^gamma']
 toolsB0 += ['MCVertex', '^B0 -> [ '+Kres+' -> [ rho0 -> pi+ pi- ] ^K_S0 ] gamma']
 toolsB0 += ['CustomFloats[cosTheta:E]', '^B0 -> [ ^'+Kres+' -> [ ^rho0 -> ^pi+ ^pi- ] [ ^K_S0 -> ^pi+ ^pi- ]  ]  ^gamma']
@@ -111,12 +114,11 @@ toolsB0SIG += ['MCTruth', '^B0']
 toolsB0SIG += ['MCVertex', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
 toolsB0SIG += ['Dalitz', '^B0 -> ^K_S0 ^pi+ ^pi- gamma']
 toolsB0SIG += ['MCHierarchy', 'B0 -> ^K_S0 pi+ pi- gamma']
-toolsB0SIG += ['CustomFloats[KresM]', '^B0 -> K_S0 pi+ pi- gamma']
+toolsB0SIG += ['DeltaT', '^B0']
+toolsB0SIG += ['MCDeltaT', '^B0']
+toolsB0SIG += ['CustomFloats[KresM:isRelatedRestOfEventB0Flavor]', '^B0 -> K_S0 pi+ pi- gamma']
 toolsB0SIG += ['CustomFloats[cosTheta:phi]', '^B0']
 toolsB0SIG += ['CustomFloats[nDaughters]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(0,E)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(1,E)]', '^B0']
-toolsB0SIG += ['CustomFloats[daughter(2,E)]', '^B0']
 toolsB0SIG += ['CustomFloats[cosTheta:phi:E]', 'B0 -> ^K_S0 ^pi+ ^pi- ^gamma']
 
 

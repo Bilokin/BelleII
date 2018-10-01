@@ -98,7 +98,7 @@ void addBranches(TTree* T, fitSettings set)
 	//T->Print();
 }
 
-void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", string signalname = "root/signalx-veto3-precut3.root", bool fullFit = true, string Kres = "Xsd")
+void tdcpv(string filename = "official-mc101/all--merged-1iab-kspipigamma-mc10.root", string signalname = "official-mc10/signal-merged-kpipigamma-mc10.root", bool fullFit = true, string Kres = "") //"root/signalx-veto3-precut3.root"
 {
 	string outputfilename = "root/tmp-branch.root";
 	string cut = getCuts(Kres);
@@ -122,6 +122,7 @@ void tdcpv(string filename = "merged-xsd2/lumi555fb-merged.root", string signaln
 		fullsettings.sigmares = settings.sigmares;
 		fullsettings.fres = settings.fres;
 		fullsettings.wvalues = settings.wvalues;
+		fullsettings.dw = settings.dw;
 		mbcdedtFit(B0Signal3, fullsettings);
 	}
 	else 

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FileCatalog>
   <File>
+    <LFN>/home/sbilokin/BelleII/test/B2A101-Y4SEventGeneration-evtgen.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/B2A101-Y4SEventGeneration-evtgen.root</PFN>
+    <ExperimentLow>0</ExperimentLow>
+    <RunLow>0</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>0</ExperimentHigh>
+    <RunHigh>0</RunHigh>
+    <EventHigh>10</EventHigh>
+  </File>
+  <File>
     <LFN>/home/sbilokin/BelleII/test/CPV/evtgen.root</LFN>
     <PFN>/home/sbilokin/BelleII/test/CPV/evtgen.root</PFN>
     <ExperimentLow>1</ExperimentLow>
@@ -1381,6 +1391,27 @@
     <RunHigh>1</RunHigh>
     <EventHigh>22</EventHigh>
     <Parents>/home/sbilokin/BelleII/test/test/evtgen1.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/try-CPMIX/recotest.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/try-CPMIX/recotest.root</PFN>
+    <ExperimentLow>0</ExperimentLow>
+    <RunLow>0</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>0</ExperimentHigh>
+    <RunHigh>0</RunHigh>
+    <EventHigh>44</EventHigh>
+    <Parents>/home/sbilokin/BelleII/test/try-CPMIX/test.root</Parents>
+  </File>
+  <File>
+    <LFN>/home/sbilokin/BelleII/test/try-CPMIX/test.root</LFN>
+    <PFN>/home/sbilokin/BelleII/test/try-CPMIX/test.root</PFN>
+    <ExperimentLow>0</ExperimentLow>
+    <RunLow>0</RunLow>
+    <EventLow>1</EventLow>
+    <ExperimentHigh>0</ExperimentHigh>
+    <RunHigh>0</RunHigh>
+    <EventHigh>5000</EventHigh>
   </File>
   <File>
     <LFN>/home/sbilokin/BelleII/test/xsd-mc-v09//evtgen1.root</LFN>
