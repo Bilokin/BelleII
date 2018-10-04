@@ -104,12 +104,14 @@ string getCuts( string Kres = "", bool enableVeto = true)
 	}
 	//cut += " && "+cosflight+" > 0.995";
 	//cut += " && !(abs(B0_K_S0_MC_GD_MOTHER_ID) == 323  && B0_isSignal)";
-	cut += " && B0_isSignal ";
+	//cut += " && B0_isSignal ";
+	//cut += " && (B0_isContinuumEvent || B0_isSignal)";
+	//cut += " && (abs(B0_gamma_MC_MOTHER_ID) ==511)";
 	//cut += " && ((B0_pi0_P > B0_pi1_P && B0_pi0_charge > 0) || (B0_pi0_P < B0_pi1_P && B0_pi1_charge)) ";
 	//cut += " && B0_pi0_P > B0_pi1_P && B0_pi0_charge > 0";
-	cut += " && abs(B0_pi0_MC_MOTHER_ID) != 323 && abs(B0_pi1_MC_MOTHER_ID) != 323";
-	//cut += " && B0_pi0_P > B0_pi1_P && B0_pi1_charge < 0";
-	cut += " && B0_m13 > B0_m23 && B0_pi1_charge < 0";
+	//cut += " && abs(B0_pi0_MC_MOTHER_ID) != 323 && abs(B0_pi1_MC_MOTHER_ID) != 323";
+	//cut += " && B0_pi0_P < B0_pi1_P && B0_pi1_charge < 0";
+	//cut += " && B0_m13 > B0_m23 && B0_pi1_charge < 0";
 	//cut += "&& B0_mbc > 5.27 && B0_deltae > -0.15 && B0_deltae < 0.05"; // BEST
 	cut += " && iCand == 0 ";
 	return cut;

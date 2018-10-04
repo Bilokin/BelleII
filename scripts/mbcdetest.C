@@ -37,7 +37,8 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	string mccut= "(B0_isSignal) &&";
-	string bkgcut= "(!B0_isSignal) && !B0_isContinuumEvent && ";
+	string bkgcut= "(!B0_isSignal) && !B0_isContinuumEvent && abs(B0_gamma_MC_MOTHER_ID) !=511  &&";
+	//string bkgcut= "B0_isContinuumEvent && ";
 	string cut = getCuts("");
 	string dtcut = "";//" && B0_mbc > 5.27 && B0_deltae > -0.25 && B0_deltae < 0.25"; 
 	TH1F * mbcHist = new TH1F("mbcHist", ";M [GeV]", 100,5.2,5.3);
@@ -78,8 +79,8 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	RooRealVar den("den","B^{#pm} width",0.5,20.) ;
 	RooCBShape deCBall("deCBall", "Crystal Ball shape", de, demean, desigma, dealpha, den);
 // --- Build Gaussian signal PDF ---
-	RooRealVar sigmean("sigmean","B^{#pm} mass",5.2795, 5.2, 5.3) ;
-	RooRealVar sigsigma("sigsigma","B^{#pm} width",0.0027,0.000001,1.) ;
+	RooRealVar sigmean("sigmean","B^{#pm} mass",5.2795, 5.275, 5.3) ;
+	RooRealVar sigsigma("sigsigma","B^{#pm} width",0.0027,0.000001,2.) ;
 	RooRealVar sigalpha("sigalpha","B^{#pm} width",1,4.) ;
 	RooRealVar sign("sign","B^{#pm} width",1,20.) ;
 	RooCBShape CBall("CBall", "Crystal Ball shape", mbc, sigmean, sigsigma, sigalpha, sign);
@@ -94,9 +95,8 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	RooRealVar c2("c2","coefficient #2",-0.1,-1.,1.) ;
 	RooChebychev chebychev("chebychev","background p.d.f.",de,RooArgList(c0,c1)) ; 
 // --- Construct signal+background PDF ---
-	RooRealVar nsig("nsig","#signal events",200,0.,10000) ;
-	RooRealVar nbkg("nbkg","#background events",800,0.,10000) ;
-	RooAddPdf sum("sum","g+a",RooArgList(gauss,argus),RooArgList(nsig,nbkg)) ;
+	RooRealVar farggauss("farggauss","#signal events",0.1,0.,1) ;
+	RooAddPdf sum("sum","g+a",RooArgList(gauss,argus),RooArgList(farggauss)) ;
 // --- Build CS signal PDF ---
 	RooRealVar csmean1("csmean1","B^{#pm} mass",0.2795, -3, 3) ;
 	RooRealVar cssigma1("cssigma1","B^{#pm} width",0.27,0.001,10.) ;
@@ -133,7 +133,7 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	//sum.fitTo(*data,Extended()) ;
 	RooFitResult* resMbcSig = CBall.fitTo(mbcRooHist,Save());
 	RooFitResult* resDeSig = deCBall.fitTo(deRooHist,Save());
-	RooFitResult* resMbcBkg = argus.fitTo(mbcBkgRooHist,Save());
+	RooFitResult* resMbcBkg = sum.fitTo(mbcBkgRooHist,Save());
 	RooFitResult* resDeBkg = chebychev.fitTo(deBkgRooHist,Save());
 	RooFitResult* resCsSig = csCBall.fitTo(csRooHist,Save());
 	//RooFitResult* resCsBkg = gaussCsBkg1.fitTo(csBkgRooHist,Save());
@@ -146,8 +146,6 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	c->cd(1);
 	RooPlot* mbcframe = mbc.frame() ;
 	//data->plotOn(mbcframe) ;
-	//sum.plotOn(mbcframe) ;
-	//sum.plotOn(mbcframe,Components(argus),LineStyle(kDashed)) ; 
 	mbcRooHist.plotOn(mbcframe) ;
 	CBall.plotOn(mbcframe) ;
 	gPad->SetLeftMargin(0.15) ; mbcframe->GetYaxis()->SetTitleOffset(1.6) ; mbcframe->Draw() ;
@@ -155,7 +153,8 @@ void mbcdetest(string filename = "root/signal-mc9-afteroptimization-merged.root"
 	c->cd(2);
 	RooPlot* mbcframe2 = mbc.frame() ;
 	mbcBkgRooHist.plotOn(mbcframe2) ;
-	argus.plotOn(mbcframe2) ;
+	sum.plotOn(mbcframe2) ;
+	sum.plotOn(mbcframe2,Components(argus),LineStyle(kDashed)) ; 
 	gPad->SetLeftMargin(0.15) ; mbcframe2->GetYaxis()->SetTitleOffset(1.6) ; mbcframe2->Draw() ;
 	//mbcHist->Draw("hesame");
 	c->cd(3);

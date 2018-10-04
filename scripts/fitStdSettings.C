@@ -35,21 +35,29 @@ fitSettings getStdSettings()
 	settings.csSigPar = {4.8763e-01, 9.6932e-01, 4.0885e-01, 3.2282e-01, 4.9590e-01};
 	settings.csBkgPar = {-0.5, 7.5e-01}; //-2.2
 	settings.fsig = 0.044;//mbc plot
-	settings.fContinuum = 0.6712;//0.763;
+	settings.fContinuum = 0.7;//0.763;
+	settings.fBB = 0.1;//0.763;
+	settings.fXsGamma = 0.087;//0.763;
+	settings.fBB = 0.7;//0.763;
 	settings.dw = -0.013;//-0.005;
 	settings.w = 0.2;
-	settings.fbkg =     {3.9203e-01, 3.2794e-01};
+	settings.fbkg =     {3.0095e-01, 6.2265e-01};
 	settings.sigmabkg = {1.5836,  6.2997e-01, 4.9696};
-	settings.fres =     {0.400615, 0.407007, 0.192379};//
+	settings.fres =     {0.470973, 0.112987, 0.41604};//
+	settings.sigmares = {0.47644, 2.80918, 1.08583};//
 	//settings.fres =     {0.421832, 0.186005, 0.392162};
-	settings.sigmares = { 0.632337, 1.60292, 4.9265};//
 	//settings.sigmares = { 5, 5, 5};
 	settings.wvalues ={ 0.473011, 0.363004, 0.314189, 0.194, 0.183236, 0.0518359, 0.0227273};//pr segmenter le w pdf
 
-	settings.mbcBBbkgPar = {5.2793, 4.6633e-03, -6.6620e+01, 0.187172};	//sigmean sigsigma argpar fbkg
-	settings.deBBbkgPar = {6.8044e-03, 1.0017e-01};//c0 c1
-	settings.csBBbkgPar = {4.8948e-01, 4.6557e-01, 1.2732, 4.0000e+01};//mean sigma alpha n
+	settings.fbkgBB =   {6.3013e-01, 2.3109e-01};
+	settings.mbcBBbkgPar = {5.2787e+00, 4.8427e-03, -7.8275e+01, 1.4857e-01};	//sigmean sigsigma argpar fbkg
+	settings.deBBbkgPar = {-6.8829e-02, 2.1193e-01};//c0 c1
+	settings.csBBbkgPar = {3.3802e-01, 6.1724e-01, 4.2479e+00, 3.7776e+01};//mean sigma alpha n
 	settings.dtBBbkgPar = {5.2371e-01, 2.7222e-01, 1.5836,  6.2997e-01, 4.9696, 1.4829};//mgbkg fbkg1 2 sgbkg 1 2 3 sgbkgpar
+	settings.fbkgXsGamma =   {6.1032e-01, 2.8473e-01};
+	settings.mbcXsGammabkgPar = {5.2822e+00, 3.1518e-03, -6.7289e+01, 6.0744e-02};	//sigmean sigsigma argpar fbkg
+	settings.deXsGammabkgPar = {-5.1833e-01,-9.0639e-03};//c0 c1
+	settings.csXsGammabkgPar = {3.1593e-01, 5.7550e-01, 1.4719e+00, 4.0000e+01};//mean sigma alpha n
 	return settings;
 }
 #endif

@@ -1,5 +1,5 @@
-#include "fitFunctions.C"
-#include "fitSettings.C"
+#include "../../roofit/fitFunctions.C"
+#include "../../roofit/fitSettings.C"
 #ifndef	__MYROOFIT__
 #define __MYROOFIT__
 #include "RooGlobalFunc.h"
@@ -38,8 +38,8 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 		q.defineType("B0bar",-1) ;
 	//RooRealVar w("w","flavour mistag rate",set.w);
 	RooRealVar w("w","flavour mistag rate",0,0.5);
-	RooRealVar A("A","A",0.,-1,1);
-	RooRealVar S("S","S",0.8,-1,1);
+	RooRealVar A("A","A",0.,-1.5,1.5);
+	RooRealVar S("S","S",0.,-1.5,1.5);
 
 	RooDataSet* data = NULL;
 	RooDataSet* wdata = NULL;
@@ -50,12 +50,11 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 		data->Print();
 		std::cout << "Done!" << std::endl;
 	}
-	//RooAbsPdf * combinedQ = getDeltaTCombined(set, dt,q,w, A, S);
 	bool fixBkgShape = true;
 	RooRealVar* fsig1  = new RooRealVar("fsig1","fsig parameter",set.fsig);
 
 	RooAbsPdf * bcp = getDeltaTSignal(set,dt,q,w,A,S);
-	RooAbsPdf * combinedBkg = getDeltaTBkg(set,dt, fixBkgShape);
+	RooAbsPdf * combinedBkg = getDeltaTBBBkg(set,dt, fixBkgShape);
 	
 	RooAddPdf * combinedQ = new RooAddPdf("combinedQ","combinedQ", RooArgList(*bcp,*combinedBkg), RooArgList(*fsig1));
 	combinedQ->Print();
@@ -88,6 +87,8 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 	RooPlot* frame = dt.frame(Title("B decay (B0/B0bar)")) ;
 	
 	dt.setBins(25) ;
+	data->plotOn(frame);
+	combinedQ->plotOn(frame, LineColor(kBlack)) ;
 	data->plotOn(frame,Cut("q==q::B0"),MarkerColor(kBlue), MarkerStyle(22)) ;
 	combinedQ->plotOn(frame, Slice(q,"B0"),LineStyle(kDashed), LineColor(kBlue)) ;
 	//combinedSignalRes.plotOn(frame, Normalization(1,RooAbsReal::Relative), LineStyle(kDashed), LineColor(kMagenta)) ;
@@ -110,7 +111,7 @@ void convolution(fitSettings set, TTree* tree = NULL, bool showSecCanvas = true)
 		w.setBins(50) ;
 		TCanvas* cw = new TCanvas("cw","w",500,500) ;
 		RooPlot* framew = w.frame(Title("w (B0/B0bar)"));
-		data->plotOn(framew) ;
+		data->plotOn(framew);
 		gPad->SetLeftMargin(0.15) ; framew->GetYaxis()->SetTitleOffset(1.6) ; framew->Draw() ;
 	}
 	std::cout << "-----------------------------" << std::endl;

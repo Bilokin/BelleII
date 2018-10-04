@@ -15,7 +15,7 @@
 
 #include "../../roofit/fitFunctions.C"
 #include "fitStdSettings.C"
-//#include "convolution3.C"
+#include "convolution3.C"
 #include "../../roofit/mbcdedtFit.C"
 #include "../../roofit/deltaT.C"
 
@@ -106,6 +106,10 @@ void tdcpv(string filename = "official-mc101/all--merged-1iab-kspipigamma-mc10.r
 	TFile * file = TFile::Open(filename.c_str());
 	TTree* B0Signal = (TTree*)file->Get("B0Signal");
 	TFile * f2 = new TFile(outputfilename.c_str(),"recreate");
+	if (!fullFit)
+	{
+		cut += " && B0_isSignal";
+	}
 	TTree* B0Signal2 = B0Signal->CopyTree(cut.c_str());
 	addBranches(B0Signal2, settings);
 	B0Signal2->AutoSave();
@@ -127,7 +131,13 @@ void tdcpv(string filename = "official-mc101/all--merged-1iab-kspipigamma-mc10.r
 	}
 	else 
 	{
-		//convolution(settings, B0Signal3);
+		fitSettings fullsettings = getStdSettings();
+		fullsettings.sigmares = settings.sigmares;
+		fullsettings.fres = settings.fres;
+		fullsettings.fsig = 1.;
+		fullsettings.wvalues = settings.wvalues;
+		fullsettings.dw = settings.dw;
+		convolution(fullsettings, B0Signal3);
 	}
 	//convolution(createRooHist(deltaTBHist), createRooHist(deltaTBbarHist));
 }
