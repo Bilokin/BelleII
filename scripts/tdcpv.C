@@ -15,7 +15,7 @@
 
 #include "../../roofit/fitFunctions.C"
 #include "fitStdSettings.C"
-#include "convolution3.C"
+#include "../../roofit/convolution3.C"
 #include "../../roofit/mbcdedtFit.C"
 #include "../../roofit/deltaT.C"
 
