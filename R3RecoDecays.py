@@ -22,7 +22,7 @@ import stdPi0s    as sp
 import stdPhotons as sg
 import variables.collections as vc
 import variables.utils as vu
-
+import beamparameters as bp
 ratingVar = "chiProb"
 inputFilename = 'input.root' 
 outputFilename = 'output.root'
@@ -64,6 +64,7 @@ variables.addAlias('B0_ThrustO','thrustOm')
 variables.addAlias('B0_ThrustB','thrustBm')
 variables.addAlias('B0_cc4','CleoConeCS(4)')
 variables.addAlias('B0_hso02','KSFWVariables(hso02)')
+#variables.addAlias('MCTagBFlavor','internalTagVMCFlavor')
 variables.addAlias('CSMVA','extraInfo(CSMVA)')
 variables.addAlias('XsdM','daughterInvM(0,1,2)')
 variables.addAlias('pi0Likeness','extraInfo(Pi0_Prob)')
@@ -76,6 +77,7 @@ variables.addAlias('m13','daughterInvariantMass(0,2)')
 variables.addAlias('m23','daughterInvariantMass(1,2)')
 
 main_path = b2.create_path() # Declaration of main path
+bp.add_beamparameters(main_path,'Y4S')
 ma.inputMdst('MC10', inputFilename, path=main_path)
 sv.goodBelleKshort(path=main_path)
 sg.stdPhotons('loose', path=main_path)
@@ -107,7 +109,7 @@ ma.buildContinuumSuppression('B0:signal', 'cleanMask', path=main_path)
 
 ma.matchMCTruth('B0:signal', path=main_path)
 
-vtx.TagV('B0:signal', 'breco', path=main_path)
+vtx.TagV('B0:signal', 'internal', path=main_path)
 
 ft.flavorTagger(particleLists = 'B0:signal', weightFiles='B2nunubarBGx1', path=main_path)
 #matchMCTruth('pi+:all')
@@ -122,7 +124,7 @@ ma.writePi0EtaVeto('B0:signal', 'B0 -> pi+:good pi-:good K_S0:all ^gamma', path=
 kin_variables = vc.mc_truth + ['p', 'E', 'pCMS', 'ECMS', 'cosTheta', 'phi',
         'M', 'dM', 'chiProb','charge', 'PDG']
 
-ft_variables = makePretty(['qrOutput(FBDT)', 'qrOutput(FANN)', 'isRelatedRestOfEventB0Flavor', 'qOutput(FANN)', 'rBinBelle(FANN)',  'qOutput(FBDT)', 'rBinBelle(FBDT)', 'McFlavorOfTagSide', 'EW90', 'pMissCMS', 'cosThetaMissCMS'])
+ft_variables = makePretty(['qrOutput(FBDT)', 'qrOutput(FANN)', 'isRelatedRestOfEventB0Flavor', 'qOutput(FANN)', 'rBinBelle(FANN)',  'qOutput(FBDT)', 'rBinBelle(FBDT)',  'EW90', 'pMissCMS', 'cosThetaMissCMS'])
 deltat_variables = ['DeltaT', 'DeltaTErr', 'MCDeltaT', 'TagVz', 'TagVzErr','mcTagVz', 'DeltaZ', 'MCTagBFlavor']
 cs_variables = makePretty(['R2', 'cosTBTO', 'cosTBz','CleoConeCS(2)','KSFWVariables(hso02)', 'CleoConeCS(4)', 'CleoConeCS(9)','KSFWVariables(hso10)', 'KSFWVariables(hso12)', 'KSFWVariables(hso14)', 'thrustBm', 'thrustOm'])
 roe_vars_clean = makePretty(['ROE_E(cleanMask)','ROE_P(cleanMask)', 'ROE_M(cleanMask)', 'ROE_deltae(cleanMask)', 'ROE_mbc(cleanMask)', 'nROE_Tracks(cleanMask)', 'nROE_NeutralECLClusters(cleanMask)', 'ROE_PTheta(cleanMask)', 'ROE_MC_MissFlags(cleanMask)'])
@@ -145,38 +147,6 @@ ma.variablesToNtuple('B0:signal',
         vu.create_aliases_for_selected(list_of_variables=track_variables, decay_string=  'B0 -> ^pi+ ^pi- [ K_S0 -> ^pi+ ^pi- ] gamma')+
         vu.create_aliases_for_selected(list_of_variables=cluster_variables, decay_string=  'B0 -> pi+ pi- [ K_S0 -> pi+ pi- ] ^gamma'),
     	filename = outputFilename, path=main_path)
-'''
-toolsB0_meson =  ['Kinematics','^B0 ->  ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi- ]  ^gamma']
-toolsB0_meson += ['CustomFloats[cosTheta:isSignal:isContinuumEvent:myRating:myRatingCriteria]', '^B0']
-toolsB0_meson += ['CustomFloats[pi0Likeness:etaLikeness:CSMVA:XsdM]', '^B0']
-toolsB0_meson += ['MCTruth','^B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
-toolsB0_meson += ['MCHierarchy','B0 ->  ^pi+ ^pi- ^K_S0 ^gamma']
-toolsB0_meson += ['Vertex','^B0 -> pi+ pi- ^K_S0 gamma']
-toolsB0_meson += ['CustomFloats[significanceOfDistance:dM]', '^B0 -> pi+ pi- ^K_S0 gamma']
-toolsB0_meson += ['MCVertex','^B0 -> pi+ pi- ^K_S0 gamma']
-toolsB0_meson += ['InvMass','^B0 -> pi+ pi- ^K_S0  gamma']
-toolsB0_meson += ['DeltaEMbc','^B0']
-toolsB0_meson += ['PID','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
-toolsB0_meson += ['CustomFloats[chiProb:charge]','B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
-toolsB0_meson += ['CustomFloats[cosTheta:isSignal]', 'B0 -> ^pi+ ^pi- [ ^K_S0 ->  ^pi+ ^pi-  ] ^gamma']
-toolsB0_meson += ['CustomFloats[d0:z0:firstPXDLayer:firstSVDLayer]', 'B0 -> ^pi+ ^pi- [ K_S0 ->  ^pi+ ^pi- ] gamma']
-toolsB0_meson += ['CustomFloats[minC2HDist:clusterMergedPi0:clusterSecondMoment:clusterErrorTiming:clusterTiming:clusterE1E9:clusterE9E21:clusterAbsZernikeMoment40:clusterAbsZernikeMoment51]', 'B0 -> pi+ pi- K_S0 ^gamma']
-toolsB0_meson += ['Dalitz', '^B0 -> ^pi+ ^pi- ^K_S0 gamma']
-toolsB0_meson += ['TrackHits','B0 -> ^pi+ ^pi-  [ K_S0 ->  ^pi+ ^pi- ]  gamma']
-toolsB0_meson += ['TagVertex', '^B0']
-toolsB0_meson += ['MCTagVertex', '^B0']
-toolsB0_meson += ['DeltaT', '^B0']
-toolsB0_meson += ['MCDeltaT', '^B0']
-toolsB0_meson += ['FlavorTagging', '^B0']
-toolsB0_meson += ['ContinuumSuppression', '^B0']
-toolsB0_meson += ['ROEMultiplicities', '^B0']
-toolsB0_meson += ['CustomFloats[pCMS]','^B0 -> pi+ pi- [ K_S0 ->  pi+ pi- ] ^gamma']
-toolsB0_meson += ['EventMetaData', '^B0']
-
-ntupleFile(outputFilename)
-ntupleTree('B0Signal', 'B0:signal', toolsB0_meson)
-'''
-
 # Process the events
 
 b2.process(main_path)
